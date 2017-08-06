@@ -1,0 +1,80 @@
+####################################################
+# Syntax Coloring Map For GEM
+####################################################
+
+####################################################
+# Datatypes (KEYWORD1)
+####################################################
+
+GEM							KEYWORD1
+GEMItem						KEYWORD1
+GEMPage						KEYWORD1
+GEMSelect					KEYWORD1
+FontSize					KEYWORD1
+AppContext					KEYWORD1
+SelectOptionInt				KEYWORD1
+SelectOptionByte			KEYWORD1
+SelectOptionChar			KEYWORD1
+
+####################################################
+# Methods and Functions (KEYWORD2)
+####################################################
+
+setSplash					KEYWORD2
+showVersion					KEYWORD2
+init						KEYWORD2
+setMenuPageCurrent			KEYWORD2
+drawMenu					KEYWORD2
+readyForKey					KEYWORD2
+registerKeyPress			KEYWORD2
+clearContext				KEYWORD2
+setReadonly					KEYWORD2
+getReadonly					KEYWORD2
+addMenuItem					KEYWORD2
+setParentMenuPage			KEYWORD2
+
+####################################################
+# Constants (LITERAL1)
+####################################################
+
+GEM_VER						LITERAL1
+
+GEM_SPR_SELECT_ARROWS		LITERAL1
+GEM_SPR_ARROW_RIGHT			LITERAL1
+GEM_SPR_ARROW_LEFT			LITERAL1
+GEM_SPR_ARROW_BTN
+GEM_SPR_CHECKBOX_UNCHECKED	LITERAL1
+GEM_SPR_CHECKBOX_CHECKED	LITERAL1
+
+GEM_CHAR_CODE_9				LITERAL1
+GEM_CHAR_CODE_0				LITERAL1
+GEM_CHAR_CODE_MINUS			LITERAL1
+GEM_CHAR_CODE_DOT			LITERAL1
+GEM_CHAR_CODE_SPACE			LITERAL1
+GEM_CHAR_CODE_UNDERSCORE	LITERAL1
+GEM_CHAR_CODE_LINE			LITERAL1
+GEM_CHAR_CODE_TILDA			LITERAL1
+
+GEM_STR_LEN
+
+GEM_VAL_INTEGER				LITERAL1
+GEM_VAL_BYTE				LITERAL1
+GEM_VAL_CHAR				LITERAL1
+GEM_VAL_BOOLEAN				LITERAL1
+GEM_VAL_SELECT				LITERAL1
+
+
+GEM_KEY_NONE				LITERAL1
+GEM_KEY_UP					LITERAL1
+GEM_KEY_RIGHT				LITERAL1
+GEM_KEY_DOWN				LITERAL1
+GEM_KEY_LEFT				LITERAL1
+GEM_KEY_CANCEL				LITERAL1
+GEM_KEY_OK					LITERAL1
+
+GEM_ITEM_VAL				LITERAL1
+GEM_ITEM_LINK				LITERAL1
+GEM_ITEM_BACK				LITERAL1
+GEM_ITEM_BUTTON				LITERAL1
+
+GEM_READONLY				LITERAL1
