@@ -61,7 +61,7 @@ struct FontSize {
 struct AppContext {
   void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function, executed if context is defined each regular loop() iteration),
                     // usually contains code of user-defined action that is run when menu Button is pressed
-  void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, executed once before context's loop() function, optional),
+  void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, called manually, generally once before context's loop() function, optional),
                     // usually contains some additional set up required by the user-defined action pointed to by context's loop()
   void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context),
                     // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again
@@ -78,18 +78,18 @@ class GEM {
     /* 
       @param 'glcd_' - pointer to the instance of the GLCD class created with AltSerialGraphicLCD library
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
-      values GEM_POINTER_DASH, GEM_POINTER_ROW
-      default GEM_POINTER_DASH
+      values GEM_POINTER_ROW, GEM_POINTER_DASH
+      default GEM_POINTER_ROW
       @param 'menuItemsPerScreen_' (optional) - count of the menu items per screen
-      default 7 (suitable for 128x64 screen with other variables at their default values)
+      default 5 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuItemHeight_' (optional) - height of the menu item
-      default 8 (suitable for 128x64 screen with other variables at their default values)
+      default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuPageScreenTopOffset_' (optional) - offset from the top of the screen to accomodate title of the menu page
-      default 8 (suitable for 128x64 screen with other variables at their default values)
+      default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen)
     */
-    GEM(GLCD* glcd_, byte menuPointerType_ = GEM_POINTER_DASH, byte menuItemsPerScreen_ = 7, byte menuItemHeight_ = 8, byte menuPageScreenTopOffset_ = 8, byte menuValuesLeftOffset_ = 86);
+    GEM(GLCD* glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
     void setSplash(uint8_t PROGMEM *sprite);             // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                          // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                          // The sprite commences with two bytes which are the width and height of the image in pixels.
