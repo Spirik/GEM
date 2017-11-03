@@ -76,7 +76,7 @@ class GEMItem;
 class GEM {
   public:
     /* 
-      @param 'glcd_' - pointer to the instance of the GLCD class created with AltSerialGraphicLCD library
+      @param 'glcd_' - reference to the instance of the GLCD class created with AltSerialGraphicLCD library
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
       values GEM_POINTER_ROW, GEM_POINTER_DASH
       default GEM_POINTER_ROW
@@ -89,7 +89,7 @@ class GEM {
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen)
     */
-    GEM(GLCD* glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
     void setSplash(uint8_t PROGMEM *sprite);             // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                          // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                          // The sprite commences with two bytes which are the width and height of the image in pixels.
@@ -109,7 +109,7 @@ class GEM {
     AppContext context;                                  // Currently set context
     void clearContext();                                 // Clear context
   private:
-    GLCD* _glcd;
+    GLCD& _glcd;
     byte _menuPointerType;
     byte _menuItemsPerScreen;
     byte _menuItemHeight;
