@@ -34,12 +34,13 @@ GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelec
   , saveAction(saveAction_)
 { }
 
-GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_)
+GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, boolean readonly_)
   : title(title_)
   , linkedVariable(linkedVariable_)
   , linkedType(linkedType_)
   , type(GEM_ITEM_VAL)
   , select(select_)
+  , readonly(readonly_)
 { }
 
 GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, void (*saveAction_)())

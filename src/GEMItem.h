@@ -61,8 +61,11 @@ class GEMItem {
       @param 'linkedType_' - type of the associated variable
       values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN, GEM_VAL_SELECT
       @param 'select_' - pointer to GEMSelect option select
+      @param 'readonly_' (optional) - set readonly mode for variable that option select is associated with
+      values GEM_READONLY (alias for true)
+      default false
     */
-    GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_);
+    GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, boolean readonly_ = false);
     /* 
       Constructor for menu item that represents variable, w/ callback
       @param 'title_' - title of the menu item displayed on the screen
