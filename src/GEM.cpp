@@ -83,13 +83,13 @@ static const uint8_t selectArrows [] PROGMEM = {
   0,20,54,20,0,0
 };
 
-GEM::GEM(GLCD& glcd_, byte _menuPointerType_, byte _menuItemsPerScreen_, byte _menuItemHeight_, byte _menuPageScreenTopOffset_, byte _menuValuesLeftOffset_)
+GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
   : _glcd(glcd_)
-  , _menuPointerType(_menuPointerType_)
-  , _menuItemsPerScreen(_menuItemsPerScreen_)
-  , _menuItemHeight(_menuItemHeight_)
-  , _menuPageScreenTopOffset(_menuPageScreenTopOffset_)
-  , _menuValuesLeftOffset(_menuValuesLeftOffset_)
+  , _menuPointerType(menuPointerType_)
+  , _menuItemsPerScreen(menuItemsPerScreen_)
+  , _menuItemHeight(menuItemHeight_)
+  , _menuPageScreenTopOffset(menuPageScreenTopOffset_)
+  , _menuValuesLeftOffset(menuValuesLeftOffset_)
 {
   _menuItemFontSize = _menuItemHeight >= 8 ? 0 : 1;
   _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height) / 2;
@@ -107,7 +107,7 @@ void GEM::setSplash(uint8_t PROGMEM *sprite) {
   _splash = sprite;
 }
 
-void GEM::showVersion(boolean flag) {
+void GEM::hideVersion(boolean flag) {
   _enableVersion = flag;
 }
 
@@ -140,8 +140,8 @@ void GEM::init() {
   }
 }
 
-void GEM::setMenuPageCurrent(GEMPage* _menuPageCurrent_) {
-  _menuPageCurrent = _menuPageCurrent_;
+void GEM::setMenuPageCurrent(GEMPage* menuPageCurrent) {
+  _menuPageCurrent = menuPageCurrent;
 }
 
 //====================== CONTEXT OPERATIONS
