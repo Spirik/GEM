@@ -51,7 +51,7 @@ class GEMItem {
       @param 'linkedType_' - type of the associated variable
       values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN, GEM_VAL_SELECT
       @param 'select_' - pointer to GEMSelect option select
-      @param 'saveAction_' - pointer to callback function exectuted when associated variable is successfuly saved
+      @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
     GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, void (*saveAction_)());
     /* 
@@ -72,7 +72,7 @@ class GEMItem {
       @param 'linkedVariable_' - pointer to variable that menu item is associated with
       @param 'linkedType_' - type of the associated variable
       values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN
-      @param 'saveAction_' - pointer to callback function exectuted when associated variable is successfuly saved
+      @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
     GEMItem(char* title_, void* linkedVariable_, byte linkedType_, void (*saveAction_)());
     /* 
