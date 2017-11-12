@@ -49,7 +49,7 @@ class GEMItem {
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - pointer to variable that menu item is associated with
       @param 'linkedType_' - type of the associated variable
-      values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN, GEM_VAL_SELECT
+      values GEM_VAL_SELECT
       @param 'select_' - pointer to GEMSelect option select
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
@@ -59,7 +59,7 @@ class GEMItem {
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - pointer to variable that menu item is associated with
       @param 'linkedType_' - type of the associated variable
-      values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN, GEM_VAL_SELECT
+      values GEM_VAL_SELECT
       @param 'select_' - pointer to GEMSelect option select
       @param 'readonly_' (optional) - set readonly mode for variable that option select is associated with
       values GEM_READONLY (alias for true)
@@ -95,11 +95,12 @@ class GEMItem {
     /* 
       Constructor for menu item that represents button
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'buttonAction__' - pointer to function that will be executed when menu item is activated
+      @param 'buttonAction_' - pointer to function that will be executed when menu item is activated
     */
     GEMItem(char* title_, void (*buttonAction_)());
     void setReadonly(boolean mode = true);  // Explicitly set or unset readonly mode for variable that menu item is associated with
-                                            // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN variables)
+                                            // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN variable
+                                            // menu items and GEM_VAL_SELECT option select)
     boolean getReadonly();                  // Get readonly state for variable that menu item is associated with
   private:
     char* title;
