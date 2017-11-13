@@ -39,8 +39,8 @@ class GEMPage {
       @param 'title_' - title of the menu page displayed at top of the screen
     */
     GEMPage(char* title_ = "");
-    void addMenuItem(GEMItem* menuItem);              // Add menu item to menu page
-    void setParentMenuPage(GEMPage* parentMenuPage);  // Specify parent level menu page (to know where to go back to when pressing Back button)
+    void addMenuItem(GEMItem& menuItem);              // Add menu item to menu page
+    void setParentMenuPage(GEMPage& parentMenuPage);  // Specify parent level menu page (to know where to go back to when pressing Back button)
   private:
     char* title;
     byte currentItemNum = 0;                          // Currently selected (focused) menu item of the page

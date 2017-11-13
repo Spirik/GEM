@@ -60,6 +60,12 @@ GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, boolean 
   , type(GEM_ITEM_VAL)
 { }
 
+GEMItem::GEMItem(char* title_, GEMPage& linkedPage_)
+  : title(title_)
+  , linkedPage(&linkedPage_)
+  , type(GEM_ITEM_LINK)
+{ }
+
 GEMItem::GEMItem(char* title_, GEMPage* linkedPage_)
   : title(title_)
   , linkedPage(linkedPage_)

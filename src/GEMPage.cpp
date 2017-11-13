@@ -29,20 +29,20 @@ GEMPage::GEMPage(char* title_)
   : title(title_)
 { }
 
-void GEMPage::addMenuItem(GEMItem* menuItem) {
+void GEMPage::addMenuItem(GEMItem& menuItem) {
   if (itemsCount == 0) {
     // If menu page is empty, link supplied menu item from within page directly (this will be the first menu item in a page)
-    _menuItem = menuItem;
+    _menuItem = &menuItem;
   } else {
     // If menu page is not empty, link supplied menu item from within the last menu item of the page
-    getMenuItem(itemsCount-1)->menuItemNext = menuItem;
+    getMenuItem(itemsCount-1)->menuItemNext = &menuItem;
   }
   itemsCount++;
 }
 
-void GEMPage::setParentMenuPage(GEMPage* parentMenuPage) {
+void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
   _menuItemBack.type = GEM_ITEM_BACK;
-  _menuItemBack.linkedPage = parentMenuPage;
+  _menuItemBack.linkedPage = &parentMenuPage;
   // Back button menu item should be always inserted at first position in list
   GEMItem* menuItemTmp = _menuItem;
   _menuItem = &_menuItemBack;

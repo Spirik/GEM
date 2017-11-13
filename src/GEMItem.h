@@ -87,7 +87,13 @@ class GEMItem {
     */
     GEMItem(char* title_, void* linkedVariable_, byte linkedType_, boolean readonly_ = false);
     /* 
-      Constructor for menu item that represents link to another menu page
+      Constructor for menu item that represents link to another menu page (via reference)
+      @param 'title_' - title of the menu item displayed on the screen
+      @param 'linkedPage_' - reference to GEMPage menu page that menu item is associated with
+    */
+    GEMItem(char* title_, GEMPage& linkedPage_);
+    /* 
+      Constructor for menu item that represents link to another menu page (via pointer)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedPage_' - pointer to GEMPage menu page that menu item is associated with
     */

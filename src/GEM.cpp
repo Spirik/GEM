@@ -140,8 +140,8 @@ void GEM::init() {
   }
 }
 
-void GEM::setMenuPageCurrent(GEMPage* menuPageCurrent) {
-  _menuPageCurrent = menuPageCurrent;
+void GEM::setMenuPageCurrent(GEMPage& menuPageCurrent) {
+  _menuPageCurrent = &menuPageCurrent;
 }
 
 //====================== CONTEXT OPERATIONS
