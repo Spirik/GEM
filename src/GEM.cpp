@@ -13,7 +13,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Created by Alexander 'Spirik' Spiridonov, 6 Aug 2017
+  Created by Alexander 'Spirik' Spiridonov, 12 Nov 2017
   
   This is free software. You can redistribute it and/or modify it under
   the terms of Creative Commons Attribution-ShareAlike 4.0 International License.
@@ -24,7 +24,7 @@
 #include "GEM.h"
 
 // Macro constant (alias) for current version of GEM library, printed on _splash screen
-#define GEM_VER "1.0"
+#define GEM_VER "beta"
 
 // Macro constants (aliases) for IDs of sprites of UI elements used to draw menu
 #define GEM_SPR_SELECT_ARROWS 0

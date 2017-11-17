@@ -13,7 +13,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Created by Alexander 'Spirik' Spiridonov, 6 Aug 2017
+  Created by Alexander 'Spirik' Spiridonov, 12 Nov 2017
   
   This is free software. You can redistribute it and/or modify it under
   the terms of Creative Commons Attribution-ShareAlike 4.0 International License.
