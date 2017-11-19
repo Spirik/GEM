@@ -655,7 +655,12 @@ void GEM::dispatchKeyPress() {
 
   if (context.loop != nullptr) {
     if ((context.allowExit) && (_currentKey == GEM_KEY_CANCEL)) {
-      context.exit();
+      if (context.exit != nullptr) {
+        context.exit();
+      } else {
+        drawMenu();
+        clearContext();
+      }
     } else {
       context.loop();
     }
