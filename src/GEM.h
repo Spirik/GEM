@@ -63,8 +63,9 @@ struct AppContext {
                     // usually contains code of user-defined action that is run when menu Button is pressed
   void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, called manually, generally once before context's loop() function, optional),
                     // usually contains some additional set up required by the user-defined action pointed to by context's loop()
-  void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context),
-                    // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again
+  void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context, optional),
+                    // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again,
+                    // if no user-defined function specified, default action will take place that consists of call to drawMenu() and clearContext() methods
   boolean allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
                              // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
 };
