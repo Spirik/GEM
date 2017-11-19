@@ -15,7 +15,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Created by Alexander 'Spirik' Spiridonov, 6 August 2017
+  Created by Alexander 'Spirik' Spiridonov, 16 Nov 2017
   
   This is free software. You can redistribute it and/or modify it under
   the terms of Creative Commons Attribution-ShareAlike 4.0 International License.
@@ -45,47 +45,49 @@ class GEMItem {
   friend class GEMPage;
   public:
     /* 
-      Constructor for menu item that represents option select, w/ callback
+      Constructors for menu item that represents option select, w/ callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - pointer to variable that menu item is associated with
-      @param 'linkedType_' - type of the associated variable
-      values GEM_VAL_SELECT
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, or char*)
       @param 'select_' - pointer to GEMSelect option select
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
-    GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, void (*saveAction_)());
+    GEMItem(char* title_, byte& linkedVariable_, GEMSelect* select_, void (*saveAction_)());
+    GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, void (*saveAction_)());
+    GEMItem(char* title_, char* linkedVariable_, GEMSelect* select_, void (*saveAction_)());
     /* 
-      Constructor for menu item that represents option select, w/o callback
+      Constructors for menu item that represents option select, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - pointer to variable that menu item is associated with
-      @param 'linkedType_' - type of the associated variable
-      values GEM_VAL_SELECT
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, or char*)
       @param 'select_' - pointer to GEMSelect option select
       @param 'readonly_' (optional) - set readonly mode for variable that option select is associated with
       values GEM_READONLY (alias for true)
       default false
     */
-    GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, boolean readonly_ = false);
+    GEMItem(char* title_, byte& linkedVariable_, GEMSelect* select_, boolean readonly_ = false);
+    GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, boolean readonly_ = false);
+    GEMItem(char* title_, char* linkedVariable_, GEMSelect* select_, boolean readonly_ = false);
     /* 
-      Constructor for menu item that represents variable, w/ callback
+      Constructors for menu item that represents variable, w/ callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - pointer to variable that menu item is associated with
-      @param 'linkedType_' - type of the associated variable
-      values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, or boolean)
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
-    GEMItem(char* title_, void* linkedVariable_, byte linkedType_, void (*saveAction_)());
+    GEMItem(char* title_, byte& linkedVariable_, void (*saveAction_)());
+    GEMItem(char* title_, int& linkedVariable_, void (*saveAction_)());
+    GEMItem(char* title_, char* linkedVariable_, void (*saveAction_)());
+    GEMItem(char* title_, boolean& linkedVariable_, void (*saveAction_)());
     /* 
-      Constructor for menu item that represents variable, w/o callback
+      Constructors for menu item that represents variable, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - pointer to variable that menu item is associated with
-      @param 'linkedType_' - type of the associated variable
-      values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, or boolean)
       @param 'readonly_' (optional) - set readonly mode for variable that menu item is associated with
       values GEM_READONLY (alias for true)
       default false
     */
-    GEMItem(char* title_, void* linkedVariable_, byte linkedType_, boolean readonly_ = false);
+    GEMItem(char* title_, byte& linkedVariable_, boolean readonly_ = false);
+    GEMItem(char* title_, int& linkedVariable_, boolean readonly_ = false);
+    GEMItem(char* title_, char* linkedVariable_, boolean readonly_ = false);
+    GEMItem(char* title_, boolean& linkedVariable_, boolean readonly_ = false);
     /* 
       Constructor for menu item that represents link to another menu page (via reference)
       @param 'title_' - title of the menu item displayed on the screen
