@@ -15,7 +15,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Created by Alexander 'Spirik' Spiridonov, 6 August 2017
+  Created by Alexander 'Spirik' Spiridonov, 16 Nov 2017
   
   This is free software. You can redistribute it and/or modify it under
   the terms of Creative Commons Attribution-ShareAlike 4.0 International License.

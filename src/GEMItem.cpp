@@ -15,7 +15,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Created by Alexander 'Spirik' Spiridonov, 6 August 2017
+  Created by Alexander 'Spirik' Spiridonov, 16 Nov 2017
   
   This is free software. You can redistribute it and/or modify it under
   the terms of Creative Commons Attribution-ShareAlike 4.0 International License.
@@ -24,41 +24,132 @@
 
 #include <Arduino.h>
 #include "GEMItem.h"
+#include "GEM.h"
 
-GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, void (*saveAction_)())
+GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect* select_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(select_)
+  , saveAction(saveAction_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , saveAction(saveAction_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect* select_, void (*saveAction_)())
   : title(title_)
   , linkedVariable(linkedVariable_)
-  , linkedType(linkedType_)
-  , type(GEM_ITEM_VAL)
+  , linkedType(GEM_VAL_SELECT)
   , select(select_)
+  , saveAction(saveAction_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+//---
+
+GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect* select_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(select_)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(select_)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect* select_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(select_)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+//---
+
+GEMItem::GEMItem(char* title_, byte& linkedVariable_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_BYTE)
+  , type(GEM_ITEM_VAL)
   , saveAction(saveAction_)
 { }
 
-GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, GEMSelect* select_, boolean readonly_)
+GEMItem::GEMItem(char* title_, int& linkedVariable_, void (*saveAction_)())
   : title(title_)
-  , linkedVariable(linkedVariable_)
-  , linkedType(linkedType_)
-  , type(GEM_ITEM_VAL)
-  , select(select_)
-  , readonly(readonly_)
-{ }
-
-GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, void (*saveAction_)())
-  : title(title_)
-  , linkedVariable(linkedVariable_)
-  , linkedType(linkedType_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_INTEGER)
   , type(GEM_ITEM_VAL)
   , saveAction(saveAction_)
 { }
 
-
-GEMItem::GEMItem(char* title_, void* linkedVariable_, byte linkedType_, boolean readonly_)
+GEMItem::GEMItem(char* title_, char* linkedVariable_, void (*saveAction_)())
   : title(title_)
   , linkedVariable(linkedVariable_)
-  , linkedType(linkedType_)
+  , linkedType(GEM_VAL_CHAR)
+  , type(GEM_ITEM_VAL)
+  , saveAction(saveAction_)
+{ }
+
+GEMItem::GEMItem(char* title_, boolean& linkedVariable_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_BOOLEAN)
+  , type(GEM_ITEM_VAL)
+  , saveAction(saveAction_)
+{ }
+
+//---
+
+GEMItem::GEMItem(char* title_, byte& linkedVariable_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_BYTE)
   , readonly(readonly_)
   , type(GEM_ITEM_VAL)
 { }
+
+GEMItem::GEMItem(char* title_, int& linkedVariable_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_INTEGER)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, char* linkedVariable_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(linkedVariable_)
+  , linkedType(GEM_VAL_CHAR)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, boolean& linkedVariable_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_BOOLEAN)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+//---
 
 GEMItem::GEMItem(char* title_, GEMPage& linkedPage_)
   : title(title_)
