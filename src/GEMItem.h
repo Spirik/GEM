@@ -103,9 +103,9 @@ class GEMItem {
     /* 
       Constructor for menu item that represents button
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'buttonAction_' - pointer to function that will be executed when menu item is activated
+      @param 'buttonAction_' - reference to function that will be executed when menu item is activated
     */
-    GEMItem(char* title_, void (*buttonAction_)());
+    GEMItem(char* title_, void (&buttonAction_)());
     void setReadonly(boolean mode = true);  // Explicitly set or unset readonly mode for variable that menu item is associated with
                                             // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN variable
                                             // menu items and GEM_VAL_SELECT option select)
@@ -119,7 +119,7 @@ class GEMItem {
     GEMSelect* select;
     GEMPage* linkedPage;
     GEMItem* menuItemNext;
-    void (*buttonAction)();
+    void (&buttonAction)();
     void (*saveAction)();
 };
   

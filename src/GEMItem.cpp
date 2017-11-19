@@ -163,7 +163,7 @@ GEMItem::GEMItem(char* title_, GEMPage* linkedPage_)
   , type(GEM_ITEM_LINK)
 { }
 
-GEMItem::GEMItem(char* title_, void (*buttonAction_)())
+GEMItem::GEMItem(char* title_, void (&buttonAction_)())
   : title(title_)
   , buttonAction(buttonAction_)
   , type(GEM_ITEM_BUTTON)
