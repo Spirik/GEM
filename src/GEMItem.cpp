@@ -39,6 +39,7 @@ GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect& select_, void (*
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
+  , select(&select_)
   , saveAction(saveAction_)
   , type(GEM_ITEM_VAL)
 { }
