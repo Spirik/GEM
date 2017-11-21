@@ -26,16 +26,16 @@
 #include "GEMItem.h"
 #include "GEM.h"
 
-GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect* select_, void (*saveAction_)())
+GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
-  , select(select_)
+  , select(&select_)
   , saveAction(saveAction_)
   , type(GEM_ITEM_VAL)
 { }
 
-GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, void (*saveAction_)())
+GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
@@ -43,40 +43,40 @@ GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, void (*
   , type(GEM_ITEM_VAL)
 { }
 
-GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect* select_, void (*saveAction_)())
+GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect& select_, void (*saveAction_)())
   : title(title_)
   , linkedVariable(linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
-  , select(select_)
+  , select(&select_)
   , saveAction(saveAction_)
   , type(GEM_ITEM_VAL)
 { }
 
 //---
 
-GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect* select_, boolean readonly_)
+GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect& select_, boolean readonly_)
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
-  , select(select_)
+  , select(&select_)
   , readonly(readonly_)
   , type(GEM_ITEM_VAL)
 { }
 
-GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect* select_, boolean readonly_)
+GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect& select_, boolean readonly_)
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
-  , select(select_)
+  , select(&select_)
   , readonly(readonly_)
   , type(GEM_ITEM_VAL)
 { }
 
-GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect* select_, boolean readonly_)
+GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect& select_, boolean readonly_)
   : title(title_)
   , linkedVariable(linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
-  , select(select_)
+  , select(&select_)
   , readonly(readonly_)
   , type(GEM_ITEM_VAL)
 { }

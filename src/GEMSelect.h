@@ -48,12 +48,12 @@ class GEMSelect {
   friend class GEM;
   public:
     /* 
-      @param 'type_' - type of the options of the select
-      values GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR
       @param 'length_' - length of the 'options_' array
       @param 'options_' - array of the available options
     */
-    GEMSelect(byte type_, byte length_, void* options_);
+    GEMSelect(byte length_, SelectOptionInt* options_);
+    GEMSelect(byte length_, SelectOptionByte* options_);
+    GEMSelect(byte length_, SelectOptionChar* options_);
   private:
     byte _type;
     byte _length;

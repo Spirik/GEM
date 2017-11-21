@@ -26,8 +26,20 @@
 #include "GEMSelect.h"
 #include "GEM.h"
 
-GEMSelect::GEMSelect(byte type_, byte length_, void* options_)
-  : _type(type_)
+GEMSelect::GEMSelect(byte length_, SelectOptionInt* options_)
+  : _type(GEM_VAL_INTEGER)
+  , _length(length_)
+  , _options(options_)
+{ }
+
+GEMSelect::GEMSelect(byte length_, SelectOptionByte* options_)
+  : _type(GEM_VAL_BYTE)
+  , _length(length_)
+  , _options(options_)
+{ }
+
+GEMSelect::GEMSelect(byte length_, SelectOptionChar* options_)
+  : _type(GEM_VAL_CHAR)
   , _length(length_)
   , _options(options_)
 { }
