@@ -27,7 +27,7 @@
 #include "GEMPage.h"
 #include "GEMSelect.h"
 
-// Macro constant (alias) for supported length of the string (character sequence) variable of type chr[GEM_STR_LEN]
+// Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
 
 // Macro constants (aliases) for menu pointer visual appearance
