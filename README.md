@@ -1,4 +1,4 @@
-GEM
+![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
 ===========
 
 GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
