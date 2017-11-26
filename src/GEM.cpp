@@ -108,7 +108,7 @@ void GEM::setSplash(uint8_t PROGMEM *sprite) {
 }
 
 void GEM::hideVersion(boolean flag) {
-  _enableVersion = flag;
+  _enableVersion = !flag;
 }
 
 void GEM::init() {
