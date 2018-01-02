@@ -118,7 +118,13 @@ void GEM::init() {
   _glcd.loadSprite_P(GEM_SPR_CHECKBOX_UNCHECKED, checkboxUnchecked);
   _glcd.loadSprite_P(GEM_SPR_CHECKBOX_CHECKED, checkboxChecked);
   _glcd.loadSprite_P(GEM_SPR_SELECT_ARROWS, selectArrows);
+  
+  _glcd.drawMode(GLCD_MODE_NORMAL);
+  _glcd.fontMode(GLCD_MODE_NORMAL);
+  _glcd.set(GLCD_ID_CRLF, 0);
+  _glcd.set(GLCD_ID_SCROLL, 0);
   _glcd.clearScreen();
+  
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
   _menuItemValueLength = (_glcd.xdim - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
   _glcd.bitblt_P(_glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, _glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, GLCD_MODE_NORMAL, _splash);
