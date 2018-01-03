@@ -458,7 +458,14 @@ GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPage
 
 * **init()**  
   *Returns*: nothing  
-  Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.).
+  Init the menu: load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.
+  > The following `GLCD` object settings will be adjusted during `init()`: 
+  > * `glcd.drawMode(GLCD_MODE_NORMAL)`;
+  > * `glcd.fontMode(GLCD_MODE_NORMAL)`;
+  > * `glcd.set(GLCD_ID_CRLF, 0)`;
+  > * `glcd.set(GLCD_ID_SCROLL, 0)`.
+  > 
+  > Keep this in mind if you are planning to use the same object in your own routines.
 
 * **setMenuPageCurrent(** _GEMPage&_ menuPageCurrent **)**  
   *Accepts*: `GEMPage`  
