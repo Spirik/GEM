@@ -23,6 +23,7 @@ Requires [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library by
   * [AppContext](#appcontext)
 * [Examples](#examples)
 * [License](#license)
+* [**Wiki**](https://github.com/Spirik/GEM/wiki)
 
 When to use
 -----------
