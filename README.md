@@ -787,11 +787,11 @@ GEM menu(glcd);
 void buttonAction() {
   // Declaration of context functions
   menu.context.loop = buttonContextLoop;
-  menu.context.enter = buttonContextEnter;
-  menu.context.exit = buttonContextExit;
+  menu.context.enter = buttonContextEnter; // Optional
+  menu.context.exit = buttonContextExit; // Optional
   // Call of context functions
   menu.context.enter();
-  //menu.context.allowExit = false; //Set to false if required to manually exit the context loop from within the loop itself (default is true)
+  //menu.context.allowExit = false; // Set to false if required to manually exit the context loop from within the loop itself (default is true)
 }
 
 void buttonContextEnter() {
@@ -818,6 +818,8 @@ void buttonContextExit() {
 }
 
 ```
+
+To exit currently running context and return to menu, press button associated with `GEM_KEY_CANCEL` key (only if `context.allowExit` flag is set to its default value of `true`, otherwise you should handle exit from the loop manually) - `context.exit()` callback will be called.
 
 For more details see supplied example on context usage and read corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
