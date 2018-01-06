@@ -28,7 +28,7 @@ Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, dow
 
 // Create KeyDetector object
 KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key));
-// To account for switch bounce effect of the buttons (if occur) you may whant to specify debounceDelay
+// To account for switch bounce effect of the buttons (if occur) you may want to specify debounceDelay
 // as the second argument to KeyDetector constructor:
 // KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key), 10);
 
@@ -52,7 +52,7 @@ GEMItem menuItemBool("Enable print:", enablePrint);
 // Create menu button that will trigger printData() function. It will print value of our number variable
 // to Serial monitor if enablePrint is true. We will write (define) this function later. However we should
 // forward-declare it in order to pass its reference to GEMItem constructor
-void printData(); //Forward declaration
+void printData(); // Forward declaration
 GEMItem menuItemButton("Print", printData);
 
 // Create menu page object of class GEMPage. Menu page holds menu items (GEMItem) and represents menu level.
