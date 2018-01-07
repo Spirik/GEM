@@ -63,7 +63,7 @@ GEMPage menuPageMain("Main Menu");
 GEM menu(glcd);
 
 void setup() {
-  // Push buttons pin modes
+  // Push-buttons pin modes
   pinMode(downPin, INPUT);
   pinMode(leftPin, INPUT);
   pinMode(rightPin, INPUT);
