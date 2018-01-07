@@ -84,17 +84,17 @@ One more additional library that may come in handy (although is not necessary) i
 Assume you have a simple setup as follows:
 
  - 128x64 LCD screen equipped with SparkFun Graphic LCD Serial Backpack, which is properly connected to the power source and to digital pins 8 and 9 of your Arduino for serial communication via SoftwareSerial library;
- - also you have 6 push buttons (momentary switches) connected to the digital pins 2 to 7, wired with pulldown resistors (so the HIGH means that the button is pressed).
+ - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with pulldown resistors (so the HIGH means that the button is pressed).
 
 ![Basic example breadboard](http://spirik.ru/downloads/misc/gem/ex_GEM_01_basic_bb_edited_1776.png)
 
-Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
 #### Navigation buttons initial setup (via KeyDetector library)
 
-Create constants for the pins you want to detect signals on (these are the pins the push buttons are connected to):
+Create constants for the pins you want to detect signals on (these are the pins the push-buttons are connected to):
 
 ```cpp
 const byte downPin = 2;
@@ -185,7 +185,7 @@ We will link menu items to menu pages to menu in `setup()` function. For now, me
 
 #### setup() function
 
-In `setup()` function of the sketch define modes of the pins push buttons are connected to:
+In `setup()` function of the sketch define modes of the pins push-buttons are connected to:
 
 ```cpp
 pinMode(downPin, INPUT);
@@ -242,7 +242,7 @@ menu.drawMenu();
 
 ```cpp
 void setup() {
-  // Push buttons pin modes
+  // Push-buttons pin modes
   pinMode(downPin, INPUT);
   pinMode(leftPin, INPUT);
   pinMode(rightPin, INPUT);
@@ -302,7 +302,7 @@ void setupMenu() {
 
 #### loop() function
 
-In the `loop()` function of the sketch we'll be listening to push buttons presses (using `KeyDetector`) and delegate pressed button to menu: 
+In the `loop()` function of the sketch we'll be listening to push-buttons presses (using `KeyDetector`) and delegate pressed button to menu: 
 
 ```cpp
 void loop() {
@@ -342,7 +342,7 @@ Full version of this basic example is shipped with the library and can be found 
 
 #### Run
 
-After compiling and uploading sketch to Arduino, wait while LCD screen boots and menu is being initialized and drawn to the screen. Then start pressing the push buttons and navigate through the menu. Pressing "Ok" button (attached to pin 7) will trigger edit mode of the "Number" variable, or change state of "Enable print" option, or invoke action associated with "Print" menu button (depending on which menu item is currently selected). If "Enable print" option is checked, then pressing "Print" button will result in `number` variable printed to the Serial Monitor.
+After compiling and uploading sketch to Arduino, wait while LCD screen boots and menu is being initialized and drawn to the screen. Then start pressing the push-buttons and navigate through the menu. Pressing "Ok" button (attached to pin 7) will trigger edit mode of the "Number" variable, or change state of "Enable print" option, or invoke action associated with "Print" menu button (depending on which menu item is currently selected). If "Enable print" option is checked, then pressing "Print" button will result in `number` variable printed to the Serial Monitor.
 
 ![Basic example](http://spirik.ru/downloads/misc/gem/gem-ex-01-basic-run.gif)
 
