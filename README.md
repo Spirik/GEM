@@ -7,7 +7,7 @@ GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
 <p align="center">
-<img src="http://spirik.ru/downloads/misc/gem/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" height="360" alt="Party hard!" />
+<img src="https://github.com/Spirik/GEM/wiki/images/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" height="360" alt="Party hard!" />
 </p>
 
 Requires [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library by Jon Green. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
@@ -37,7 +37,7 @@ Menu created with GEM library comprises of three base elements:
  - menu page (`GEMPage` class) - consists of list of menu items and represents menu level;
  - menu object itself (`GEM` class) - can have multiple menu pages (linked to each other) with multiple menu items each.
 
-![GEM structure](http://spirik.ru/downloads/misc/gem/gem-structure.png)
+![GEM structure](https://github.com/Spirik/GEM/wiki/images/gem-structure.png)
 
 How to use
 -----------
@@ -86,7 +86,7 @@ Assume you have a simple setup as follows:
  - 128x64 LCD screen equipped with SparkFun Graphic LCD Serial Backpack, which is properly connected to the power source and to digital pins 8 and 9 of your Arduino for serial communication via SoftwareSerial library;
  - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with pulldown resistors (so the HIGH means that the button is pressed).
 
-![Basic example breadboard](http://spirik.ru/downloads/misc/gem/ex_GEM_01_basic_bb_edited_1776.png)
+![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_bb_edited_1776.png)
 
 Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
@@ -344,7 +344,7 @@ Full version of this basic example is shipped with the library and can be found 
 
 After compiling and uploading sketch to Arduino, wait while LCD screen boots and menu is being initialized and drawn to the screen. Then start pressing the push-buttons and navigate through the menu. Pressing "Ok" button (attached to pin 7) will trigger edit mode of the "Number" variable, or change state of "Enable print" option, or invoke action associated with "Print" menu button (depending on which menu item is currently selected). If "Enable print" option is checked, then pressing "Print" button will result in `number` variable printed to the Serial Monitor.
 
-![Basic example](http://spirik.ru/downloads/misc/gem/gem-ex-01-basic-run.gif)
+![Basic example](https://github.com/Spirik/GEM/wiki/images/gem-ex-01-basic-run.gif)
 
 To learn more about GEM library, see the following Reference section and visit [wiki](https://github.com/Spirik/GEM/wiki).
 
@@ -392,9 +392,11 @@ GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPage
   *Default*: `86`  
   Offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen). Suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen.
 
-![GEM customization](http://spirik.ru/downloads/misc/gem/customization.gif)
+![GEM customization](https://github.com/Spirik/GEM/wiki/images/customization.gif)
 
 > **Note:** carefully choose values of `menuItemsPerScreen`, `menuItemHeight`, `menuPageScreenTopOffset`, `menuValuesLeftOffset` in accordance to the actual size of your LCD screen. Default values of these options are suitable for 128x64 screens. But that is not the only possible option: the other combination of values you set may also be suitable - just calculate them correctly and see what works best for you.
+
+For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 #### Constants
 
@@ -450,7 +452,7 @@ GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPage
   Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before `GEM::init()`. The following is the format of the sprite as described in AltSerialGraphicLCD library documentation:
   > The sprite commences with two bytes which are the width and height of the image in pixels. The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB) is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel. A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed by the next row of 8 vertical pixels and so on. Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero (although this does not matter).
 
-  For more details and example, see [wiki](https://github.com/Spirik/GEM/wiki).
+  For more details on splash customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 * **hideVersion(** _boolean_ flag = true **)**  
   *Accepts*: `boolean`  
