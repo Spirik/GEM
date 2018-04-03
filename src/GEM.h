@@ -102,7 +102,7 @@ class GEM {
       default 86 (suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen)
     */
     GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
-    void setSplash(uint8_t PROGMEM *sprite);             // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+    void setSplash(const uint8_t PROGMEM *sprite);             // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                          // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                          // The sprite commences with two bytes which are the width and height of the image in pixels.
                                                          // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
@@ -132,7 +132,7 @@ class GEM {
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
-    uint8_t PROGMEM *_splash;
+    const uint8_t PROGMEM *_splash;
     boolean _enableVersion = true;
 
     /* DRAW OPERATIONS */
