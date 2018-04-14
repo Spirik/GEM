@@ -447,7 +447,7 @@ For more details on customization see corresponding section of the [wiki](https:
 
 #### Methods
 
-* **setSplash(** _uint8_t PROGMEM_ *sprite **)**  
+* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  
   *Returns*: nothing  
   Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before `GEM::init()`. The following is the format of the sprite as described in AltSerialGraphicLCD library documentation:
   > The sprite commences with two bytes which are the width and height of the image in pixels. The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB) is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel. A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed by the next row of 8 vertical pixels and so on. Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero (although this does not matter).
@@ -625,8 +625,8 @@ GEMItem menuItemButton(title, buttonAction);
   Title of the menu item displayed on the screen (in this case - name of the button).
 
 * **buttonAction**  
-  *Type*: `reference to function`  
-  Reference to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+  *Type*: `pointer to function`  
+  Pointer to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
 
 #### Constants
 
