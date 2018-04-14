@@ -66,12 +66,12 @@ GEMItem menuItemLabel("Label:", label);
 
 // Create menu button that will trigger blinkDelay() function. It will blink with built-in LED with delay()
 // set to the value of interval variable. We will write (define) this function later. However, we should
-// forward-declare it in order to pass its reference to GEMItem constructor
+// forward-declare it in order to pass to GEMItem constructor
 void blinkDelay(); // Forward declaration
 GEMItem menuItemDelayButton1("Blink v1", blinkDelay);
 // Likewise, create menu button that will trigger blinkMillis() function. It will blink with built-in LED with millis based
 // delay set to the value of interval variable. We will write (define) this function later. However, we should
-// forward-declare it in order to pass its reference to GEMItem constructor
+// forward-declare it in order to pass to GEMItem constructor
 void blinkMillis(); // Forward declaration
 GEMItem menuItemDelayButton2("Blink v2", blinkMillis);
 

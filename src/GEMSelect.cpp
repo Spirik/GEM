@@ -64,9 +64,9 @@ byte GEMSelect::getLength() {
 }
 
 int GEMSelect::getSelectedOptionNum(void* variable) {
-  SelectOptionInt* optsInt = _options;
-  SelectOptionByte* optsByte = _options;
-  SelectOptionChar* optsChar = _options;
+  SelectOptionInt* optsInt = (SelectOptionInt*)_options;
+  SelectOptionByte* optsByte = (SelectOptionByte*)_options;
+  SelectOptionChar* optsChar = (SelectOptionChar*)_options;
   boolean found = false;
   for (byte i=0; i<_length; i++) {
     switch (_type) {
@@ -91,10 +91,10 @@ char* GEMSelect::getSelectedOptionName(void* variable) {
 }
 
 char* GEMSelect::getOptionNameByIndex(int index) {
-  char* name;
-  SelectOptionInt* optsInt = _options;
-  SelectOptionByte* optsByte = _options;
-  SelectOptionChar* optsChar = _options;
+  const char* name;
+  SelectOptionInt* optsInt = (SelectOptionInt*)_options;
+  SelectOptionByte* optsByte = (SelectOptionByte*)_options;
+  SelectOptionChar* optsChar = (SelectOptionChar*)_options;
   switch (_type) {
     case GEM_VAL_INTEGER:
       name = (index > -1 && index < _length) ? optsInt[index].name : "";
@@ -106,13 +106,13 @@ char* GEMSelect::getOptionNameByIndex(int index) {
       name = (index > -1 && index < _length) ? optsChar[index].name : "";
       break;
   }
-  return name;
+  return const_cast<char*>(name);
 }
 
 void GEMSelect::setValue(void* variable, int index) {
-  SelectOptionInt* optsInt = _options;
-  SelectOptionByte* optsByte = _options;
-  SelectOptionChar* optsChar = _options;
+  SelectOptionInt* optsInt = (SelectOptionInt*)_options;
+  SelectOptionByte* optsByte = (SelectOptionByte*)_options;
+  SelectOptionChar* optsChar = (SelectOptionChar*)_options;
   if (index > -1 && index < _length) {
     switch (_type) {
       case GEM_VAL_INTEGER:

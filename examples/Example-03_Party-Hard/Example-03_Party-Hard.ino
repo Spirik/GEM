@@ -79,7 +79,7 @@ GEMItem menuItemTempo("Tempo:", tempo, selectTempo, applyTempo);
 
 // Create menu button that will trigger rock() function. It will run animation sequence.
 // We will write (define) this function later. However, we should
-// forward-declare it in order to pass its reference to GEMItem constructor
+// forward-declare it in order to pass to GEMItem constructor
 void rock(); // Forward declaration
 GEMItem menuItemButton("Let's Rock!", rock);
 
@@ -177,7 +177,7 @@ void applyTempo() {
 // --- Animation draw routines
 
 // Draw sprite on screen
-void drawSprite(uint8_t PROGMEM *_splash, byte _mode) {
+void drawSprite(const uint8_t PROGMEM *_splash, byte _mode) {
   glcd.bitblt_P(glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, _mode, _splash);
 }
 

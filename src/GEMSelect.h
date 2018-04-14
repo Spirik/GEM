@@ -38,7 +38,7 @@
 
 // Declaration of SelectOptionInt type
 struct SelectOptionInt {
-  char* name;  // Text label of the option as displayed in select
+  char* name;    // Text label of the option as displayed in select
   int val_int;   // Value of the option that is assigned to linked variable upon option selection
 };
 

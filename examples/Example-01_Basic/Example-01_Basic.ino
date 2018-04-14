@@ -51,7 +51,7 @@ GEMItem menuItemBool("Enable print:", enablePrint);
 
 // Create menu button that will trigger printData() function. It will print value of our number variable
 // to Serial monitor if enablePrint is true. We will write (define) this function later. However, we should
-// forward-declare it in order to pass its reference to GEMItem constructor
+// forward-declare it in order to pass to GEMItem constructor
 void printData(); // Forward declaration
 GEMItem menuItemButton("Print", printData);
 

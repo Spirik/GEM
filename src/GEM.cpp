@@ -114,7 +114,7 @@ GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menu
 
 //====================== INIT OPERATIONS
 
-void GEM::setSplash(uint8_t PROGMEM *sprite) {
+void GEM::setSplash(const uint8_t PROGMEM *sprite) {
   _splash = sprite;
 }
 

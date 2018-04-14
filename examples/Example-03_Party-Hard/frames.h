@@ -349,4 +349,4 @@ static const uint8_t partyFrame5 [] PROGMEM = {
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-void *frames[] = {partyFrame1, partyFrame2, partyFrame3, partyFrame4, partyFrame5};
+const uint8_t *frames[] = {partyFrame1, partyFrame2, partyFrame3, partyFrame4, partyFrame5};
