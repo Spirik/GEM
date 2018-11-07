@@ -49,6 +49,7 @@ void GEMPage::addMenuItem(GEMItem& menuItem) {
     getMenuItem(itemsCount-1)->menuItemNext = &menuItem;
   }
   itemsCount++;
+  currentItemNum = (_menuItemBack.linkedPage != nullptr) ? 1 : 0;
 }
 
 void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
@@ -61,7 +62,7 @@ void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
     _menuItemBack.menuItemNext = menuItemTmp;
   }
   itemsCount++;
-  currentItemNum = 1;
+  currentItemNum = (itemsCount > 1) ? 1 : 0;
 }
 
 GEMItem* GEMPage::getMenuItem(byte index) {
