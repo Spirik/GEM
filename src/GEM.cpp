@@ -219,8 +219,8 @@ void GEM::printMenuItems() {
   byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
   GEMItem* menuItemTmp = &(*(_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen));
   byte y = _menuPageScreenTopOffset;
-  byte i = 0;  
-  do {
+  byte i = 0;
+  while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
     _glcd.setY(y + getMenuItemInsetOffset());
     switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
@@ -276,19 +276,21 @@ void GEM::printMenuItems() {
     menuItemTmp = menuItemTmp->menuItemNext;    
     y += _menuItemHeight;
     i++;
-  } while (menuItemTmp != 0 && i < _menuItemsPerScreen);
+  }
   memset(_valueString, '\0', GEM_STR_LEN - 1);
 }
 
 void GEM::drawMenuPointer() {
-  int pointerPosition = getCurrentItemTopOffset(false);
-  if (_menuPointerType == GEM_POINTER_DASH) {
-    _glcd.eraseBox(0, _menuPageScreenTopOffset, 1, _glcd.ydim-1);
-    _glcd.drawBox(0, pointerPosition, 1, pointerPosition + _menuItemHeight - 2, GLCD_MODE_NORMAL);
-  } else {
-    _glcd.drawMode(GLCD_MODE_XOR);
-    _glcd.fillBox(0, pointerPosition-1, _glcd.xdim-3, pointerPosition + _menuItemHeight - 1);
-    _glcd.drawMode(GLCD_MODE_NORMAL);
+  if (_menuPageCurrent->itemsCount > 0) {
+    int pointerPosition = getCurrentItemTopOffset(false);
+    if (_menuPointerType == GEM_POINTER_DASH) {
+      _glcd.eraseBox(0, _menuPageScreenTopOffset, 1, _glcd.ydim-1);
+      _glcd.drawBox(0, pointerPosition, 1, pointerPosition + _menuItemHeight - 2, GLCD_MODE_NORMAL);
+    } else {
+      _glcd.drawMode(GLCD_MODE_XOR);
+      _glcd.fillBox(0, pointerPosition-1, _glcd.xdim-3, pointerPosition + _menuItemHeight - 1);
+      _glcd.drawMode(GLCD_MODE_NORMAL);
+    }
   }
 }
 
@@ -313,7 +315,7 @@ void GEM::nextMenuItem() {
   } else {
     _menuPageCurrent->currentItemNum++;
   }
-  boolean redrawMenu = (_menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
+  boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
   if (redrawMenu) {
     drawMenu();
   } else {
@@ -325,7 +327,7 @@ void GEM::prevMenuItem() {
   if (_menuPointerType != GEM_POINTER_DASH) {
     drawMenuPointer();
   }
-  boolean redrawMenu = (_menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
+  boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
   if (_menuPageCurrent->currentItemNum == 0) {
     _menuPageCurrent->currentItemNum = _menuPageCurrent->itemsCount-1;
   } else {
@@ -351,7 +353,7 @@ void GEM::menuItemSelect() {
       drawMenu();
       break;
     case GEM_ITEM_BACK:
-      _menuPageCurrent->currentItemNum = 1;
+      _menuPageCurrent->currentItemNum = (_menuPageCurrent->itemsCount > 1) ? 1 : 0;
       _menuPageCurrent = menuItemTmp->linkedPage;
       drawMenu();
       break;
