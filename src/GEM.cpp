@@ -405,16 +405,21 @@ void GEM::checkboxToggle() {
   int topOffset = getCurrentItemTopOffset(true, true);
   boolean checkboxValue = *(boolean*)menuItemTmp->linkedVariable;
   *(boolean*)menuItemTmp->linkedVariable = !checkboxValue;
-  int mode = GLCD_MODE_NORMAL;
-  if (!checkboxValue) {
-    _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+  if (menuItemTmp->saveAction != nullptr) {
+    menuItemTmp->saveAction();
+    exitEditValue();
   } else {
-    _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+    int mode = GLCD_MODE_NORMAL;
+    if (!checkboxValue) {
+      _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+    } else {
+      _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+    }
+    if (_menuPointerType != GEM_POINTER_DASH) {
+      drawMenuPointer();
+    }
+    _editValueMode = false;
   }
-  if (_menuPointerType != GEM_POINTER_DASH) {
-    drawMenuPointer();
-  }
-  _editValueMode = false;
 }
 
 void GEM::clearValueVisibleRange() {
