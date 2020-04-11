@@ -102,7 +102,10 @@ class GEM {
       default 86 (suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen)
     */
     GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
-    void setSplash(const uint8_t PROGMEM *sprite);             // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+
+    /* INIT OPERATIONS */
+
+    void setSplash(const uint8_t PROGMEM *sprite);       // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                          // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                          // The sprite commences with two bytes which are the width and height of the image in pixels.
                                                          // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
@@ -114,12 +117,21 @@ class GEM {
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
+
+    /* CONTEXT OPERATIONS */
+
+    AppContext context;                                  // Currently set context
+    void clearContext();                                 // Clear context
+
+    /* DRAW OPERATIONS */
+
     void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+
+    /* KEY DETECTION */
+
     boolean readyForKey();                               // Check that menu is waiting for the key press
     void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
                                                          // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
-    AppContext context;                                  // Currently set context
-    void clearContext();                                 // Clear context
   private:
     GLCD& _glcd;
     byte _menuPointerType;
