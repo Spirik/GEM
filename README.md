@@ -16,7 +16,7 @@ Requires [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library by
 * [Structure](#structure)
 * [How to use](#how-to-use)
 * [Reference](#reference)
-  * [GEM](#gem-1)
+  * [GEM](#gem)
   * [GEMPage](#gempage)
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
