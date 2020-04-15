@@ -39,12 +39,10 @@
 #include <Arduino.h>
 #include "GEMItem.h"
 
-// Forward declaration of GEM class
-class GEM;
-
 // Declaration of GEMPage class
 class GEMPage {
   friend class GEM;
+  friend class GEM_u8g2;
   public:
     /* 
       @param 'title_' - title of the menu page displayed at top of the screen

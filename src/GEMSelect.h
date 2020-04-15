@@ -57,6 +57,7 @@ struct SelectOptionChar {
 // Declaration of GEMSelect class
 class GEMSelect {
   friend class GEM;
+  friend class GEM_u8g2;
   public:
     /* 
       @param 'length_' - length of the 'options_' array

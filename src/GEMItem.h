@@ -46,13 +46,13 @@
 #define GEM_READONLY true
 
 // Forward declaration of necessary classes
-class GEM;
 class GEMPage;
 class GEMSelect;
 
 // Declaration of GEMItem class
 class GEMItem {
   friend class GEM;
+  friend class GEM_u8g2;
   friend class GEMPage;
   public:
     /* 
