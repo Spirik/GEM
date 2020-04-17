@@ -40,6 +40,12 @@
 #include "GEMPage.h"
 #include "GEMSelect.h"
 
+// Macro constants (aliases) for u8g2 font families used to draw menu
+#define GEM_FONT_BIG u8g2_font_5x8_mf
+#define GEM_FONT_SMALL u8g2_font_tom_thumb_4x6_mf
+#define GEM_FONT_BIG_CYR u8g2_font_5x8_t_cyrillic
+#define GEM_FONT_SMALL_CYR u8g2_font_4x6_t_cyrillic
+
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
 
@@ -75,6 +81,12 @@ struct Splash {
 struct FontSize {
   byte width;   // Width of the character
   byte height;  // Height of the character
+};
+
+// Declaration of FontFamilies type
+struct FontFamilies {
+  uint8_t * big;    // Big font family (i.e., 5x8)
+  uint8_t * small;  // Small font family (i.e., 4x6)
 };
 
 // Declaration of AppContext type
@@ -116,6 +128,7 @@ class GEM_u8g2 {
 
     void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    void enableCyrillic(boolean flag = true);            // Enable cyrillic set of fonts. Generally should be called before GEM::init(). To revert to non-cyrillic fonts pass false: enableVyrillic(false).
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
 
@@ -142,6 +155,7 @@ class GEM_u8g2 {
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
+    FontFamilies _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;

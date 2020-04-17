@@ -126,6 +126,14 @@ void GEM_u8g2::hideVersion(boolean flag) {
   _enableVersion = !flag;
 }
 
+void GEM_u8g2::enableCyrillic(boolean flag) {
+  if (flag) {
+    _fontFamilies = {(uint8_t *)GEM_FONT_BIG_CYR, (uint8_t *)GEM_FONT_SMALL_CYR};
+  } else {
+    _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
+  }
+}
+
 void GEM_u8g2::init() {
   /*
   _glcd.loadSprite_P(GEM_SPR_ARROW_RIGHT, arrowRight);
@@ -141,6 +149,9 @@ void GEM_u8g2::init() {
   _glcd.set(GLCD_ID_SCROLL, 0);
   _glcd.clearScreen();
   */
+  _u8g2.clear();
+  _u8g2.setFontPosTop();
+  _u8g2.enableUTF8Print();
   
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
   _menuItemValueLength = (_u8g2.getDisplayWidth() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
@@ -155,9 +166,9 @@ void GEM_u8g2::init() {
     _u8g2.firstPage();
     do {
       _u8g2.drawXBMP((_u8g2.getDisplayWidth() - _splash.width) / 2, (_u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
-      _u8g2.setFont(u8g2_font_tom_thumb_4x6_mr);
+      _u8g2.setFont(_fontFamilies.small);
       byte x = _u8g2.getDisplayWidth() - strlen(GEM_VER)*4;
-      byte y = _u8g2.getDisplayHeight() - 1;
+      byte y = _u8g2.getDisplayHeight() - 7;
       if (_splash.image != logo_bits) {
         _u8g2.setCursor(x - 12, y);
         _u8g2.print("GEM");
@@ -188,12 +199,14 @@ void GEM_u8g2::clearContext() {
 //====================== DRAW OPERATIONS
 
 void GEM_u8g2::drawMenu() {
-  // _glcd.clearScreen();
   _u8g2.clear();
-  drawTitleBar();
-  printMenuItems();
-  drawMenuPointer();
-  drawScrollbar();
+  _u8g2.firstPage();
+  do {
+    drawTitleBar();
+    // printMenuItems();
+    // drawMenuPointer();
+    // drawScrollbar();
+  } while (_u8g2.nextPage());
 }
 
 void GEM_u8g2::drawTitleBar() {
@@ -203,7 +216,10 @@ void GEM_u8g2::drawTitleBar() {
   _glcd.putstr(_menuPageCurrent->title);
   _glcd.fontFace(_menuItemFontSize);
   */
- _u8g2.setFont(u8g2_font_5x8_mr);
+ _u8g2.setFont(_fontFamilies.small);
+ _u8g2.setCursor(5, 0);
+ _u8g2.print(_menuPageCurrent->title);
+ _u8g2.setFont(_menuItemFontSize ? _fontFamilies.big : _fontFamilies.small);
 }
 
 void GEM_u8g2::printMenuItemString(char* str, byte num, byte startPos) {
