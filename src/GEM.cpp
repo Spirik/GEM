@@ -410,7 +410,6 @@ void GEM::checkboxToggle() {
     menuItemTmp->saveAction();
     exitEditValue();
   } else {
-    int mode = GLCD_MODE_NORMAL;
     if (!checkboxValue) {
       _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
     } else {

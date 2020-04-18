@@ -211,6 +211,8 @@ void GEM_u8g2::init() {
   } else {
     delay(1000);
   }
+
+  _u8g2.clear();
 }
 
 void GEM_u8g2::setMenuPageCurrent(GEMPage& menuPageCurrent) {
@@ -229,7 +231,7 @@ void GEM_u8g2::clearContext() {
 //====================== DRAW OPERATIONS
 
 void GEM_u8g2::drawMenu() {
-  _u8g2.clear();
+  // _u8g2.clear(); // Not clearing for better performance
   _u8g2.firstPage();
   do {
     drawTitleBar();
@@ -346,12 +348,6 @@ void GEM_u8g2::drawMenuPointer() {
   if (_menuPageCurrent->itemsCount > 0) {
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
-      //!!! todo: consider removing erasing of the box - it seems to be unnecessary since all menu is redrawn each time in picture loop
-      /*
-      _u8g2.setDrawColor(0);
-      _u8g2.drawBox(0, _menuPageScreenTopOffset, 2, _u8g2.getDisplayHeight() - _menuPageScreenTopOffset - 1);
-      _u8g2.setDrawColor(1);
-      */
       _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
     } else {
       _u8g2.setDrawColor(2);
@@ -374,37 +370,41 @@ void GEM_u8g2::drawScrollbar() {
 //====================== MENU ITEMS NAVIGATION
 
 void GEM_u8g2::nextMenuItem() {
-  if (_menuPointerType != GEM_POINTER_DASH) {
+  /* if (_menuPointerType != GEM_POINTER_DASH) {
     drawMenuPointer();
-  }
+  } */
   if (_menuPageCurrent->currentItemNum == _menuPageCurrent->itemsCount-1) {
     _menuPageCurrent->currentItemNum = 0;
   } else {
     _menuPageCurrent->currentItemNum++;
   }
+  /*
   boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
   if (redrawMenu) {
     drawMenu();
   } else {
     drawMenuPointer();
   }
+  */
+  drawMenu(); //!!! Always redraw becuase of how u8g2 works
 }
 
 void GEM_u8g2::prevMenuItem() {
-  if (_menuPointerType != GEM_POINTER_DASH) {
+  /* if (_menuPointerType != GEM_POINTER_DASH) {
     drawMenuPointer();
-  }
-  boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
+  } */
+  // boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
   if (_menuPageCurrent->currentItemNum == 0) {
     _menuPageCurrent->currentItemNum = _menuPageCurrent->itemsCount-1;
   } else {
     _menuPageCurrent->currentItemNum--;
   }
-  if (redrawMenu) {
+  /* if (redrawMenu) {
     drawMenu();
   } else {
     drawMenuPointer();
-  }
+  } */
+  drawMenu(); //!!! Always redraw becuase of how u8g2 works
 }
 
 void GEM_u8g2::menuItemSelect() {
@@ -413,6 +413,7 @@ void GEM_u8g2::menuItemSelect() {
     case GEM_ITEM_VAL:
       if (!menuItemTmp->readonly) {
         enterEditValueMode();
+        drawMenu(); //!!! Added this
       }
       break;
     case GEM_ITEM_LINK:
@@ -436,9 +437,9 @@ void GEM_u8g2::enterEditValueMode() {
   _editValueMode = true;
   
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  if (_menuPointerType != GEM_POINTER_DASH) {
+  /* if (_menuPointerType != GEM_POINTER_DASH) {
     drawMenuPointer();
-  }
+  } */
   _editValueType = menuItemTmp->linkedType;
   switch (_editValueType) {
     case GEM_VAL_INTEGER:
@@ -476,15 +477,14 @@ void GEM_u8g2::checkboxToggle() {
     menuItemTmp->saveAction();
     exitEditValue();
   } else {
-    // int mode = GLCD_MODE_NORMAL;
-    if (!checkboxValue) {
-      // _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+    /* if (!checkboxValue) {
+      _u8g2.drawXBMP(_menuValuesLeftOffset, topOffset, checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits);
     } else {
-      // _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
-    }
-    if (_menuPointerType != GEM_POINTER_DASH) {
+      _u8g2.drawXBMP(_menuValuesLeftOffset, topOffset, checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits);
+    } */
+    /* if (_menuPointerType != GEM_POINTER_DASH) {
       drawMenuPointer();
-    }
+    } */
     _editValueMode = false;
   }
 }
@@ -538,15 +538,17 @@ void GEM_u8g2::prevEditValueCursorPosition() {
 void GEM_u8g2::drawEditValueCursor() {
   int pointerPosition = getCurrentItemTopOffset(false);
   byte cursorLeftOffset = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width;
-  /*
-  _glcd.drawMode(GLCD_MODE_XOR);
+  // _glcd.drawMode(GLCD_MODE_XOR);
+  _u8g2.setDrawColor(2);
   if (_editValueType == GEM_VAL_SELECT) {
-    _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, _glcd.xdim - 3, pointerPosition + _menuItemHeight - 1);
+    // _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, _glcd.xdim - 3, pointerPosition + _menuItemHeight - 1);
   } else {
-    _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, cursorLeftOffset + _menuItemFont[_menuItemFontSize].width - 1, pointerPosition + _menuItemHeight - 1);
+    // _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, cursorLeftOffset + _menuItemFont[_menuItemFontSize].width - 1, pointerPosition + _menuItemHeight - 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width, _menuItemHeight);
   }
-  _glcd.drawMode(GLCD_MODE_NORMAL);
-  */
+  // _glcd.drawMode(GLCD_MODE_NORMAL);
+  _u8g2.setDrawColor(1);
+
 }
 
 void GEM_u8g2::nextEditValueDigit() {

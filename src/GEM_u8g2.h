@@ -41,10 +41,10 @@
 #include "GEMSelect.h"
 
 // Macro constants (aliases) for u8g2 font families used to draw menu
-#define GEM_FONT_BIG u8g2_font_6x12_tf
-#define GEM_FONT_SMALL u8g2_font_tom_thumb_4x6_tf
-#define GEM_FONT_BIG_CYR u8g2_font_6x12_t_cyrillic
-#define GEM_FONT_SMALL_CYR u8g2_font_4x6_t_cyrillic
+#define GEM_FONT_BIG        u8g2_font_6x12_tf
+#define GEM_FONT_SMALL      u8g2_font_tom_thumb_4x6_tf
+#define GEM_FONT_BIG_CYR    u8g2_font_6x12_t_cyrillic
+#define GEM_FONT_SMALL_CYR  u8g2_font_4x6_t_cyrillic
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
@@ -61,14 +61,14 @@
 #define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
                            // (note that char[] array should be big enough to hold select option with the longest value)
 
-// Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu
-#define GEM_KEY_NONE 0    // No key presses are detected
-#define GEM_KEY_UP 1      // Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select)
-#define GEM_KEY_RIGHT 2   // Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button)
-#define GEM_KEY_DOWN 3    // Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select)
-#define GEM_KEY_LEFT 4    // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
-#define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
-#define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button)
+// Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu (mapped to corresponsding u8g2 constants)
+#define GEM_KEY_NONE    0                         // No key presses are detected
+#define GEM_KEY_UP      U8X8_MSG_GPIO_MENU_UP     // Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select)
+#define GEM_KEY_RIGHT   U8X8_MSG_GPIO_MENU_NEXT   // Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button)
+#define GEM_KEY_DOWN    U8X8_MSG_GPIO_MENU_DOWN   // Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select)
+#define GEM_KEY_LEFT    U8X8_MSG_GPIO_MENU_PREV   // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
+#define GEM_KEY_CANCEL  U8X8_MSG_GPIO_MENU_HOME   // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
+#define GEM_KEY_OK      U8X8_MSG_GPIO_MENU_SELECT // Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button)
 
 // Declaration of Splash type
 struct Splash {
