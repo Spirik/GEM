@@ -208,7 +208,7 @@ void GEM::printMenuItemFull(char* str, int offset) {
 }
 
 byte GEM::getMenuItemInsetOffset(boolean forSprite) {
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize == 1 ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
 }
 
 byte GEM::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
@@ -217,11 +217,12 @@ byte GEM::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
 
 void GEM::printMenuItems() {
   byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-  GEMItem* menuItemTmp = &(*(_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen));
+  GEMItem* menuItemTmp = (_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
   while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
     _glcd.setY(y + getMenuItemInsetOffset());
+    byte yDraw = y + getMenuItemInsetOffset(true);
     switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
         _glcd.setX(5);
@@ -246,31 +247,31 @@ void GEM::printMenuItems() {
             break;
           case GEM_VAL_BOOLEAN:
             if (*(boolean*)menuItemTmp->linkedVariable) {
-              _glcd.drawSprite(_menuValuesLeftOffset, y + getMenuItemInsetOffset(true), GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+              _glcd.drawSprite(_menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
             } else {
-              _glcd.drawSprite(_menuValuesLeftOffset, y + getMenuItemInsetOffset(true), GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+              _glcd.drawSprite(_menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
             }
             break;
           case GEM_VAL_SELECT:
             GEMSelect* select = menuItemTmp->select;
             printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-            _glcd.drawSprite(_glcd.xdim-7, y + getMenuItemInsetOffset(true), GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+            _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
             break;
         }
         break;
       case GEM_ITEM_LINK:
         _glcd.setX(5);
         printMenuItemFull(menuItemTmp->title);
-        _glcd.drawSprite(_glcd.xdim-8, y + getMenuItemInsetOffset(true), GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
+        _glcd.drawSprite(_glcd.xdim-8, yDraw, GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BACK:
         _glcd.setX(11);
-        _glcd.drawSprite(5, y + getMenuItemInsetOffset(true), GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
+        _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BUTTON:
         _glcd.setX(11);
         printMenuItemFull(menuItemTmp->title);
-        _glcd.drawSprite(5, y + getMenuItemInsetOffset(true), GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
+        _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
         break;
     }
     menuItemTmp = menuItemTmp->menuItemNext;    

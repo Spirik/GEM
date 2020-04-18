@@ -41,9 +41,9 @@
 #include "GEMSelect.h"
 
 // Macro constants (aliases) for u8g2 font families used to draw menu
-#define GEM_FONT_BIG u8g2_font_5x8_mf
-#define GEM_FONT_SMALL u8g2_font_tom_thumb_4x6_mf
-#define GEM_FONT_BIG_CYR u8g2_font_5x8_t_cyrillic
+#define GEM_FONT_BIG u8g2_font_6x12_tf
+#define GEM_FONT_SMALL u8g2_font_tom_thumb_4x6_tf
+#define GEM_FONT_BIG_CYR u8g2_font_6x12_t_cyrillic
 #define GEM_FONT_SMALL_CYR u8g2_font_4x6_t_cyrillic
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]

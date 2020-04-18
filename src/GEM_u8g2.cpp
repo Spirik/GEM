@@ -73,29 +73,59 @@ static const unsigned char logo_bits [] U8X8_PROGMEM = {
 };
 
 // Sprites of the UI elements used to draw menu
-static const uint8_t arrowRight [] PROGMEM = {
+/* static const uint8_t arrowRight [] PROGMEM = {
   6, 8,
   0,0,62,28,8,0
+}; */
+#define arrowRight_width  6
+#define arrowRight_height 8
+static const unsigned char arrowRight_bits [] U8X8_PROGMEM = {
+   0xc0,0xc4,0xcc,0xdc,0xcc,0xc4,0xc0,0xc0
 };
-static const uint8_t arrowLeft [] PROGMEM = {
+/* static const uint8_t arrowLeft [] PROGMEM = {
   6, 8,
   8,28,62,0,0,0
+}; */
+#define arrowLeft_width  6
+#define arrowLeft_height 8
+static const unsigned char arrowLeft_bits [] U8X8_PROGMEM = {
+   0xc0,0xc4,0xc6,0xc7,0xc6,0xc4,0xc0,0xc0
 };
-static const uint8_t arrowBtn [] PROGMEM = {
+/* static const uint8_t arrowBtn [] PROGMEM = {
   6, 8,
   62,34,20,8,0,0
+}; */
+#define arrowBtn_width  6
+#define arrowBtn_height 8
+static const unsigned char arrowBtn_bits [] U8X8_PROGMEM = {
+  0xc0,0xc3,0xc5,0xc9,0xc5,0xc3,0xc0,0xc0
 };
-static const uint8_t checkboxUnchecked [] PROGMEM = {
+/* static const uint8_t checkboxUnchecked [] PROGMEM = {
   7, 8,
   126,66,66,66,66,126,0
+}; */
+#define checkboxUnchecked_width  7
+#define checkboxUnchecked_height 8
+static const unsigned char checkboxUnchecked_bits [] U8X8_PROGMEM = {
+   0x80,0xbf,0xa1,0xa1,0xa1,0xa1,0xbf,0x80
 };
-static const uint8_t checkboxChecked [] PROGMEM = {
+/* static const uint8_t checkboxChecked [] PROGMEM = {
   7, 8,
   126,74,82,74,68,126,1
+}; */
+#define checkboxChecked_width  7
+#define checkboxChecked_height 8
+static const unsigned char checkboxChecked_bits [] U8X8_PROGMEM = {
+   0xc0,0xaf,0xb1,0xab,0xa5,0xa1,0xbf,0x80
 };
-static const uint8_t selectArrows [] PROGMEM = {
+/* static const uint8_t selectArrows [] PROGMEM = {
   6, 8,
   0,20,54,20,0,0
+}; */
+#define selectArrows_width  6
+#define selectArrows_height 8
+static const unsigned char selectArrows_bits [] U8X8_PROGMEM = {
+   0xc0,0xc4,0xce,0xc0,0xce,0xc4,0xc0,0xc0
 };
 
 GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
@@ -203,29 +233,23 @@ void GEM_u8g2::drawMenu() {
   _u8g2.firstPage();
   do {
     drawTitleBar();
-    // printMenuItems();
+    printMenuItems();
     // drawMenuPointer();
     // drawScrollbar();
   } while (_u8g2.nextPage());
 }
 
 void GEM_u8g2::drawTitleBar() {
-  /*
-  _glcd.fontFace(1);
-  _glcd.setXY(5,1);
-  _glcd.putstr(_menuPageCurrent->title);
-  _glcd.fontFace(_menuItemFontSize);
-  */
  _u8g2.setFont(_fontFamilies.small);
  _u8g2.setCursor(5, 0);
  _u8g2.print(_menuPageCurrent->title);
- _u8g2.setFont(_menuItemFontSize ? _fontFamilies.big : _fontFamilies.small);
+ _u8g2.setFont(_menuItemFontSize ? _fontFamilies.small : _fontFamilies.big);
 }
 
 void GEM_u8g2::printMenuItemString(char* str, byte num, byte startPos) {
   byte i = startPos;
   while (i < num + startPos && str[i] != '\0') {
-    // _glcd.put(str[i]);
+    _u8g2.print(str[i]);
     i++;
   }
 }
@@ -243,7 +267,9 @@ void GEM_u8g2::printMenuItemFull(char* str, int offset) {
 }
 
 byte GEM_u8g2::getMenuItemInsetOffset(boolean forSprite) {
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize == 1 ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? 0 : 1) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
 }
 
 byte GEM_u8g2::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
@@ -252,22 +278,22 @@ byte GEM_u8g2::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprit
 
 void GEM_u8g2::printMenuItems() {
   byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-  GEMItem* menuItemTmp = &(*(_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen));
+  GEMItem* menuItemTmp = (_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
-  /*
   while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
-    _glcd.setY(y + getMenuItemInsetOffset());
+    byte yText = y + getMenuItemInsetOffset();
+    byte yDraw = y + getMenuItemInsetOffset(true);
     switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
-        _glcd.setX(5);
+        _u8g2.setCursor(5, yText);
         if (menuItemTmp->readonly) {
           printMenuItemTitle(menuItemTmp->title, -1);
-          _glcd.putstr("^");
+          _u8g2.print("^");
         } else {
           printMenuItemTitle(menuItemTmp->title);
         }
-        _glcd.setX(_menuValuesLeftOffset);
+        _u8g2.setCursor(_menuValuesLeftOffset, y);
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
             itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
@@ -282,38 +308,37 @@ void GEM_u8g2::printMenuItems() {
             break;
           case GEM_VAL_BOOLEAN:
             if (*(boolean*)menuItemTmp->linkedVariable) {
-              _glcd.drawSprite(_menuValuesLeftOffset, y + getMenuItemInsetOffset(true), GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+              _u8g2.drawXBMP(_menuValuesLeftOffset, yDraw, checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits);
             } else {
-              _glcd.drawSprite(_menuValuesLeftOffset, y + getMenuItemInsetOffset(true), GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+              _u8g2.drawXBMP(_menuValuesLeftOffset, yDraw, checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits);
             }
             break;
           case GEM_VAL_SELECT:
             GEMSelect* select = menuItemTmp->select;
             printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-            _glcd.drawSprite(_glcd.xdim-7, y + getMenuItemInsetOffset(true), GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+            _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
             break;
         }
         break;
       case GEM_ITEM_LINK:
-        _glcd.setX(5);
+        _u8g2.setCursor(5, yText);
         printMenuItemFull(menuItemTmp->title);
-        _glcd.drawSprite(_glcd.xdim-8, y + getMenuItemInsetOffset(true), GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
+        _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 8, yDraw, arrowRight_width, arrowRight_height, arrowRight_bits);
         break;
       case GEM_ITEM_BACK:
-        _glcd.setX(11);
-        _glcd.drawSprite(5, y + getMenuItemInsetOffset(true), GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
+        _u8g2.setCursor(11, yText);
+        _u8g2.drawXBMP(5, yDraw, arrowLeft_width, arrowLeft_height, arrowLeft_bits);
         break;
       case GEM_ITEM_BUTTON:
-        _glcd.setX(11);
+        _u8g2.setCursor(11, yText);
         printMenuItemFull(menuItemTmp->title);
-        _glcd.drawSprite(5, y + getMenuItemInsetOffset(true), GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
+        _u8g2.drawXBMP(5, yDraw, arrowBtn_width, arrowBtn_height, arrowBtn_bits);
         break;
     }
     menuItemTmp = menuItemTmp->menuItemNext;    
     y += _menuItemHeight;
     i++;
   }
-  */
   memset(_valueString, '\0', GEM_STR_LEN - 1);
 }
 
