@@ -234,8 +234,8 @@ void GEM_u8g2::drawMenu() {
   do {
     drawTitleBar();
     printMenuItems();
-    // drawMenuPointer();
-    // drawScrollbar();
+    drawMenuPointer();
+    drawScrollbar();
   } while (_u8g2.nextPage());
 }
 
@@ -268,8 +268,8 @@ void GEM_u8g2::printMenuItemFull(char* str, int offset) {
 
 byte GEM_u8g2::getMenuItemInsetOffset(boolean forSprite) {
   // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? 0 : 1) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
-  // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? 0 : 1) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
 }
 
 byte GEM_u8g2::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
@@ -293,7 +293,7 @@ void GEM_u8g2::printMenuItems() {
         } else {
           printMenuItemTitle(menuItemTmp->title);
         }
-        _u8g2.setCursor(_menuValuesLeftOffset, y);
+        _u8g2.setCursor(_menuValuesLeftOffset, yText);
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
             itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
@@ -343,31 +343,32 @@ void GEM_u8g2::printMenuItems() {
 }
 
 void GEM_u8g2::drawMenuPointer() {
-  /*
   if (_menuPageCurrent->itemsCount > 0) {
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
-      _glcd.eraseBox(0, _menuPageScreenTopOffset, 1, _glcd.ydim-1);
-      _glcd.drawBox(0, pointerPosition, 1, pointerPosition + _menuItemHeight - 2, GLCD_MODE_NORMAL);
+      //!!! todo: consider removing erasing of the box - it seems to be unnecessary since all menu is redrawn each time in picture loop
+      /*
+      _u8g2.setDrawColor(0);
+      _u8g2.drawBox(0, _menuPageScreenTopOffset, 2, _u8g2.getDisplayHeight() - _menuPageScreenTopOffset - 1);
+      _u8g2.setDrawColor(1);
+      */
+      _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
     } else {
-      _glcd.drawMode(GLCD_MODE_XOR);
-      _glcd.fillBox(0, pointerPosition-1, _glcd.xdim-3, pointerPosition + _menuItemHeight - 1);
-      _glcd.drawMode(GLCD_MODE_NORMAL);
+      _u8g2.setDrawColor(2);
+      _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1);
+      _u8g2.setDrawColor(1);
     }
   }
-  */
 }
 
 void GEM_u8g2::drawScrollbar() {
   byte screensCount = (_menuPageCurrent->itemsCount % _menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / _menuItemsPerScreen : _menuPageCurrent->itemsCount / _menuItemsPerScreen + 1;
-  /*
   if (screensCount > 1) {
     byte currentScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-    byte scrollbarHeight = (_glcd.ydim - _menuPageScreenTopOffset) / screensCount;
+    byte scrollbarHeight = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset) / screensCount;
     byte scrollbarPosition = currentScreenNum * scrollbarHeight + _menuPageScreenTopOffset;
-    _glcd.drawLine(_glcd.xdim-1, scrollbarPosition, _glcd.xdim-1, scrollbarPosition + scrollbarHeight-1, GLCD_MODE_NORMAL);
+    _u8g2.drawLine(_u8g2.getDisplayWidth() - 1, scrollbarPosition, _u8g2.getDisplayWidth() - 1, scrollbarPosition + scrollbarHeight-1);
   }
-  */
 }
 
 //====================== MENU ITEMS NAVIGATION
