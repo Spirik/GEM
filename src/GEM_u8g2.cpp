@@ -468,6 +468,7 @@ void GEM_u8g2::enterEditValueMode() {
       break;
     case GEM_VAL_BOOLEAN:
       checkboxToggle();
+      drawMenu();
       break;
     case GEM_VAL_SELECT:
       GEMSelect* select = menuItemTmp->select;
