@@ -193,6 +193,7 @@ class GEM_u8g2 {
     byte _editValueVirtualCursorPosition;
     char _valueString[GEM_STR_LEN];
     int _valueSelectNum;
+    bool _movingCursorNext = true;
     void enterEditValueMode();
     void checkboxToggle();
     void clearValueVisibleRange();

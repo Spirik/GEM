@@ -269,8 +269,6 @@ void GEM_u8g2::printMenuItemFull(char* str, int offset) {
 }
 
 byte GEM_u8g2::getMenuItemInsetOffset(boolean forSprite) {
-  // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
-  // return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? 0 : 1) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
   return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
 }
 
@@ -283,6 +281,7 @@ void GEM_u8g2::printMenuItems() {
   GEMItem* menuItemTmp = (_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
+  char valueStringTmp[GEM_STR_LEN];
   while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
     byte yText = y + getMenuItemInsetOffset();
     byte yDraw = y + getMenuItemInsetOffset(true);
@@ -299,19 +298,33 @@ void GEM_u8g2::printMenuItems() {
         _u8g2.setCursor(_menuValuesLeftOffset, yText);
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
-            itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
-            printMenuItemValue(_valueString);
-            /* if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+            itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+            // printMenuItemValue(valueStringTmp);
+            
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
               //!!! - Added this
-              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
+              if (_movingCursorNext) {
+                if (_editValueCursorPosition == _menuItemValueLength - 1) {
+                   printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
+                } else {
+                  printMenuItemValue(_valueString); //!!! - Tweak this
+                }
+              } else {
+                if (_editValueCursorPosition == 0) {
+                  printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition);
+                } else {
+                  printMenuItemValue(_valueString); //!!! - Tweak this
+                }
+              }
               drawEditValueCursor();
             } else {
-              printMenuItemValue(_valueString);
-            } */
+              printMenuItemValue(valueStringTmp);
+            }
+
             break;
           case GEM_VAL_BYTE:
-            itoa(*(byte*)menuItemTmp->linkedVariable, _valueString, 10);
-            printMenuItemValue(_valueString);
+            itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+            printMenuItemValue(valueStringTmp);
             break;
           case GEM_VAL_CHAR:
             printMenuItemValue((char*)menuItemTmp->linkedVariable);
@@ -349,7 +362,7 @@ void GEM_u8g2::printMenuItems() {
     y += _menuItemHeight;
     i++;
   }
-  memset(_valueString, '\0', GEM_STR_LEN - 1);
+  memset(valueStringTmp, '\0', GEM_STR_LEN - 1);
 }
 
 void GEM_u8g2::drawMenuPointer() {
@@ -516,37 +529,42 @@ void GEM_u8g2::clearValueVisibleRange() {
 void GEM_u8g2::initEditValueCursor() {
   _editValueCursorPosition = 0;
   _editValueVirtualCursorPosition = 0;
-  drawEditValueCursor();
+  // drawEditValueCursor(); // Redundant for u8g2
+  drawMenu();
 }
 
 void GEM_u8g2::nextEditValueCursorPosition() {
-  drawEditValueCursor();
+  // drawEditValueCursor(); // Redundant for u8g2
   if ((_editValueCursorPosition != _menuItemValueLength - 1) && (_editValueCursorPosition != _editValueLength - 1) && (_valueString[_editValueCursorPosition] != '\0')) {
     _editValueCursorPosition++;
   }
   if ((_editValueVirtualCursorPosition != _editValueLength - 1) && (_valueString[_editValueVirtualCursorPosition] != '\0')) {
     _editValueVirtualCursorPosition++;
-    if (_editValueCursorPosition == _menuItemValueLength - 1) {
+    /* if (_editValueCursorPosition == _menuItemValueLength - 1) {
       clearValueVisibleRange();
       printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
-    }
+    } */
   }
-  drawEditValueCursor();
+  _movingCursorNext = true;
+  // drawEditValueCursor(); // Redundant for u8g2
+  drawMenu();
 }
 
 void GEM_u8g2::prevEditValueCursorPosition() {
-  drawEditValueCursor();
+  // drawEditValueCursor(); // Redundant for u8g2
   if (_editValueCursorPosition != 0) {
     _editValueCursorPosition--;
   }
   if (_editValueVirtualCursorPosition != 0) {
     _editValueVirtualCursorPosition--;
-    if (_editValueCursorPosition == 0) {
+    /* if (_editValueCursorPosition == 0) {
       clearValueVisibleRange();
       printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition);
-    }
+    } */
   }
-  drawEditValueCursor();
+  _movingCursorNext = false;
+  // drawEditValueCursor(); // Redundant for u8g2
+  drawMenu();
 }
 
 void GEM_u8g2::drawEditValueCursor() {
@@ -568,7 +586,7 @@ void GEM_u8g2::drawEditValueCursor() {
 void GEM_u8g2::nextEditValueDigit() {
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
-  //todo: Update for compatibility with u8g2 fonts (and Cyrillic fonts in perticular)
+  //todo: Update for compatibility with u8g2 fonts (and Cyrillic fonts in particular)
   if (_editValueType == GEM_VAL_CHAR) {
     switch (code) {
       case 0:
@@ -649,16 +667,17 @@ void GEM_u8g2::prevEditValueDigit() {
 void GEM_u8g2::drawEditValueDigit(byte code) {
   char chrNew = (char)code;
   _valueString[_editValueVirtualCursorPosition] = chrNew;
-  drawEditValueCursor();
-  int pointerPosition = getCurrentItemTopOffset();
+  // drawEditValueCursor(); // Redundant for u8g2
+  // int pointerPosition = getCurrentItemTopOffset();
   /*
   _glcd.setX(_menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width);
   _glcd.setY(pointerPosition);
   _glcd.put(code);
   */
   // _u8g2.setCursor(_menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width, pointerPosition);
-  _u8g2.drawGlyph(_menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width, pointerPosition, code);
-  drawEditValueCursor();
+  // _u8g2.drawGlyph(_menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width, pointerPosition, code);
+  // drawEditValueCursor(); // Redundant for u8g2
+  drawMenu();
 }
 
 void GEM_u8g2::nextEditValueSelect() {
