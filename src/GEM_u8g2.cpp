@@ -295,11 +295,19 @@ void GEM_u8g2::printMenuItems() {
         } else {
           printMenuItemTitle(menuItemTmp->title);
         }
+        
         _u8g2.setCursor(_menuValuesLeftOffset, yText);
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
             itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
             printMenuItemValue(_valueString);
+            /* if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              //!!! - Added this
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
+              drawEditValueCursor();
+            } else {
+              printMenuItemValue(_valueString);
+            } */
             break;
           case GEM_VAL_BYTE:
             itoa(*(byte*)menuItemTmp->linkedVariable, _valueString, 10);
@@ -321,10 +329,6 @@ void GEM_u8g2::printMenuItems() {
             _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
             break;
         }
-        //!!! - Added this
-        /* if (_editValueMode) {
-          drawEditValueCursor();
-        } */
         break;
       case GEM_ITEM_LINK:
         _u8g2.setCursor(5, yText);
@@ -417,7 +421,7 @@ void GEM_u8g2::menuItemSelect() {
     case GEM_ITEM_VAL:
       if (!menuItemTmp->readonly) {
         enterEditValueMode();
-        drawMenu(); //!!! Added this
+        // drawMenu(); //!!! Added this
       }
       break;
     case GEM_ITEM_LINK:
@@ -450,7 +454,7 @@ void GEM_u8g2::enterEditValueMode() {
       itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
       _editValueLength = 6;
       initEditValueCursor();
-      drawMenu(); //!!!
+      // drawMenu(); //!!!
       break;
     case GEM_VAL_BYTE:
       itoa(*(byte*)menuItemTmp->linkedVariable, _valueString, 10);
@@ -502,7 +506,9 @@ void GEM_u8g2::clearValueVisibleRange() {
   _glcd.setX(_menuValuesLeftOffset);
   _glcd.setY(getCurrentItemTopOffset());
   */
- _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - 3, _menuItemHeight);
+ _u8g2.setDrawColor(0);
+ _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemValueLength * _menuItemFont[_menuItemFontSize].width, _menuItemHeight);
+ _u8g2.setDrawColor(1);
  _u8g2.setCursor(_menuValuesLeftOffset, getCurrentItemTopOffset());
 }
 
@@ -549,9 +555,10 @@ void GEM_u8g2::drawEditValueCursor() {
   _u8g2.setDrawColor(2);
   if (_editValueType == GEM_VAL_SELECT) {
     // _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, _glcd.xdim - 3, pointerPosition + _menuItemHeight - 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - cursorLeftOffset - 3, _menuItemHeight + 1);
   } else {
     // _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, cursorLeftOffset + _menuItemFont[_menuItemFontSize].width - 1, pointerPosition + _menuItemHeight - 1);
-    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width, _menuItemHeight);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width + 1, _menuItemHeight + 1);
   }
   // _glcd.drawMode(GLCD_MODE_NORMAL);
   _u8g2.setDrawColor(1);
@@ -715,10 +722,6 @@ void GEM_u8g2::exitEditValue() {
   _editValueMode = false;
   drawEditValueCursor();
   drawMenu();
-}
-
-void GEM_u8g2::editValueLoop() {
-  delay(1000);
 }
 
 // Trim leading/trailing whitespaces

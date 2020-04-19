@@ -208,7 +208,6 @@ class GEM_u8g2 {
     void saveEditValue();
     void cancelEditValue();
     void exitEditValue();
-    void editValueLoop();
     char* trimString(char* str);
 
     /* KEY DETECTION */

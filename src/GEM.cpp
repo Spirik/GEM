@@ -632,10 +632,6 @@ void GEM::exitEditValue() {
   drawMenu();
 }
 
-void GEM::editValueLoop() {
-  delay(1000);
-}
-
 // Trim leading/trailing whitespaces
 // Author: Adam Rosenfield, https://stackoverflow.com/a/122721
 char* GEM::trimString(char* str) {
