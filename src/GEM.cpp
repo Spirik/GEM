@@ -445,7 +445,7 @@ void GEM::nextEditValueCursorPosition() {
     _editValueVirtualCursorPosition++;
     if (_editValueCursorPosition == _menuItemValueLength - 1) {
       clearValueVisibleRange();
-      printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
+      printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
     }
   }
   drawEditValueCursor();
