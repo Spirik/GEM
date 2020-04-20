@@ -299,23 +299,9 @@ void GEM_u8g2::printMenuItems() {
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
             itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-            // printMenuItemValue(valueStringTmp);
             
             if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-              //!!! - Added this
-              if (_movingCursorNext) {
-                if (_editValueCursorPosition == _menuItemValueLength - 1) {
-                   printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
-                } else {
-                  printMenuItemValue(_valueString); //!!! - Tweak this
-                }
-              } else {
-                if (_editValueCursorPosition == 0) {
-                  printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition);
-                } else {
-                  printMenuItemValue(_valueString); //!!! - Tweak this
-                }
-              }
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
               drawEditValueCursor();
             } else {
               printMenuItemValue(valueStringTmp);
@@ -545,7 +531,6 @@ void GEM_u8g2::nextEditValueCursorPosition() {
       printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _menuItemValueLength + 1);
     } */
   }
-  _movingCursorNext = true;
   // drawEditValueCursor(); // Redundant for u8g2
   drawMenu();
 }
@@ -562,7 +547,6 @@ void GEM_u8g2::prevEditValueCursorPosition() {
       printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition);
     } */
   }
-  _movingCursorNext = false;
   // drawEditValueCursor(); // Redundant for u8g2
   drawMenu();
 }
