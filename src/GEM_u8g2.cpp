@@ -55,6 +55,15 @@
 #define GEM_CHAR_CODE_UNDERSCORE 95
 #define GEM_CHAR_CODE_LINE 124
 #define GEM_CHAR_CODE_TILDA 126
+/*
+// WIP for Cyrillic values support
+#define GEM_CHAR_CODE_CYR_YO 1025
+#define GEM_CHAR_CODE_CYR_A 1040
+#define GEM_CHAR_CODE_CYR_E 1045
+#define GEM_CHAR_CODE_CYR_E_SM 1077
+#define GEM_CHAR_CODE_CYR_YA_SM 1103
+#define GEM_CHAR_CODE_CYR_YO_SM 1105
+*/
 
 // Sprite of the default GEM _splash screen (GEM logo v1)
 /* #define logo_width  12
@@ -157,8 +166,10 @@ void GEM_u8g2::hideVersion(boolean flag) {
 }
 
 void GEM_u8g2::enableCyrillic(boolean flag) {
-  if (flag) {
+  _cyrillicEnabled = flag;
+  if (_cyrillicEnabled) {
     _fontFamilies = {(uint8_t *)GEM_FONT_BIG_CYR, (uint8_t *)GEM_FONT_SMALL_CYR};
+    _u8g2.enableUTF8Print();
   } else {
     _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
   }
@@ -181,7 +192,6 @@ void GEM_u8g2::init() {
   */
   _u8g2.clear();
   _u8g2.setFontPosTop();
-  _u8g2.enableUTF8Print();
   
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
   _menuItemValueLength = (_u8g2.getDisplayWidth() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
@@ -299,21 +309,29 @@ void GEM_u8g2::printMenuItems() {
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
             itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-            
             if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
               printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
               drawEditValueCursor();
             } else {
               printMenuItemValue(valueStringTmp);
             }
-
             break;
           case GEM_VAL_BYTE:
             itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-            printMenuItemValue(valueStringTmp);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+              drawEditValueCursor();
+            } else {
+              printMenuItemValue(valueStringTmp);
+            }
             break;
           case GEM_VAL_CHAR:
-            printMenuItemValue((char*)menuItemTmp->linkedVariable);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+              drawEditValueCursor();
+            } else {
+              printMenuItemValue((char*)menuItemTmp->linkedVariable);
+            }
             break;
           case GEM_VAL_BOOLEAN:
             if (*(boolean*)menuItemTmp->linkedVariable) {
@@ -570,7 +588,6 @@ void GEM_u8g2::drawEditValueCursor() {
 void GEM_u8g2::nextEditValueDigit() {
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
-  //todo: Update for compatibility with u8g2 fonts (and Cyrillic fonts in particular)
   if (_editValueType == GEM_VAL_CHAR) {
     switch (code) {
       case 0:
@@ -579,9 +596,27 @@ void GEM_u8g2::nextEditValueDigit() {
       case GEM_CHAR_CODE_TILDA:
         code = GEM_CHAR_CODE_SPACE;
         break;
-      case GEM_CHAR_CODE_LINE - 1:
-        code = GEM_CHAR_CODE_LINE + 1;
+      /*
+      // WIP for Cyrillic values support
+      case GEM_CHAR_CODE_TILDA:
+        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_A : GEM_CHAR_CODE_SPACE;
         break;
+      case GEM_CHAR_CODE_CYR_YA_SM:
+        code = GEM_CHAR_CODE_SPACE;
+        break;
+      case GEM_CHAR_CODE_CYR_E:
+        code = GEM_CHAR_CODE_CYR_YO;
+        break;
+      case GEM_CHAR_CODE_CYR_YO:
+        code = GEM_CHAR_CODE_CYR_E + 1;
+        break;
+      case GEM_CHAR_CODE_CYR_E_SM:
+        code = GEM_CHAR_CODE_CYR_YO_SM;
+        break;
+      case GEM_CHAR_CODE_CYR_YO_SM:
+        code = GEM_CHAR_CODE_CYR_E_SM + 1;
+        break;
+      */
       default:
         code++;
         break;
@@ -619,9 +654,30 @@ void GEM_u8g2::prevEditValueDigit() {
       case GEM_CHAR_CODE_SPACE:
         code = GEM_CHAR_CODE_TILDA;
         break;
-      case GEM_CHAR_CODE_LINE + 1:
-        code = GEM_CHAR_CODE_LINE - 1;
+      /*
+      // WIP for Cyrillic values support
+      case 0:
+        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
         break;
+      case GEM_CHAR_CODE_SPACE:
+        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
+        break;
+      case GEM_CHAR_CODE_CYR_A:
+        code = GEM_CHAR_CODE_TILDA;
+        break;
+      case GEM_CHAR_CODE_CYR_E + 1:
+        code = GEM_CHAR_CODE_CYR_YO;
+        break;
+      case GEM_CHAR_CODE_CYR_YO:
+        code = GEM_CHAR_CODE_CYR_E;
+        break;
+      case GEM_CHAR_CODE_CYR_E_SM + 1:
+        code = GEM_CHAR_CODE_CYR_YO_SM;
+        break;
+      case GEM_CHAR_CODE_CYR_YO_SM:
+        code = GEM_CHAR_CODE_CYR_E_SM;
+        break;
+      */
       default:
         code--;
         break;
