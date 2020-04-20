@@ -356,7 +356,7 @@ void GEM_u8g2::drawMenuPointer() {
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
       _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
-    } else {
+    } else if (!_editValueMode) {
       _u8g2.setDrawColor(2);
       _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1);
       _u8g2.setDrawColor(1);
