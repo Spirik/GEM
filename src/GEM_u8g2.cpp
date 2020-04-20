@@ -172,6 +172,7 @@ void GEM_u8g2::enableCyrillic(boolean flag) {
     _u8g2.enableUTF8Print();
   } else {
     _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
+    _u8g2.disableUTF8Print();
   }
 }
 
@@ -342,8 +343,14 @@ void GEM_u8g2::printMenuItems() {
             break;
           case GEM_VAL_SELECT:
             GEMSelect* select = menuItemTmp->select;
-            printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-            _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
+              _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+              drawEditValueCursor();
+            } else {
+              printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
+              _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+            }
             break;
         }
         break;
@@ -576,7 +583,7 @@ void GEM_u8g2::drawEditValueCursor() {
   _u8g2.setDrawColor(2);
   if (_editValueType == GEM_VAL_SELECT) {
     // _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, _glcd.xdim - 3, pointerPosition + _menuItemHeight - 1);
-    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - cursorLeftOffset - 3, _menuItemHeight + 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - cursorLeftOffset - 1, _menuItemHeight + 1);
   } else {
     // _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, cursorLeftOffset + _menuItemFont[_menuItemFontSize].width - 1, pointerPosition + _menuItemHeight - 1);
     _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width + 1, _menuItemHeight + 1);
@@ -726,7 +733,8 @@ void GEM_u8g2::nextEditValueSelect() {
   if (_valueSelectNum+1 < select->getLength()) {
     _valueSelectNum++;
   }
-  drawEditValueSelect();
+  // drawEditValueSelect(); // Redundant for u8g2
+  drawMenu();
 }
 
 void GEM_u8g2::prevEditValueSelect() {
@@ -735,10 +743,12 @@ void GEM_u8g2::prevEditValueSelect() {
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
   }
-  drawEditValueSelect();
+  // drawEditValueSelect(); // Redundant for u8g2
+  drawMenu();
 }
 
 void GEM_u8g2::drawEditValueSelect() {
+  /*
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   GEMSelect* select = menuItemTmp->select;
   clearValueVisibleRange();
@@ -746,6 +756,7 @@ void GEM_u8g2::drawEditValueSelect() {
   // _glcd.drawSprite(_glcd.xdim - 7, getCurrentItemTopOffset(true, true), GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
   _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, getCurrentItemTopOffset(true, true), selectArrows_width, selectArrows_height, selectArrows_bits);
   drawEditValueCursor();
+  */
 }
 
 void GEM_u8g2::saveEditValue() {

@@ -168,6 +168,8 @@ void applyTempo() {
   } else {
     // Disable readonly mode of interval menu item for "Custom" preset
     menuItemInt.setReadonly(false);
+    // Validate interval (in case the previous setting was Manual and interval set to 0)
+    validateInterval();
   }
   // Print tempo variable to Serial
   Serial.print("Tempo option set: ");
