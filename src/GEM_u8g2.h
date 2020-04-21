@@ -85,8 +85,8 @@ struct FontSize {
 
 // Declaration of FontFamilies type
 struct FontFamilies {
-  uint8_t * big;    // Big font family (i.e., 5x8)
-  uint8_t * small;  // Small font family (i.e., 4x6)
+  const uint8_t * big;    // Big font family (i.e., 5x8)
+  const uint8_t * small;  // Small font family (i.e., 4x6)
 };
 
 // Declaration of AppContext type
