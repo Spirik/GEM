@@ -9,6 +9,7 @@
   explicit call to context.exit() routine. Callback function is attached to menu item linked to int variable,
   making sure that variable is within allowable range.
 
+  AltSerialGraphicLCD library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
   
   Additional info (including the breadboard view) available on GitHub:

@@ -4,6 +4,7 @@
   Simple one page menu with one editable menu item associated with int variable, one with boolean variable,
   and a button, pressing of which will result in int variable value printed to Serial monitor if boolean variable is set to true.
 
+  AltSerialGraphicLCD library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
   
   Additional info (including the breadboard view) available on GitHub:
