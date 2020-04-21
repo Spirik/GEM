@@ -226,6 +226,18 @@ void GEM_u8g2::init() {
   _u8g2.clear();
 }
 
+void GEM_u8g2::reInit() {
+  _u8g2.initDisplay();
+  _u8g2.setPowerSave(0);
+  _u8g2.clear();
+  _u8g2.setFontPosTop();
+  if (_cyrillicEnabled) {
+    _u8g2.enableUTF8Print();
+  } else {
+    _u8g2.disableUTF8Print();
+  }
+}
+
 void GEM_u8g2::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
 }
@@ -841,6 +853,7 @@ void GEM_u8g2::dispatchKeyPress() {
       if (context.exit != nullptr) {
         context.exit();
       } else {
+        reInit();
         drawMenu();
         clearContext();
       }
