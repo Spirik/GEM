@@ -261,6 +261,7 @@ void rockContextExit() {
   currentFrame = framesCount;
 
   // Draw menu back on screen and clear context
+  menu.reInit();
   menu.drawMenu();
   menu.clearContext();
 }

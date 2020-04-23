@@ -116,6 +116,7 @@ class GEM {
                                                          // (although this does not matter).
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
+    void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
 
     /* CONTEXT OPERATIONS */

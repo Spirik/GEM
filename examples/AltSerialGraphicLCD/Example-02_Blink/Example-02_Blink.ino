@@ -216,6 +216,7 @@ void blinkDelayContextExit() {
   ledOn = false;
   
   // Draw menu back on screen and clear context
+  menu.reInit();
   menu.drawMenu();
   menu.clearContext();
 
@@ -267,6 +268,7 @@ void blinkMillisContextExit() {
   ledOn = false;
   
   // Draw menu back on screen and clear context
+  menu.reInit();
   menu.drawMenu();
   menu.clearContext();
 

@@ -157,6 +157,14 @@ void GEM::init() {
   }
 }
 
+void GEM::reInit() {
+  _glcd.drawMode(GLCD_MODE_NORMAL);
+  _glcd.fontMode(GLCD_MODE_NORMAL);
+  _glcd.set(GLCD_ID_CRLF, 0);
+  _glcd.set(GLCD_ID_SCROLL, 0);
+  _glcd.clearScreen();
+}
+
 void GEM::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
 }
@@ -678,6 +686,7 @@ void GEM::dispatchKeyPress() {
       if (context.exit != nullptr) {
         context.exit();
       } else {
+        reInit();
         drawMenu();
         clearContext();
       }
