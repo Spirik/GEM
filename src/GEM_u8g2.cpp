@@ -192,6 +192,7 @@ void GEM_u8g2::init() {
   _glcd.clearScreen();
   */
   _u8g2.clear();
+  _u8g2.setDrawColor(1);
   _u8g2.setFontPosTop();
   
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
@@ -230,6 +231,7 @@ void GEM_u8g2::reInit() {
   _u8g2.initDisplay();
   _u8g2.setPowerSave(0);
   _u8g2.clear();
+  _u8g2.setDrawColor(1);
   _u8g2.setFontPosTop();
   if (_cyrillicEnabled) {
     _u8g2.enableUTF8Print();
