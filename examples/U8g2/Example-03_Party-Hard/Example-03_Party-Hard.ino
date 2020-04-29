@@ -8,8 +8,7 @@
   is determined by value of int variable, setting of which to 0 will enable manual control of the frames through
   navigation push-buttons.
 
-  AltSerialGraphicLCD library is used to draw menu.
-  KeyDetector library is used to detect push-buttons presses.
+  U8g2lib library is used to draw menu and to detect push-buttons presses.
   
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
@@ -17,38 +16,18 @@
   This example code is in the public domain.
 */
 
-#include <GEM.h>
-#include <KeyDetector.h>
+#include <GEM_u8g2.h>
 
 // Include sprites of animation frames
 // (moved to separate file to save space)
 #include "frames.h"
 
-// Pins the buttons are connected to
-const byte downPin = 2;
-const byte leftPin = 3;
-const byte rightPin = 4;
-const byte upPin = 5;
-const byte cancelPin = 6;
-const byte okPin = 7;
-
-// Array of Key objects that will link GEM key identifiers with dedicated pins
-Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, downPin}, {GEM_KEY_LEFT, leftPin}, {GEM_KEY_CANCEL, cancelPin}, {GEM_KEY_OK, okPin}};
-
-// Create KeyDetector object
-KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key));
-// To account for switch bounce effect of the buttons (if occur) you may want to specify debounceDelay
-// as the second argument to KeyDetector constructor:
-// KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key), 10);
-
-// Constants for the pins SparkFun Graphic LCD Serial Backpack is connected to and SoftwareSerial object
-const byte rxPin = 8;
-const byte txPin = 9;
-SoftwareSerial serialLCD(rxPin, txPin);
-
-// Create an instance of the GLCD class. This instance is used to call all the subsequent GLCD functions
-// (internally from GEM library, or manually in your sketch if it is required)
-GLCD glcd(serialLCD);
+// Create an instance of the U8g2 library.
+// Use constructor that matches your setup (see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for details).
+// This instance is used to call all the subsequent U8g2 functions (internally from GEM library,
+// or manually in your sketch if it is required).
+// Please update the pin numbers according to your setup. Use U8X8_PIN_NONE if the reset pin is not connected
+U8G2_KS0108_128X64_2 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0, /*dc=*/ A1, /*cs0=*/ A3, /*cs1=*/ A2, /*cs2=*/ U8X8_PIN_NONE, /* reset=*/ U8X8_PIN_NONE);   // Set R/W to low!
 
 // Create variables that will be editable through the menu and assign them initial values
 int interval = 200;
@@ -88,30 +67,16 @@ GEMItem menuItemButton("Let's Rock!", rock);
 // Menu can have multiple menu pages (linked to each other) with multiple menu items each
 GEMPage menuPageMain("Party Hard");
 
-// Create menu object of class GEM. Supply its constructor with reference to glcd object we created earlier
-GEM menu(glcd);
+// Create menu object of class GEM_u8g2. Supply its constructor with reference to u8g2 object we created earlier
+GEM_u8g2 menu(u8g2);
 
 void setup() {
-  // Push-buttons pin modes
-  pinMode(downPin, INPUT);
-  pinMode(leftPin, INPUT);
-  pinMode(rightPin, INPUT);
-  pinMode(upPin, INPUT);
-  pinMode(cancelPin, INPUT);
-  pinMode(okPin, INPUT);
-
-  // Serial communications setup
+  // Serial communication setup
   Serial.begin(115200);
-  serialLCD.begin(115200);
 
-  // LCD reset
-  delay(500);
-  glcd.reset();
-  delay(1000);
-  // Uncomment the following lines in dire situations
-  // (e.g. when screen becomes unresponsive after shutdown)
-  glcd.reset();
-  delay(1000);
+  // U8g2 library init. Pass pin numbers the buttons are connected to.
+  // The push-buttons should be wired with pullup resistors (so the LOW means that the button is pressed)
+  u8g2.begin(/*Select/OK=*/ 7, /*Right/Next=*/ 4, /*Left/Prev=*/ 3, /*Up=*/ 5, /*Down=*/ 2, /*Home/Cancel=*/ 6);
 
   // Load initial preset selected through tempo option select
   applyTempo();
@@ -136,11 +101,9 @@ void setupMenu() {
 void loop() {
   // If menu is ready to accept button press...
   if (menu.readyForKey()) {
-    // ...detect key press using KeyDetector library
-    myKeyDetector.detect();
-    // Pass pressed button to menu
-    // (pressed button ID is stored in trigger property of KeyDetector object)
-    menu.registerKeyPress(myKeyDetector.trigger);
+    // ...detect key press using U8g2 library
+    // and pass pressed button to menu
+    menu.registerKeyPress(u8g2.getMenuEvent());
   }
 }
 
@@ -178,8 +141,9 @@ void applyTempo() {
 // --- Animation draw routines
 
 // Draw sprite on screen
-void drawSprite(const uint8_t PROGMEM *_splash, byte _mode) {
-  glcd.bitblt_P(glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, _mode, _splash);
+// (note that Splash is the custom type used internally in GEM library for convenience of storing XBM graphics)
+void drawSprite(Splash _splash) {
+  u8g2.drawXBMP((u8g2.getDisplayWidth() - _splash.width) / 2, (u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
 }
 
 // Draw frame based on direction of animation
@@ -191,10 +155,15 @@ void drawFrame(boolean forward) {
     // Previous frame
     currentFrame = (currentFrame == 1 ? framesCount : currentFrame-1);
   }
-  // Set mode based on strobe effect and frame number
-  byte mode = strobe && (currentFrame % 2  == 0) ? GLCD_MODE_REVERSE : GLCD_MODE_NORMAL;
-  // Draw frame on screen
-  drawSprite(frames[currentFrame-1], mode);
+  // Set inversed mode based on strobe effect and frame number
+  byte mode = strobe && (currentFrame % 2  == 0) ? 0 : 1;
+  // Draw on screen
+  u8g2.firstPage();
+  do {
+    u8g2.setDrawColor(mode);
+    // Draw frame on screen
+    drawSprite(frames[currentFrame-1]);
+  } while (u8g2.nextPage());
 }
 
 // --- Animation context routines
@@ -211,7 +180,7 @@ void rock() {
 // Invoked once when the button is pressed
 void rockContextEnter() {
   // Clear sreen
-  glcd.clearScreen();
+  u8g2.clear();
   // Draw initial frame for the case of manual navigation ("Manual" tempo preset)
   if (interval == 0) {
     drawFrame(true);
@@ -221,9 +190,9 @@ void rockContextEnter() {
 
 // Invoked every loop iteration
 void rockContextLoop() {
-  // Detect key press manually using KeyDetector library
-  myKeyDetector.detect();
-  if (myKeyDetector.trigger == GEM_KEY_CANCEL) {
+  // Detect key press manually using U8g2 library
+  byte key = u8g2.getMenuEvent();
+  if (key == GEM_KEY_CANCEL) {
     // Exit animation routine if GEM_KEY_CANCEL key was pressed
     menu.context.exit();
   } else {
@@ -238,7 +207,7 @@ void rockContextLoop() {
     } else {
       // Manual mode.
       // Check pressed keys and navigate through frames accordingly
-      switch (myKeyDetector.trigger) {
+      switch (key) {
         case GEM_KEY_RIGHT:
           Serial.println("Next frame");
           drawFrame(true);
