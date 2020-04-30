@@ -274,10 +274,36 @@ void GEM_u8g2::drawTitleBar() {
 }
 
 void GEM_u8g2::printMenuItemString(char* str, byte num, byte startPos) {
-  byte i = startPos;
-  while (i < num + startPos && str[i] != '\0') {
-    _u8g2.print(str[i]);
-    i++;
+  if (_cyrillicEnabled) {
+
+    byte j = 0;
+    byte p = 0;
+    while (j < startPos && str[p] != '\0') {
+      if ((byte)str[p] != 208 && (byte)str[p] != 209) {
+        j++;
+      }
+      p++;
+    }
+    byte startPosReal = p;
+
+    byte i = startPosReal;
+    byte k = startPosReal;
+    while (i < num + startPosReal && str[k] != '\0') {
+      _u8g2.print(str[k]);
+      if ((byte)str[k] != 208 && (byte)str[k] != 209) {
+        i++;
+      }
+      k++;
+    }
+
+  } else {
+
+    byte i = startPos;
+    while (i < num + startPos && str[i] != '\0') {
+      _u8g2.print(str[i]);
+      i++;
+    }
+
   }
 }
 
