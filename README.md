@@ -10,11 +10,16 @@ Supports buttons that can invoke user-defined actions and create action-specific
 <img src="https://github.com/Spirik/GEM/wiki/images/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" height="360" alt="Party hard!" />
 </p>
 
-Requires [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library by Jon Green. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
+Requires either [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0) or [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) graphic libraries.
+
+> For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
 * [When to use](#when-to-use)
 * [Structure](#structure)
-* [How to use](#how-to-use)
+* [Installation](#installation)
+* How to use
+  * [With AltSerialGraphicLCD](#how-to-use-with-altserialgraphiclcd)
+  * [With U8g2](#how-to-use-with-u8g2)
 * [Reference](#reference)
   * [GEM](#gem)
   * [GEMPage](#gempage)
@@ -27,7 +32,7 @@ Requires [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library by
 
 When to use
 -----------
-If you want to equip your project with graphical LCD display and let user to choose different options and settings to configure its operation. Whether it is control panel of smart home or simple configurable LED strip, GEM will provide all necessary controls for editing variables and navigating through submenus, as well as running user-defined functions.
+If you want to equip your project with graphical LCD display and let user choose different options and settings to configure its operation. Whether it is control panel of smart home or simple configurable LED strip, GEM will provide all necessary controls for editing variables and navigating through submenus, as well as running user-defined functions.
 
 Structure
 -----------
@@ -39,16 +44,8 @@ Menu created with GEM library comprises of three base elements:
 
 ![GEM structure](https://github.com/Spirik/GEM/wiki/images/gem-structure.png)
 
-How to use
------------
-
-### Requirements
-
-GEM library requires [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library to operate. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
-
-In theory GEM is compatible with any display, that is supported by SparkFun Graphic LCD Serial Backpack. Guaranteed to work with [128x64](https://www.sparkfun.com/products/710) pixel displays. [160x128](https://www.sparkfun.com/products/8799) pixel ones should work fine as well, although that is yet to be tested.
-
-### Install
+Installation
+------------
 
 Library format is compatible with Arduino IDE 1.5.x+. There are two ways to install the library:
 
@@ -57,9 +54,18 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 
 Whichever option you choose you may need to reload IDE afterwards.
 
+How to use with AltSerialGraphicLCD
+-----------------------------------
+
+### Requirements
+
+GEM supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
+
+In theory GEM is compatible with any display, that is supported by SparkFun Graphic LCD Serial Backpack. Guaranteed to work with [128x64](https://www.sparkfun.com/products/710) pixel displays. [160x128](https://www.sparkfun.com/products/8799) pixel ones should work fine as well, although it wasn't tested.
+
 ### Import
 
-To include GEM library add the following line at the top of your sketch:
+To include AltSerialGraphicLCD-compatible version of GEM library add the following line at the top of your sketch:
 
 ```cpp
 #include <GEM.h>
@@ -74,7 +80,7 @@ In order to communicate with your SparkFun Graphic LCD Serial Backpack, AltSeria
 ```
 > Note that it is possible to use hardware serial instead (e.g. if you're planning to use it with Arduino Leonardo's `Serial1` class), however some modifications of AltSerialGraphicLCD library would be required in that case.
 
-One more additional library that may come in handy (although is not necessary) is [KeyDetector](https://github.com/Spirik/KeyDetector) - it is small and lightweight library for key press events detection. It is used in some of the supplied examples (as well as the following) to detect button presses for navigation through menu. To include KeyDetector library, install it first and then add the following line:
+One more additional library that may come in handy (although is not necessary) is [KeyDetector](https://github.com/Spirik/KeyDetector) - it is small and lightweight library for key press events detection. It is used in some of the supplied examples (as well as the following one) to detect button presses for navigation through menu. To include KeyDetector library, install it first and then add the following line:
 
 ```cpp
 #include <KeyDetector.h>
@@ -86,9 +92,9 @@ Assume you have a simple setup as follows:
  - 128x64 LCD screen equipped with SparkFun Graphic LCD Serial Backpack, which is properly connected to the power source and to digital pins 8 and 9 of your Arduino for serial communication via SoftwareSerial library;
  - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with pulldown resistors (so the HIGH means that the button is pressed).
 
-![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_bb_edited_1776.png)
+![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_bb_edited_1776_o.png)
 
-Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
@@ -153,7 +159,7 @@ int number = -512;
 boolean enablePrint = false;
 ```
 
-Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" accordingly - these names will be printed on screen:
+Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" respectively - these names will be printed on screen:
 
 ```cpp
 GEMItem menuItemInt("Number:", number);
@@ -338,7 +344,7 @@ void printData() {
 
 #### Sketch
 
-Full version of this basic example is shipped with the library and can be found at "examples/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/blob/master/examples/Example-01_Basic/Example-01_Basic.ino)".
+Full version of this basic example is shipped with the library and can be found at "examples/AltSerialGraphicLCD/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/tree/u8g2-support/examples/AltSerialGraphicLCD/Example-01_Basic/Example-01_Basic.ino)".
 
 #### Run
 
@@ -346,22 +352,245 @@ After compiling and uploading sketch to Arduino, wait while LCD screen boots and
 
 ![Basic example](https://github.com/Spirik/GEM/wiki/images/gem-ex-01-basic-run.gif)
 
-To learn more about GEM library, see the following Reference section and visit [wiki](https://github.com/Spirik/GEM/wiki).
+To learn more about GEM library, see the [Reference](#reference) section and visit [wiki](https://github.com/Spirik/GEM/wiki).
+
+How to use with U8g2
+--------------------
+
+### Requirements
+
+GEM supports [U8g2](https://github.com/olikraus/U8g2_Arduino) library.
+
+In theory GEM is compatible with any display, that is supported by U8g2 library (given that it is properly set up and configured using correct [constructor](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp)). Guaranteed to work with [128x64](https://www.sparkfun.com/products/710) pixel displays, based on KS0108 controller. [160x128](https://www.sparkfun.com/products/8799) pixel ones should also work, as well as any other display that is supported by U8g2, although it is yet to be tested.
+
+### Import
+
+To include U8g2-compatible version of GEM library add the following line at the top of your sketch:
+
+```cpp
+#include <GEM_u8g2.h>
+```
+
+U8g2 library will be included automatically through GEM library, so no need to include it explicitly in your sketch (although it still needs to be installed in your system, of course).
+
+### Use
+
+Assume you have a simple setup as follows:
+
+ - 128x64 LCD screen based on (or compatible with) KS0108 controller, connected as shown below;
+ - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with pullup resistors (so the LOW means that the button is pressed).
+
+![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_u8g2_breadboard_bb_edited_1974_o.png)
+
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). We will use U8g2 library to detect single button presses.
+
+> For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
+
+#### LCD initial setup (via U8g2 library)
+
+U8g2 library supports numerous popular display controllers. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
+
+In our case create an instance of the `U8G2_KS0108_128X64_1` class named `u8g2`. This instance is used to call all the subsequent U8g2 functions (internally from GEM library, or manually in your sketch if it is required).
+
+```cpp
+U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0, /*dc=*/ A1, /*cs0=*/ A3, /*cs1=*/ A2, /*cs2=*/ U8X8_PIN_NONE, /* reset=*/ U8X8_PIN_NONE);
+```
+
+> **Note:** GEM library is compatible with all buffer size options supported by U8g2 (namely `_1`, `_2`, `_F`).
+
+LCD initial setup is now complete.
+
+#### Menu initial setup
+
+Create variables that you would like to be editable through the menu. Assign them initial values:
+
+```cpp
+int number = -512;
+boolean enablePrint = false;
+```
+
+Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" respectively - these names will be printed on screen:
+
+```cpp
+GEMItem menuItemInt("Number:", number);
+GEMItem menuItemBool("Enable print:", enablePrint);
+```
+
+Create menu button that will trigger `printData()` function. It will print value of our `number` variable to Serial monitor if `enablePrint` is `true`. We will write (define) this function later. However we should forward-declare it in order to pass its reference to `GEMItem` constructor. Let's name our button "Print":
+
+```cpp
+void printData(); //Forward declaration
+GEMItem menuItemButton("Print", printData);
+```
+
+Create menu page object of class `GEMPage`. Menu page holds menu items (`GEMItem`) and, in fact, represents menu level. Menu can have multiple menu pages (linked to each other) with multiple menu items each. Let's call our only menu page "Main Menu":
+
+```cpp
+GEMPage menuPageMain("Main Menu");
+```
+
+And finally, create menu object of class `GEM`. Supply its constructor with a reference to `glcd` object we created earlier:
+
+```cpp
+GEM_u8g2 menu(u8g2);
+```
+
+> **Note:** `GEM_u8g2` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+
+We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
+
+#### setup() function
+
+In `setup()` function of the sketch init serial communication:
+
+```cpp
+Serial.begin(115200);
+```
+
+Init `u8g2` instance of U8g2 library by calling `begin()` method and supplying it with pin numbers push-buttons are attached to:
+
+```cpp
+u8g2.begin(/*Select/OK=*/ 7, /*Right/Next=*/ 4, /*Left/Prev=*/ 3, /*Up=*/ 5, /*Down=*/ 2, /*Home/Cancel=*/ 6);
+```
+
+Init menu. That will run some initialization routines (e.g. clear display and apply some GEM specific settings), then show splash screen (which can be customized).
+
+```cpp
+menu.init();
+```
+
+The next step is to gather all of the previously declared menu items and pages together and assign them to our menu. It is convenient to do that in a separate function. Let's call it `setupMenu()`. We will define it later.
+
+```cpp
+setupMenu();
+```
+
+And finally, draw menu to the screen:
+
+```cpp
+menu.drawMenu();
+```
+
+`setup()` function of the sketch is now complete:
+
+```cpp
+void setup() {
+  // Serial communication setup
+  Serial.begin(115200);
+
+  // U8g2 library init. Pass pin numbers the buttons are connected to.
+  // The push-buttons should be wired with pullup resistors (so the LOW means that the button is pressed)
+  u8g2.begin(/*Select/OK=*/ 7, /*Right/Next=*/ 4, /*Left/Prev=*/ 3, /*Up=*/ 5, /*Down=*/ 2, /*Home/Cancel=*/ 6);
+
+  // Menu init, setup and draw
+  menu.init();
+  setupMenu();
+  menu.drawMenu();
+}
+```
+
+#### setupMenu() function
+
+Let's assemble our menu. First, add menu items to menu page:
+
+```cpp
+menuPageMain.addMenuItem(menuItemInt);
+menuPageMain.addMenuItem(menuItemBool);
+menuPageMain.addMenuItem(menuItemButton);
+```
+
+Because we don't have multiple menu levels, all we left to do now is to add our only menu page to menu and set it as initial menu page (loaded when menu first drawn):
+
+```cpp
+menu.setMenuPageCurrent(menuPageMain);
+```
+
+`setupMenu()` is now complete:
+
+```cpp
+void setupMenu() {
+  // Add menu items to menu page
+  menuPageMain.addMenuItem(menuItemInt);
+  menuPageMain.addMenuItem(menuItemBool);
+  menuPageMain.addMenuItem(menuItemButton);
+
+  // Add menu page to menu and set it as current
+  menu.setMenuPageCurrent(menuPageMain);
+}
+```
+
+#### loop() function
+
+In the `loop()` function of the sketch we'll be listening to push-buttons presses (using `U8g2`) and delegate pressed button to menu: 
+
+```cpp
+void loop() {
+  // If menu is ready to accept button press...
+  if (menu.readyForKey()) {
+    // ...detect key press using U8g2 library
+    // and pass pressed button to menu
+    menu.registerKeyPress(u8g2.getMenuEvent());
+  }
+}
+```
+
+#### Button action
+
+Let's define `printData()` function that we declared earlier. It will be invoked each time the "Print" button in our menu is pressed.  It should print value of our `number` variable to Serial monitor if `enablePrint` is `true`.
+
+```cpp
+void printData() {
+  // If enablePrint flag is set to true (checkbox on screen is checked)...
+  if (enablePrint) {
+    // ...print the number to Serial
+    Serial.print("Number is: ");
+    Serial.println(number);
+  } else {
+    Serial.println("Printing is disabled, sorry:(");
+  }
+}
+```
+
+> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#appcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
+
+#### Sketch
+
+Full version of this basic example is shipped with the library and can be found at "examples/U8g2/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/tree/u8g2-support/examples/U8g2/Example-01_Basic/Example-01_Basic.ino)".
+
+#### Run
+
+After compiling and uploading sketch to Arduino, wait while LCD screen boots and menu is being initialized and drawn to the screen. Then start pressing the push-buttons and navigate through the menu. Pressing "Ok" button (attached to pin 7) will trigger edit mode of the "Number" variable, or change state of "Enable print" option, or invoke action associated with "Print" menu button (depending on which menu item is currently selected). If "Enable print" option is checked, then pressing "Print" button will result in `number` variable printed to the Serial Monitor.
+
+![Basic example](https://github.com/Spirik/GEM/wiki/images/gem-ex-01-basic-run.gif)
+
+To learn more about GEM library, see the [Reference](#reference) section and visit [wiki](https://github.com/Spirik/GEM/wiki).
 
 Reference
 -----------
 
-### GEM
+### GEM, GEM_u8g2
 
-Primary class of library. Responsible for appearance of the menu, communication with LCD screen (via supplied `GLCD` object) connected to SparkFun Graphic LCD Serial Backpack, integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of class `GEM` defines as follows:
+Primary class of library. Responsible for appearance of the menu, communication with LCD screen (via supplied `GLCD` or `U8g2` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of class `GEM` defines as follows.
+
+AltSerialGraphicLCD version:
 
 ```cpp
 GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
 ```
 
-* **glcd**  
+U8g2 version:
+
+```cpp
+GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+```
+
+* **glcd**  [_`AltSerialGraphicLCD` version_]  
   *Type*: `GLCD`  
   Holds the reference to a `GLCD` object created with AltSerialGraphicLCD library and used for communication with SparkFun Graphic LCD Serial Backpack.
+
+* **u8g2**  [_`U8g2` version_]  
+  *Type*: `U8g2`  
+  Holds the reference to an object created with U8g2 library and used for communication with LCD. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
 
 * **menuPointerType**  [*optional*]  
   *Type*: `byte`  
@@ -396,6 +625,8 @@ GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPage
 
 > **Note:** carefully choose values of `menuItemsPerScreen`, `menuItemHeight`, `menuPageScreenTopOffset`, `menuValuesLeftOffset` in accordance to the actual size of your LCD screen. Default values of these options are suitable for 128x64 screens. But that is not the only possible option: the other combination of values you set may also be suitable - just calculate them correctly and see what works best for you.
 
+> **Note:** long title of the menu page `GEMPage` won't overflow to the new line in U8g2 version and will be truncated at the edge of the screen.
+
 For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 #### Constants
@@ -403,70 +634,82 @@ For more details on customization see corresponding section of the [wiki](https:
 * **GEM_POINTER_DASH**  
   *Type*: macro `#define GEM_POINTER_DASH 0`  
   *Value*: `0`  
-  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM` constructor): pointer to the left of the row.
+  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM` and `GEM_u8g2` constructors): pointer to the left of the row.
 
 * **GEM_POINTER_ROW**  
   *Type*: macro `#define GEM_POINTER_ROW 1`  
   *Value*: `1`  
-  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM` constructor): highlighted row.
+  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM` and `GEM_u8g2` constructors): highlighted row.
 
 * **GEM_KEY_NONE**  
   *Type*: macro `#define GEM_KEY_NONE 0`  
   *Value*: `0`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that no key presses were detected.
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that no key presses were detected.
 
 * **GEM_KEY_UP**  
   *Type*: macro `#define GEM_KEY_UP 1`  
   *Value*: `1`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select).
 
 * **GEM_KEY_RIGHT**  
   *Type*: macro `#define GEM_KEY_RIGHT 2`  
   *Value*: `2`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button).
 
 * **GEM_KEY_DOWN**  
   *Type*: macro `#define GEM_KEY_DOWN 3`  
   *Value*: `3`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select).
 
 * **GEM_KEY_LEFT**  
   *Type*: macro `#define GEM_KEY_LEFT 4`  
   *Value*: `4`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable).
 
 * **GEM_KEY_CANCEL**  
   *Type*: macro `#define GEM_KEY_CANCEL 5`  
   *Value*: `5`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings).
 
 * **GEM_KEY_OK**  
   *Type*: macro `#define GEM_KEY_OK 6`  
   *Value*: `6`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` method. Indicates that Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button).
 
 #### Methods
 
-* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  
+* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  [_`AltSerialGraphicLCD` version_]  
+  *Accepts*: `_const uint8_t PROGMEM_ *`  
   *Returns*: nothing  
   Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before `GEM::init()`. The following is the format of the sprite as described in AltSerialGraphicLCD library documentation:
   > The sprite commences with two bytes which are the width and height of the image in pixels. The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB) is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel. A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed by the next row of 8 vertical pixels and so on. Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero (although this does not matter).
 
   For more details on splash customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
+* **setSplash(** _byte_ width, _byte_ height, _const unsigned char U8X8_PROGMEM_ *image **)**  [_`U8g2` version_]  
+  *Accepts*: `byte`, `byte`, `_const unsigned char U8X8_PROGMEM_ *`  
+  *Returns*: nothing  
+  Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
 * **hideVersion(** _boolean_ flag = true **)**  
   *Accepts*: `boolean`  
   *Returns*: nothing  
-  Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `GEM::init()`.
+  Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `GEM::init()` and `GEM_u8g2::init()`.
 
 * **init()**  
   *Returns*: nothing  
-  Init the menu: load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.
-  > The following `GLCD` object settings will be adjusted during `init()`: 
+  Init the menu: load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack (for AltSerialGraphicLCD version), display GEM splash screen, etc.
+  > The following `GLCD` object settings will be applied during `init()`: 
   > * `glcd.drawMode(GLCD_MODE_NORMAL)`;
   > * `glcd.fontMode(GLCD_MODE_NORMAL)`;
   > * `glcd.set(GLCD_ID_CRLF, 0)`;
   > * `glcd.set(GLCD_ID_SCROLL, 0)`.
+  > 
+  > Keep this in mind if you are planning to use the same object in your own routines.
+  
+  > The following `U8g2` object settings will be applied during `init()`: 
+  > * `u8g2.setDrawColor(1)`;
+  > * `u8g2.setFontPosTop()`.
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
 
@@ -477,7 +720,7 @@ For more details on customization see corresponding section of the [wiki](https:
 
 * **drawMenu()**  
   *Returns*: nothing  
-  Draw menu on screen, with menu page set earlier in `GEM::setMenuPageCurrent()`.
+  Draw menu on screen, with menu page set earlier in `GEM::setMenuPageCurrent()` or `GEM_u8g2::setMenuPageCurrent()`.
 
 * *boolean* **readyForKey()**  
   *Returns*: `boolean`  
@@ -514,7 +757,7 @@ GEMPage menuPage(title);
   *Type*: `char*`  
   Title of the menu page displayed at top of the screen.
   
-  > **Note:** there is no explicit restriction on the length of the title: if it's more than 30 characters, it will overflow to the next line. It is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
+  > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD and U8g2 vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD version and will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
 
 #### Methods
 
@@ -665,11 +908,11 @@ GEMSelect mySelect(length, optionsArray);
 
 * **length**  
   *Type*: `byte`  
-  Length of `optionsArray`. Should be explicitly supplied because array is passed by reference. Easy way to provide array length is to calculate it using the following expression: `sizeof(optionsArray)/sizeof(SelectOptionInt)`, or `sizeof(optionsArray)/sizeof(SelectOptionByte)`, or `sizeof(optionsArray)/sizeof(SelectOptionChar)` depending on the type of the array used.
+  Length of `optionsArray`. Should be explicitly supplied because array is passed as a pointer. Easy way to provide array length is to calculate it using the following expression: `sizeof(optionsArray)/sizeof(SelectOptionInt)`, or `sizeof(optionsArray)/sizeof(SelectOptionByte)`, or `sizeof(optionsArray)/sizeof(SelectOptionChar)` depending on the type of the array used.
 
 * **optionsArray**  
   *Type*: `void*` (pointer to array of type either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionChar`)  
-  Array of the available options. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionChar` depending on kind of data options are selected from. See the following section for definition of these custom types.
+  Array of the available options. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionChar` depending on the kind of data options are selected from. See the following section for definition of these custom types.
 
 Example of use:
 
@@ -745,7 +988,7 @@ SelectOptionChar selectOption = {name, val_char};
 
 ### AppContext
 
-Data structure that represents "context" of the currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` object is of type `AppContext`. 
+Data structure that represents "context" of the currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` (and `GEM_u8g2`) object is of type `AppContext`. 
 
 Consists of pointers to user-supplied functions that represent setup and loop functions (named `context.enter()` and `context.loop()` respectively) of the context. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
@@ -765,7 +1008,7 @@ AppContext myContext = {loop, enter, exit, allowExit};
 
 * **exit** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to `exit()` function of current context. Called automatically when user exits currently running context if `context.allowExit` (see below) is set to `true`. Should be invoked manually otherwise. Usually contains instructions to do some cleanup after context's `loop()` and to draw menu on screen again (by calling `drawMenu()` method of `GEM` object). If no user-defined function specified, default action will be invoked that consists of call to two methods of `GEM` object: `drawMenu()` and `clearContext()`.
+  Pointer to `exit()` function of current context. Called automatically when user exits currently running context if `context.allowExit` (see below) is set to `true`. Should be invoked manually otherwise. Usually contains instructions to do some cleanup after context's `loop()` and to draw menu on screen again (by calling `drawMenu()` method of `GEM` or `GEM_u8g2` object). If no user-defined function specified, default action will be invoked that consists of call to three methods of `GEM` or `GEM_u8g2` object: `reInit()`, `drawMenu()`, and `clearContext()`.
 
 * **allowExit**
   *Type*: `boolean`  
@@ -783,7 +1026,7 @@ GEMItem menuItemButton("Blink!", buttonAction);
 ...
 
 // Create menu object
-GEM menu(glcd);
+GEM menu(glcd); // AltSerialGraphicLCD version used for example
 
 ...
 
