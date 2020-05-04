@@ -14,6 +14,8 @@ Requires either [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (si
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
+> Cyrillic is partially supported in U8g2 version of GEM (since 1.1). Can be used in menu title, menu item labels (including variables, buttons, and menu page links), and select options. Editable strings with cyrillic characters are not supported.
+
 * [When to use](#when-to-use)
 * [Structure](#structure)
 * [Installation](#installation)
@@ -90,7 +92,7 @@ One more additional library that may come in handy (although is not necessary) i
 Assume you have a simple setup as follows:
 
  - 128x64 LCD screen equipped with SparkFun Graphic LCD Serial Backpack, which is properly connected to the power source and to digital pins 8 and 9 of your Arduino for serial communication via SoftwareSerial library;
- - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with pulldown resistors (so the HIGH means that the button is pressed).
+ - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with 10kOhm pulldown resistors (so the HIGH means that the button is pressed).
 
 ![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_bb_edited_1776_o.png)
 
@@ -377,8 +379,8 @@ U8g2 library will be included automatically through GEM library, so no need to i
 
 Assume you have a simple setup as follows:
 
- - 128x64 LCD screen based on (or compatible with) KS0108 controller, connected as shown below;
- - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with pullup resistors (so the LOW means that the button is pressed).
+ - 128x64 LCD screen based on (or compatible with) KS0108 controller, connected as shown below, with 10kOhm potentiometer to adjust screen contrast;
+ - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with 10kOhm pullup resistors (so the LOW means that the button is pressed).
 
 ![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_u8g2_breadboard_bb_edited_1974_o.png)
 
@@ -584,11 +586,11 @@ U8g2 version:
 GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
 ```
 
-* **glcd**  [_`AltSerialGraphicLCD` version_]  
+* **glcd**  `AltSerialGraphicLCD version`  
   *Type*: `GLCD`  
   Holds the reference to a `GLCD` object created with AltSerialGraphicLCD library and used for communication with SparkFun Graphic LCD Serial Backpack.
 
-* **u8g2**  [_`U8g2` version_]  
+* **u8g2**  `U8g2 version`  
   *Type*: `U8g2`  
   Holds the reference to an object created with U8g2 library and used for communication with LCD. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
 
@@ -678,7 +680,7 @@ For more details on customization see corresponding section of the [wiki](https:
 
 #### Methods
 
-* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  [_`AltSerialGraphicLCD` version_]  
+* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
   *Accepts*: `_const uint8_t PROGMEM_ *`  
   *Returns*: nothing  
   Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before `GEM::init()`. The following is the format of the sprite as described in AltSerialGraphicLCD library documentation:
@@ -686,7 +688,7 @@ For more details on customization see corresponding section of the [wiki](https:
 
   For more details on splash customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
-* **setSplash(** _byte_ width, _byte_ height, _const unsigned char U8X8_PROGMEM_ *image **)**  [_`U8g2` version_]  
+* **setSplash(** _byte_ width, _byte_ height, _const unsigned char U8X8_PROGMEM_ *image **)**  `U8g2 version`  
   *Accepts*: `byte`, `byte`, `_const unsigned char U8X8_PROGMEM_ *`  
   *Returns*: nothing  
   Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
@@ -695,6 +697,12 @@ For more details on customization see corresponding section of the [wiki](https:
   *Accepts*: `boolean`  
   *Returns*: nothing  
   Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `GEM::init()` and `GEM_u8g2::init()`.
+  Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+* **enableCyrillic(** _boolean_ flag = true **)**  `U8g2 version only`  
+  *Accepts*: `boolean`  
+  *Returns*: nothing  
+  Turn cyrillic typeset on (`enableCyrillic()`) or off (`enableCyrillic(false)`). [`u8g2_font_6x12_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_t_cyrillic.png) and [`u8g2_font_4x6_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_4x6_t_cyrillic.png) fonts from [U8g2](https://github.com/olikraus/u8g2/wiki/fntlistall) will be used when cyrillic typeset is enabled, and default fonts [`u8g2_font_6x12_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_tr.png) and [`u8g2_font_tom_thumb_4x6_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_tom_thumb_4x6_tr.png) will be used otherwise. You may use cyrillic in menu title, menu item labels (`GEMItem`, including buttons and menu page links), and select options (`SelectOptionInt`, `SelectOptionByte`, `SelectOptionChar` data structures). Editable strings with cyrillic characters are **not supported** (edit mode of such strings may lead to unpredictable results due to incompatibility with 2-byte characters). Increases required program storage space, use cautiously. By default cyrillic typeset is off. Should be called before `GEM_u8g2::init()`.
 
 * **init()**  
   *Returns*: nothing  
@@ -712,6 +720,10 @@ For more details on customization see corresponding section of the [wiki](https:
   > * `u8g2.setFontPosTop()`.
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
+
+* **reInit()**  
+  *Returns*: nothing  
+  Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD or U8g2 graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#appcontext) for more details.
 
 * **setMenuPageCurrent(** _GEMPage&_ menuPageCurrent **)**  
   *Accepts*: `GEMPage`  
