@@ -48,7 +48,7 @@
 // Macro constants (aliases) for supported types of associated with menu item variable
 #define GEM_VAL_INTEGER 0  // Associated variable is of type int
 #define GEM_VAL_BYTE 1     // Associated variable is of type byte
-#define GEM_VAL_CHAR 2     // Associated variable is of type char[17]
+#define GEM_VAL_CHAR 2     // Associated variable is of type char[GEM_STR_LEN]
 #define GEM_VAL_BOOLEAN 3  // Associated variable is of type boolean
 #define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
                            // (note that char[] array should be big enough to hold select option with the longest value)
@@ -70,13 +70,13 @@ struct FontSize {
 
 // Declaration of AppContext type
 struct AppContext {
-  void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function, executed if context is defined each regular loop() iteration),
+  void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function: if context is defined, executed each regular loop() iteration),
                     // usually contains code of user-defined action that is run when menu Button is pressed
   void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, called manually, generally once before context's loop() function, optional),
                     // usually contains some additional set up required by the user-defined action pointed to by context's loop()
   void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context, optional),
                     // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again,
-                    // if no user-defined function specified, default action will take place that consists of call to drawMenu() and clearContext() methods
+                    // if no user-defined function specified, default action will take place that consists of call to reInit(), drawMenu() and clearContext() methods
   boolean allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
                              // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
 };
@@ -99,7 +99,7 @@ class GEM {
       @param 'menuPageScreenTopOffset_' (optional) - offset from the top of the screen to accommodate title of the menu page
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
-      default 86 (suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen)
+      default 86 (suitable for 128x64 screen with other variables at their default values)
     */
     GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
 

@@ -56,11 +56,13 @@
 #define GEM_CHAR_CODE_TILDA 126
 
 // Sprite of the default GEM _splash screen (GEM logo v1)
-/*static const uint8_t logo [] PROGMEM = {
+/*
+static const uint8_t logo [] PROGMEM = {
   15, 15,
   0,0,0,128,192,96,48,24,140,196,228,252,252,248,0,0,
   0,31,57,56,60,62,59,59,51,55,39,63,31,0,0,0
-};*/
+};
+*/
 
 // Sprite of the default GEM _splash screen (GEM logo v2)
 static const uint8_t logo [] PROGMEM = {

@@ -1,7 +1,4 @@
 /*
-
-  !!! Work-in-progress of u8g2 support, may be highly unstable !!!
-
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
   editable menu items, such as variables (supports int, byte, boolean, char[17] data types) and
   option selects. User-defined callback function can be specified to invoke when menu item is saved.
@@ -9,12 +6,12 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Requires U8G2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
+  Requires U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
 
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -35,7 +32,6 @@
 #ifndef HEADER_GEM
 #define HEADER_GEM
 
-// #include <AltSerialGraphicLCD.h>
 #include <U8g2lib.h>
 #include "GEMPage.h"
 #include "GEMSelect.h"
@@ -56,7 +52,7 @@
 // Macro constants (aliases) for supported types of associated with menu item variable
 #define GEM_VAL_INTEGER 0  // Associated variable is of type int
 #define GEM_VAL_BYTE 1     // Associated variable is of type byte
-#define GEM_VAL_CHAR 2     // Associated variable is of type char[17]
+#define GEM_VAL_CHAR 2     // Associated variable is of type char[GEM_STR_LEN]
 #define GEM_VAL_BOOLEAN 3  // Associated variable is of type boolean
 #define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
                            // (note that char[] array should be big enough to hold select option with the longest value)
@@ -91,13 +87,13 @@ struct FontFamilies {
 
 // Declaration of AppContext type
 struct AppContext {
-  void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function, executed if context is defined each regular loop() iteration),
+  void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function: if context is defined, executed each regular loop() iteration),
                     // usually contains code of user-defined action that is run when menu Button is pressed
   void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, called manually, generally once before context's loop() function, optional),
                     // usually contains some additional set up required by the user-defined action pointed to by context's loop()
   void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context, optional),
                     // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again,
-                    // if no user-defined function specified, default action will take place that consists of call to drawMenu() and clearContext() methods
+                    // if no user-defined function specified, default action will take place that consists of call to reInit(), drawMenu() and clearContext() methods
   boolean allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
                              // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
 };
@@ -105,11 +101,11 @@ struct AppContext {
 // Forward declaration of necessary classes
 class GEMItem;
 
-// Declaration of GEM class
+// Declaration of GEM_u8g2 class
 class GEM_u8g2 {
   public:
     /* 
-      @param 'u8g2_' - reference to the instance of the U8G2 class created with U8G2 library
+      @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
       values GEM_POINTER_ROW, GEM_POINTER_DASH
       default GEM_POINTER_ROW
@@ -120,15 +116,15 @@ class GEM_u8g2 {
       @param 'menuPageScreenTopOffset_' (optional) - offset from the top of the screen to accommodate title of the menu page
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
-      default 86 (suitable for 128x64 screen with other variables at their default values; 86 - maximum value for 128x64 screen)
+      default 86 (suitable for 128x64 screen with other variables at their default values)
     */
     GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
 
     /* INIT OPERATIONS */
 
-    void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
-    void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
-    void enableCyrillic(boolean flag = true);            // Enable cyrillic set of fonts. Generally should be called before GEM::init(). To revert to non-cyrillic fonts pass false: enableVyrillic(false).
+    void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
+    void enableCyrillic(boolean flag = true);            // Enable cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-cyrillic fonts pass false: enableCyrillic(false).
     void init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -140,7 +136,7 @@ class GEM_u8g2 {
 
     /* DRAW OPERATIONS */
 
-    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
 
     /* KEY DETECTION */
 
@@ -197,7 +193,6 @@ class GEM_u8g2 {
     int _valueSelectNum;
     void enterEditValueMode();
     void checkboxToggle();
-    void clearValueVisibleRange();
     void initEditValueCursor();
     void nextEditValueCursorPosition();
     void prevEditValueCursorPosition();
@@ -207,7 +202,6 @@ class GEM_u8g2 {
     void drawEditValueDigit(byte code);
     void nextEditValueSelect();
     void prevEditValueSelect();
-    void drawEditValueSelect();
     void saveEditValue();
     void cancelEditValue();
     void exitEditValue();
