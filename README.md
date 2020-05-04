@@ -398,7 +398,7 @@ In our case create an instance of the `U8G2_KS0108_128X64_1` class named `u8g2`.
 U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0, /*dc=*/ A1, /*cs0=*/ A3, /*cs1=*/ A2, /*cs2=*/ U8X8_PIN_NONE, /* reset=*/ U8X8_PIN_NONE);
 ```
 
-> **Note:** GEM library is compatible with all buffer size options supported by U8g2 (namely `_1`, `_2`, `_F`).
+> **Note:** GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
 
 LCD initial setup is now complete.
 
@@ -593,6 +593,8 @@ GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, men
 * **u8g2**  `U8g2 version`  
   *Type*: `U8g2`  
   Holds the reference to an object created with U8g2 library and used for communication with LCD. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
+
+  > **Note:** GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
 
 * **menuPointerType**  [*optional*]  
   *Type*: `byte`  
