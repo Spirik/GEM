@@ -35,7 +35,7 @@
 #include "GEM.h"
 
 // Macro constant (alias) for current version of GEM library, printed on _splash screen
-#define GEM_VER "1.0"
+#define GEM_VER "1.1"
 
 // Macro constants (aliases) for IDs of sprites of UI elements used to draw menu
 #define GEM_SPR_SELECT_ARROWS 0
@@ -227,7 +227,7 @@ byte GEM::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
 
 void GEM::printMenuItems() {
   byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-  GEMItem* menuItemTmp = (_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
+  GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
   while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
