@@ -346,7 +346,7 @@ void printData() {
 
 #### Sketch
 
-Full version of this basic example is shipped with the library and can be found at "examples/AltSerialGraphicLCD/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/tree/u8g2-support/examples/AltSerialGraphicLCD/Example-01_Basic/Example-01_Basic.ino)".
+Full version of this basic example is shipped with the library and can be found at "examples/AltSerialGraphicLCD/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/blob/master/examples/AltSerialGraphicLCD/Example-01_Basic/Example-01_Basic.ino)".
 
 #### Run
 
@@ -557,7 +557,7 @@ void printData() {
 
 #### Sketch
 
-Full version of this basic example is shipped with the library and can be found at "examples/U8g2/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/tree/u8g2-support/examples/U8g2/Example-01_Basic/Example-01_Basic.ino)".
+Full version of this basic example is shipped with the library and can be found at "examples/U8g2/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/blob/master/examples/U8g2/Example-01_Basic/Example-01_Basic.ino)".
 
 #### Run
 
