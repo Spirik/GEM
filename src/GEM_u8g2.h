@@ -124,7 +124,7 @@ class GEM_u8g2 {
 
     void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
-    void enableCyrillic(boolean flag = true);            // Enable cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-cyrillic fonts pass false: enableCyrillic(false).
+    void enableCyrillic(boolean flag = true);            // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
     void init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current

@@ -464,7 +464,7 @@ static const unsigned char partyFrame5_bits [] U8X8_PROGMEM = {
   0xAE, 0x00, 0x00, 0x00
 };
 
-// Splash is the custom type used internally in GEM library for convenience of storing XBM graphics
+// Splash is the custom type used internally in GEM library for convenient way of storing XBM graphics of Splash screen
 const Splash partyFrame1 = {partyFrame1_width, partyFrame1_height, partyFrame1_bits};
 const Splash partyFrame2 = {partyFrame2_width, partyFrame2_height, partyFrame2_bits};
 const Splash partyFrame3 = {partyFrame3_width, partyFrame3_height, partyFrame3_bits};
