@@ -6,14 +6,12 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Requires AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html).
-  LCD screen must be equipped with SparkFun Graphic LCD Serial Backpack and properly set up
-  to operate using firmware provided with aforementioned library.
+  Requires U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
 
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -34,9 +32,15 @@
 #ifndef HEADER_GEM
 #define HEADER_GEM
 
-#include <AltSerialGraphicLCD.h>
+#include <U8g2lib.h>
 #include "GEMPage.h"
 #include "GEMSelect.h"
+
+// Macro constants (aliases) for u8g2 font families used to draw menu
+#define GEM_FONT_BIG        u8g2_font_6x12_tr
+#define GEM_FONT_SMALL      u8g2_font_tom_thumb_4x6_tr
+#define GEM_FONT_BIG_CYR    u8g2_font_6x12_t_cyrillic
+#define GEM_FONT_SMALL_CYR  u8g2_font_4x6_t_cyrillic
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
@@ -53,19 +57,32 @@
 #define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
                            // (note that char[] array should be big enough to hold select option with the longest value)
 
-// Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu
-#define GEM_KEY_NONE 0    // No key presses are detected
-#define GEM_KEY_UP 1      // Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select)
-#define GEM_KEY_RIGHT 2   // Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button)
-#define GEM_KEY_DOWN 3    // Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select)
-#define GEM_KEY_LEFT 4    // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
-#define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
-#define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button)
+// Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu (mapped to corresponsding u8g2 constants)
+#define GEM_KEY_NONE    0                         // No key presses are detected
+#define GEM_KEY_UP      U8X8_MSG_GPIO_MENU_UP     // Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select)
+#define GEM_KEY_RIGHT   U8X8_MSG_GPIO_MENU_NEXT   // Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button)
+#define GEM_KEY_DOWN    U8X8_MSG_GPIO_MENU_DOWN   // Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select)
+#define GEM_KEY_LEFT    U8X8_MSG_GPIO_MENU_PREV   // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
+#define GEM_KEY_CANCEL  U8X8_MSG_GPIO_MENU_HOME   // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
+#define GEM_KEY_OK      U8X8_MSG_GPIO_MENU_SELECT // Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button)
+
+// Declaration of Splash type
+struct Splash {
+  byte width;                         // Width of the splash lmage
+  byte height;                        // Height of the splash image
+  const uint8_t U8X8_PROGMEM *image;  // Pointer to XBM image to be shown as splash
+};
 
 // Declaration of FontSize type
 struct FontSize {
   byte width;   // Width of the character
   byte height;  // Height of the character
+};
+
+// Declaration of FontFamilies type
+struct FontFamilies {
+  const uint8_t * big;    // Big font family (i.e., 5x8)
+  const uint8_t * small;  // Small font family (i.e., 4x6)
 };
 
 // Declaration of AppContext type
@@ -84,11 +101,11 @@ struct AppContext {
 // Forward declaration of necessary classes
 class GEMItem;
 
-// Declaration of GEM class
-class GEM {
+// Declaration of GEM_u8g2 class
+class GEM_u8g2 {
   public:
     /* 
-      @param 'glcd_' - reference to the instance of the GLCD class created with AltSerialGraphicLCD library
+      @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
       values GEM_POINTER_ROW, GEM_POINTER_DASH
       default GEM_POINTER_ROW
@@ -101,22 +118,15 @@ class GEM {
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
     */
-    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
 
     /* INIT OPERATIONS */
 
-    void setSplash(const uint8_t PROGMEM *sprite);       // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
-                                                         // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
-                                                         // The sprite commences with two bytes which are the width and height of the image in pixels.
-                                                         // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
-                                                         // is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel.
-                                                         // A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed
-                                                         // by the next row of 8 vertical pixels and so on.
-                                                         // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
-                                                         // (although this does not matter).
-    void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
-    void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
-    void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
+    void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
+    void enableCyrillic(boolean flag = true);            // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
+    void init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
+    void reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
 
     /* CONTEXT OPERATIONS */
@@ -126,7 +136,7 @@ class GEM {
 
     /* DRAW OPERATIONS */
 
-    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
 
     /* KEY DETECTION */
 
@@ -134,7 +144,7 @@ class GEM {
     void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
                                                          // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
-    GLCD& _glcd;
+    U8G2& _u8g2;
     byte _menuPointerType;
     byte _menuItemsPerScreen;
     byte _menuItemHeight;
@@ -142,16 +152,19 @@ class GEM {
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
+    FontFamilies _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
+    bool _cyrillicEnabled = false;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
-    const uint8_t PROGMEM *_splash;
+    Splash _splash;
     boolean _enableVersion = true;
 
     /* DRAW OPERATIONS */
 
     GEMPage* _menuPageCurrent;
     GEMItem* _menuItemCurrent;
+    void layoutMenu();
     void drawTitleBar();
     void printMenuItemString(char* str, byte num, byte startPos = 0);
     void printMenuItemTitle(char* str, int offset = 0);
@@ -180,7 +193,6 @@ class GEM {
     int _valueSelectNum;
     void enterEditValueMode();
     void checkboxToggle();
-    void clearValueVisibleRange();
     void initEditValueCursor();
     void nextEditValueCursorPosition();
     void prevEditValueCursorPosition();
@@ -190,7 +202,6 @@ class GEM {
     void drawEditValueDigit(byte code);
     void nextEditValueSelect();
     void prevEditValueSelect();
-    void drawEditValueSelect();
     void saveEditValue();
     void cancelEditValue();
     void exitEditValue();

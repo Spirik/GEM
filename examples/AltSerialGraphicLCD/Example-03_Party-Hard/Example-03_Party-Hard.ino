@@ -8,6 +8,7 @@
   is determined by value of int variable, setting of which to 0 will enable manual control of the frames through
   navigation push-buttons.
 
+  AltSerialGraphicLCD library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
   
   Additional info (including the breadboard view) available on GitHub:
@@ -258,6 +259,7 @@ void rockContextExit() {
   currentFrame = framesCount;
 
   // Draw menu back on screen and clear context
+  menu.reInit();
   menu.drawMenu();
   menu.clearContext();
 }

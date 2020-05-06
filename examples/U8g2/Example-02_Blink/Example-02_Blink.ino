@@ -3,13 +3,13 @@
   with validation callbacks, button actions with custom context (with different values of context.allowExit flag).
 
   Two page menu with one editable menu item associated with int variable, one with char[17] variable,
-  and two buttons, pressing of which will result in blinking with internal LED: one button will launch
+  and two buttons, pressing of which will result in blinking of message on the screen: one button will launch
   delay() based routine and create context with context.allowExit set to true, and the second one - millis() based
   routine with context.allowExit set to false, that will require manual exit from the context's loop with
   explicit call to context.exit() routine. Callback function is attached to menu item linked to int variable,
   making sure that variable is within allowable range.
 
-  KeyDetector library is used to detect push-buttons presses.
+  U8g2lib library is used to draw menu and to detect push-buttons presses.
   
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
@@ -17,34 +17,14 @@
   This example code is in the public domain.
 */
 
-#include <GEM.h>
-#include <KeyDetector.h>
+#include <GEM_u8g2.h>
 
-// Pins the buttons are connected to
-const byte downPin = 2;
-const byte leftPin = 3;
-const byte rightPin = 4;
-const byte upPin = 5;
-const byte cancelPin = 6;
-const byte okPin = 7;
-
-// Array of Key objects that will link GEM key identifiers with dedicated pins
-Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, downPin}, {GEM_KEY_LEFT, leftPin}, {GEM_KEY_CANCEL, cancelPin}, {GEM_KEY_OK, okPin}};
-
-// Create KeyDetector object
-KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key));
-// To account for switch bounce effect of the buttons (if occur) you may want to specify debounceDelay
-// as the second argument to KeyDetector constructor:
-// KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key), 10);
-
-// Constants for the pins SparkFun Graphic LCD Serial Backpack is connected to and SoftwareSerial object
-const byte rxPin = 8;
-const byte txPin = 9;
-SoftwareSerial serialLCD(rxPin, txPin);
-
-// Create an instance of the GLCD class. This instance is used to call all the subsequent GLCD functions
-// (internally from GEM library, or manually in your sketch if it is required)
-GLCD glcd(serialLCD);
+// Create an instance of the U8g2 library.
+// Use constructor that matches your setup (see https://github.com/olikraus/u8g2/wiki/u8g2setupcpp for details).
+// This instance is used to call all the subsequent U8g2 functions (internally from GEM library,
+// or manually in your sketch if it is required).
+// Please update the pin numbers according to your setup. Use U8X8_PIN_NONE if the reset pin is not connected
+U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0, /*dc=*/ A1, /*cs0=*/ A3, /*cs1=*/ A2, /*cs2=*/ U8X8_PIN_NONE, /* reset=*/ U8X8_PIN_NONE);   // Set R/W to low!
 
 // Create variables that will be editable through the menu and assign them initial values
 int interval = 500;
@@ -54,8 +34,8 @@ char label[GEM_STR_LEN] = "Blink!"; // Maximum length of the string should not e
 // Supplementary variable used in millis based version of Blink routine
 unsigned long previousMillis = 0;
 
-// Variable to hold current LED state
-boolean ledOn = false;
+// Variable to hold current label state (visible or hidden)
+boolean labelOn = false;
 
 // Create two menu item objects of class GEMItem, linked to interval and label variables
 // with validateInterval() callback function attached to interval menu item,
@@ -64,12 +44,12 @@ void validateInterval(); // Forward declaration
 GEMItem menuItemInterval("Interval:", interval, validateInterval);
 GEMItem menuItemLabel("Label:", label);
 
-// Create menu button that will trigger blinkDelay() function. It will blink with built-in LED with delay()
+// Create menu button that will trigger blinkDelay() function. It will blink the label on the screen with delay()
 // set to the value of interval variable. We will write (define) this function later. However, we should
 // forward-declare it in order to pass to GEMItem constructor
 void blinkDelay(); // Forward declaration
 GEMItem menuItemDelayButton1("Blink v1", blinkDelay);
-// Likewise, create menu button that will trigger blinkMillis() function. It will blink with built-in LED with millis based
+// Likewise, create menu button that will trigger blinkMillis() function. It will blink the label on the screen with millis based
 // delay set to the value of interval variable. We will write (define) this function later. However, we should
 // forward-declare it in order to pass to GEMItem constructor
 void blinkMillis(); // Forward declaration
@@ -83,30 +63,16 @@ GEMPage menuPageSettings("Settings"); // Settings submenu
 // Create menu item linked to Settings menu page
 GEMItem menuItemMainSettings("Settings", menuPageSettings);
 
-// Create menu object of class GEM. Supply its constructor with reference to glcd object we created earlier
-GEM menu(glcd);
+// Create menu object of class GEM_u8g2. Supply its constructor with reference to u8g2 object we created earlier
+GEM_u8g2 menu(u8g2);
 
 void setup() {
-  // Push-buttons pin modes
-  pinMode(downPin, INPUT);
-  pinMode(leftPin, INPUT);
-  pinMode(rightPin, INPUT);
-  pinMode(upPin, INPUT);
-  pinMode(cancelPin, INPUT);
-  pinMode(okPin, INPUT);
-
-  // Serial communications setup
+  // Serial communication setup
   Serial.begin(115200);
-  serialLCD.begin(115200);
 
-  // LCD reset
-  delay(500);
-  glcd.reset();
-  delay(1000);
-  // Uncomment the following lines in dire situations
-  // (e.g. when screen becomes unresponsive after shutdown)
-  glcd.reset();
-  delay(1000);
+  // U8g2 library init. Pass pin numbers the buttons are connected to.
+  // The push-buttons should be wired with pullup resistors (so the LOW means that the button is pressed)
+  u8g2.begin(/*Select/OK=*/ 7, /*Right/Next=*/ 4, /*Left/Prev=*/ 3, /*Up=*/ 5, /*Down=*/ 2, /*Home/Cancel=*/ 6);
 
   // Menu init, setup and draw
   menu.init();
@@ -134,11 +100,9 @@ void setupMenu() {
 void loop() {
   // If menu is ready to accept button press...
   if (menu.readyForKey()) {
-    // ...detect key press using KeyDetector library
-    myKeyDetector.detect();
-    // Pass pressed button to menu
-    // (pressed button ID is stored in trigger property of KeyDetector object)
-    menu.registerKeyPress(myKeyDetector.trigger);
+    // ...detect key press using U8g2 library
+    // and pass pressed button to menu
+    menu.registerKeyPress(u8g2.getMenuEvent());
   }
 }
 
@@ -159,24 +123,21 @@ void validateInterval() {
 
 // Clear screen and print label at the center
 void printLabel() {
-  glcd.clearScreen();
-  glcd.setX(glcd.xdim/2 - strlen(label)*3);
-  glcd.setY(glcd.ydim/2 - 4);
-  glcd.putstr(label);
-}
-
-// Toggle built-in LED on or off
-void toggleLED() {
-  ledOn = !ledOn;
-  digitalWrite(LED_BUILTIN, ledOn ? HIGH : LOW);
+  u8g2.clear();
+  u8g2.firstPage();
+  do {
+    u8g2.setCursor(u8g2.getDisplayWidth()/2 - strlen(label)*3, u8g2.getDisplayHeight()/2 - 4);
+    u8g2.print(label);
+  } while (u8g2.nextPage());
 }
 
 // Toggle label on screen
 void toggleLabel() {
-  if (ledOn) {
+  labelOn = !labelOn;
+  if (labelOn) {
     printLabel();
   } else {
-    glcd.clearScreen();
+    u8g2.clear();
   }
 }
 
@@ -192,19 +153,15 @@ void blinkDelay() {
 
 // Invoked once when the button is pressed
 void blinkDelayContextEnter() {
-  // Set pin mode of the LED_BUILTIN pin (equals to pin 13 on Arduino UNO board)
-  pinMode(LED_BUILTIN, OUTPUT);
-
   Serial.println("Delay based Blink is in progress");
 }
 
 // Invoked every loop iteration
 void blinkDelayContextLoop() {
-  // Blink with LED attached to the LED_BUILTIN pin.
+  // Blink the label on the screen.
   // Delay based Blink makes it harder to exit the loop
   // due to the blocking nature of the delay() function - carefully match timing of
   // exit key presses with the blink cycles; millis based blink has no such restriction
-  toggleLED();
   toggleLabel();
   delay(interval);
 }
@@ -212,9 +169,10 @@ void blinkDelayContextLoop() {
 // Invoked once when the GEM_KEY_CANCEL key is pressed
 void blinkDelayContextExit() {
   // Reset variables
-  ledOn = false;
+  labelOn = false;
   
   // Draw menu back on screen and clear context
+  menu.reInit();
   menu.drawMenu();
   menu.clearContext();
 
@@ -234,26 +192,22 @@ void blinkMillis() {
 
 // Invoked once when the button is pressed
 void blinkMillisContextEnter() {
-  // Set pin mode of the LED_BUILTIN pin (equals to pin 13 on Arduino board)
-  pinMode(LED_BUILTIN, OUTPUT);
-
   Serial.println("Millis based Blink is in progress");
 }
 
 // Invoked every loop iteration
 void blinkMillisContextLoop() {
-  // Detect key press manually using KeyDetector library
-  myKeyDetector.detect();
-  if (myKeyDetector.trigger == GEM_KEY_CANCEL) {
+  // Detect key press manually using U8g2 library
+  byte key = u8g2.getMenuEvent();
+  if (key == GEM_KEY_CANCEL) {
     // Exit Blink routine if GEM_KEY_CANCEL key was pressed
     menu.context.exit();
   } else {
-    // Test millis timer and toggle LED accordingly.
+    // Test millis timer and toggle label accordingly.
     // Program flow is not paused and key press allows to exit Blink routine immediately
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= interval) {
       previousMillis = currentMillis;
-      toggleLED();
       toggleLabel();
     }
   }
@@ -263,9 +217,10 @@ void blinkMillisContextLoop() {
 void blinkMillisContextExit() {
   // Reset variables
   previousMillis = 0;
-  ledOn = false;
+  labelOn = false;
   
   // Draw menu back on screen and clear context
+  menu.reInit();
   menu.drawMenu();
   menu.clearContext();
 

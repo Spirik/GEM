@@ -7,10 +7,13 @@
 ####################################################
 
 GEM	KEYWORD1
+GEM_u8g2	KEYWORD1
 GEMItem	KEYWORD1
 GEMPage	KEYWORD1
 GEMSelect	KEYWORD1
+Splash	KEYWORD1
 FontSize	KEYWORD1
+FontFamilies	KEYWORD1
 AppContext	KEYWORD1
 SelectOptionInt	KEYWORD1
 SelectOptionByte	KEYWORD1
@@ -21,8 +24,10 @@ SelectOptionChar	KEYWORD1
 ####################################################
 
 setSplash	KEYWORD2
-showVersion	KEYWORD2
+hideVersion	KEYWORD2
+enableCyrillic	KEYWORD2
 init	KEYWORD2
+reInit	KEYWORD2
 setMenuPageCurrent	KEYWORD2
 drawMenu	KEYWORD2
 readyForKey	KEYWORD2

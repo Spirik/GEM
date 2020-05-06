@@ -6,14 +6,12 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Requires AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html).
-  LCD screen must be equipped with SparkFun Graphic LCD Serial Backpack and properly set up
-  to operate using firmware provided with aforementioned library.
+  Requires U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
 
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -32,18 +30,10 @@
 */
 
 #include <Arduino.h>
-#include "GEM.h"
+#include "GEM_u8g2.h"
 
 // Macro constant (alias) for current version of GEM library, printed on _splash screen
 #define GEM_VER "1.1"
-
-// Macro constants (aliases) for IDs of sprites of UI elements used to draw menu
-#define GEM_SPR_SELECT_ARROWS 0
-#define GEM_SPR_ARROW_RIGHT 1
-#define GEM_SPR_ARROW_LEFT 2
-#define GEM_SPR_ARROW_BTN 3
-#define GEM_SPR_CHECKBOX_UNCHECKED 4
-#define GEM_SPR_CHECKBOX_CHECKED 5
 
 // Macro constants (aliases) for some of the ASCII character codes
 #define GEM_CHAR_CODE_9 57
@@ -54,50 +44,74 @@
 #define GEM_CHAR_CODE_UNDERSCORE 95
 #define GEM_CHAR_CODE_LINE 124
 #define GEM_CHAR_CODE_TILDA 126
-
-// Sprite of the default GEM _splash screen (GEM logo v1)
 /*
-static const uint8_t logo [] PROGMEM = {
-  15, 15,
-  0,0,0,128,192,96,48,24,140,196,228,252,252,248,0,0,
-  0,31,57,56,60,62,59,59,51,55,39,63,31,0,0,0
+// WIP for Cyrillic values support
+#define GEM_CHAR_CODE_CYR_YO 1025
+#define GEM_CHAR_CODE_CYR_A 1040
+#define GEM_CHAR_CODE_CYR_E 1045
+#define GEM_CHAR_CODE_CYR_E_SM 1077
+#define GEM_CHAR_CODE_CYR_YA_SM 1103
+#define GEM_CHAR_CODE_CYR_YO_SM 1105
+*/
+
+// XBM image of the default GEM _splash screen (GEM logo v1)
+/*
+#define logo_width  12
+#define logo_height 12
+static const unsigned char logo_bits [] U8X8_PROGMEM = {
+  0xc0,0xf7,0x60,0xfe,0x30,0xfe,0x18,0xff,0x8c,0xff,0xc6,0xff,
+  0xe3,0xff,0xf1,0xff,0x19,0xff,0x7f,0xfc,0xff,0xfd,0xfe,0xf7
 };
 */
 
-// Sprite of the default GEM _splash screen (GEM logo v2)
-static const uint8_t logo [] PROGMEM = {
-  20, 8,
-  0, 65,65,65,73,72,0, 0, 73,73,73,73,65,0, 0, 127,0,12,0,127,0
+// XBM image of the default GEM _splash screen (GEM logo v2)
+#define logo_width  20
+#define logo_height 8
+static const unsigned char logo_bits [] U8X8_PROGMEM = {
+  0x8f,0x4f,0xf4,0x00,0x40,0xf4,0x00,0x40,0xf5,0x98,0x47,0xf5,
+  0x00,0x40,0xf4,0x00,0x40,0xf4,0x9f,0x4f,0xf4,0x00,0x00,0xf0
 };
 
 // Sprites of the UI elements used to draw menu
-static const uint8_t arrowRight [] PROGMEM = {
-  6, 8,
-  0,0,62,28,8,0
-};
-static const uint8_t arrowLeft [] PROGMEM = {
-  6, 8,
-  8,28,62,0,0,0
-};
-static const uint8_t arrowBtn [] PROGMEM = {
-  6, 8,
-  62,34,20,8,0,0
-};
-static const uint8_t checkboxUnchecked [] PROGMEM = {
-  7, 8,
-  126,66,66,66,66,126,0
-};
-static const uint8_t checkboxChecked [] PROGMEM = {
-  7, 8,
-  126,74,82,74,68,126,1
-};
-static const uint8_t selectArrows [] PROGMEM = {
-  6, 8,
-  0,20,54,20,0,0
+
+#define arrowRight_width  6
+#define arrowRight_height 8
+static const unsigned char arrowRight_bits [] U8X8_PROGMEM = {
+   0xc0,0xc4,0xcc,0xdc,0xcc,0xc4,0xc0,0xc0
 };
 
-GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
-  : _glcd(glcd_)
+#define arrowLeft_width  6
+#define arrowLeft_height 8
+static const unsigned char arrowLeft_bits [] U8X8_PROGMEM = {
+   0xc0,0xc4,0xc6,0xc7,0xc6,0xc4,0xc0,0xc0
+};
+
+#define arrowBtn_width  6
+#define arrowBtn_height 8
+static const unsigned char arrowBtn_bits [] U8X8_PROGMEM = {
+  0xc0,0xc3,0xc5,0xc9,0xc5,0xc3,0xc0,0xc0
+};
+
+#define checkboxUnchecked_width  7
+#define checkboxUnchecked_height 8
+static const unsigned char checkboxUnchecked_bits [] U8X8_PROGMEM = {
+   0x80,0xbf,0xa1,0xa1,0xa1,0xa1,0xbf,0x80
+};
+
+#define checkboxChecked_width  7
+#define checkboxChecked_height 8
+static const unsigned char checkboxChecked_bits [] U8X8_PROGMEM = {
+   0xc0,0xaf,0xb1,0xab,0xa5,0xa1,0xbf,0x80
+};
+
+#define selectArrows_width  6
+#define selectArrows_height 8
+static const unsigned char selectArrows_bits [] U8X8_PROGMEM = {
+   0xc0,0xc4,0xce,0xc0,0xce,0xc4,0xc0,0xc0
+};
+
+GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
+  : _u8g2(u8g2_)
   , _menuPointerType(menuPointerType_)
   , _menuItemsPerScreen(menuItemsPerScreen_)
   , _menuItemHeight(menuItemHeight_)
@@ -106,7 +120,7 @@ GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menu
 {
   _menuItemFontSize = _menuItemHeight >= 8 ? 0 : 1;
   _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height) / 2;
-  _splash = logo;
+  _splash = {logo_width, logo_height, logo_bits};
   clearContext();
   _editValueMode = false;
   _editValueCursorPosition = 0;
@@ -116,64 +130,82 @@ GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menu
 
 //====================== INIT OPERATIONS
 
-void GEM::setSplash(const uint8_t PROGMEM *sprite) {
-  _splash = sprite;
+void GEM_u8g2::setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image) {
+  _splash = {width, height, image};
 }
 
-void GEM::hideVersion(boolean flag) {
+void GEM_u8g2::hideVersion(boolean flag) {
   _enableVersion = !flag;
 }
 
-void GEM::init() {
-  _glcd.loadSprite_P(GEM_SPR_ARROW_RIGHT, arrowRight);
-  _glcd.loadSprite_P(GEM_SPR_ARROW_LEFT, arrowLeft);
-  _glcd.loadSprite_P(GEM_SPR_ARROW_BTN, arrowBtn);
-  _glcd.loadSprite_P(GEM_SPR_CHECKBOX_UNCHECKED, checkboxUnchecked);
-  _glcd.loadSprite_P(GEM_SPR_CHECKBOX_CHECKED, checkboxChecked);
-  _glcd.loadSprite_P(GEM_SPR_SELECT_ARROWS, selectArrows);
-  
-  _glcd.drawMode(GLCD_MODE_NORMAL);
-  _glcd.fontMode(GLCD_MODE_NORMAL);
-  _glcd.set(GLCD_ID_CRLF, 0);
-  _glcd.set(GLCD_ID_SCROLL, 0);
-  _glcd.clearScreen();
+void GEM_u8g2::enableCyrillic(boolean flag) {
+  _cyrillicEnabled = flag;
+  if (_cyrillicEnabled) {
+    _fontFamilies = {(uint8_t *)GEM_FONT_BIG_CYR, (uint8_t *)GEM_FONT_SMALL_CYR};
+    _u8g2.enableUTF8Print();
+  } else {
+    _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
+    _u8g2.disableUTF8Print();
+  }
+}
+
+void GEM_u8g2::init() {
+  _u8g2.clear();
+  _u8g2.setDrawColor(1);
+  _u8g2.setFontPosTop();
   
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
-  _menuItemValueLength = (_glcd.xdim - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
-  _glcd.bitblt_P(_glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, _glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, GLCD_MODE_NORMAL, _splash);
+  _menuItemValueLength = (_u8g2.getDisplayWidth() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
+
+  _u8g2.firstPage();
+  do {
+    _u8g2.drawXBMP((_u8g2.getDisplayWidth() - _splash.width) / 2, (_u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
+  } while (_u8g2.nextPage());
 
   if (_enableVersion) {
     delay(500);
-    _glcd.fontFace(1);
-    _glcd.setY(_glcd.ydim - 6);
-    if (_splash != logo) {
-      _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4 - 12);
-      _glcd.putstr("GEM");
-    } else {
-      _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4);
-    }
-    _glcd.putstr(GEM_VER);
+    _u8g2.firstPage();
+    do {
+      _u8g2.drawXBMP((_u8g2.getDisplayWidth() - _splash.width) / 2, (_u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
+      _u8g2.setFont(_fontFamilies.small);
+      byte x = _u8g2.getDisplayWidth() - strlen(GEM_VER)*4;
+      byte y = _u8g2.getDisplayHeight() - 7;
+      if (_splash.image != logo_bits) {
+        _u8g2.setCursor(x - 12, y);
+        _u8g2.print("GEM");
+      } else {
+        _u8g2.setCursor(x, y);
+      }
+      _u8g2.print(GEM_VER);
+    } while (_u8g2.nextPage());
     delay(500);
   } else {
     delay(1000);
   }
+
+  _u8g2.clear();
 }
 
-void GEM::reInit() {
-  _glcd.drawMode(GLCD_MODE_NORMAL);
-  _glcd.fontMode(GLCD_MODE_NORMAL);
-  _glcd.set(GLCD_ID_CRLF, 0);
-  _glcd.set(GLCD_ID_SCROLL, 0);
-  _glcd.clearScreen();
+void GEM_u8g2::reInit() {
+  _u8g2.initDisplay();
+  _u8g2.setPowerSave(0);
+  _u8g2.clear();
+  _u8g2.setDrawColor(1);
+  _u8g2.setFontPosTop();
+  if (_cyrillicEnabled) {
+    _u8g2.enableUTF8Print();
+  } else {
+    _u8g2.disableUTF8Print();
+  }
 }
 
-void GEM::setMenuPageCurrent(GEMPage& menuPageCurrent) {
+void GEM_u8g2::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
 }
 
 //====================== CONTEXT OPERATIONS
 
-void GEM::clearContext() {
+void GEM_u8g2::clearContext() {
   context.loop = nullptr;
   context.enter = nullptr;
   context.exit = nullptr;
@@ -182,176 +214,211 @@ void GEM::clearContext() {
 
 //====================== DRAW OPERATIONS
 
-void GEM::drawMenu() {
-  _glcd.clearScreen();
-  drawTitleBar();
-  printMenuItems();
-  drawMenuPointer();
-  drawScrollbar();
+void GEM_u8g2::drawMenu() {
+  // _u8g2.clear(); // Not clearing for better performance
+  _u8g2.firstPage();
+  do {
+    drawTitleBar();
+    printMenuItems();
+    drawMenuPointer();
+    drawScrollbar();
+  } while (_u8g2.nextPage());
 }
 
-void GEM::drawTitleBar() {
-  _glcd.fontFace(1);
-  _glcd.setXY(5,1);
-  _glcd.putstr(_menuPageCurrent->title);
-  _glcd.fontFace(_menuItemFontSize);
+void GEM_u8g2::drawTitleBar() {
+ _u8g2.setFont(_fontFamilies.small);
+ _u8g2.setCursor(5, 0);
+ _u8g2.print(_menuPageCurrent->title);
+ _u8g2.setFont(_menuItemFontSize ? _fontFamilies.small : _fontFamilies.big);
 }
 
-void GEM::printMenuItemString(char* str, byte num, byte startPos) {
-  byte i = startPos;
-  while (i < num + startPos && str[i] != '\0') {
-    _glcd.put(str[i]);
-    i++;
+void GEM_u8g2::printMenuItemString(char* str, byte num, byte startPos) {
+  if (_cyrillicEnabled) {
+
+    byte j = 0;
+    byte p = 0;
+    while (j < startPos && str[p] != '\0') {
+      if ((byte)str[p] != 208 && (byte)str[p] != 209) {
+        j++;
+      }
+      p++;
+    }
+    byte startPosReal = p;
+
+    byte i = startPosReal;
+    byte k = startPosReal;
+    while (i < num + startPosReal && str[k] != '\0') {
+      _u8g2.print(str[k]);
+      if ((byte)str[k] != 208 && (byte)str[k] != 209) {
+        i++;
+      }
+      k++;
+    }
+
+  } else {
+
+    byte i = startPos;
+    while (i < num + startPos && str[i] != '\0') {
+      _u8g2.print(str[i]);
+      i++;
+    }
+
   }
 }
 
-void GEM::printMenuItemTitle(char* str, int offset) {
+void GEM_u8g2::printMenuItemTitle(char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + offset);
 }
 
-void GEM::printMenuItemValue(char* str, int offset, byte startPos) {
+void GEM_u8g2::printMenuItemValue(char* str, int offset, byte startPos) {
   printMenuItemString(str, _menuItemValueLength + offset, startPos);
 }
 
-void GEM::printMenuItemFull(char* str, int offset) {
+void GEM_u8g2::printMenuItemFull(char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + _menuItemValueLength + offset);
 }
 
-byte GEM::getMenuItemInsetOffset(boolean forSprite) {
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : 0 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+byte GEM_u8g2::getMenuItemInsetOffset(boolean forSprite) {
+  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
 }
 
-byte GEM::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
+byte GEM_u8g2::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
   return (_menuPageCurrent->currentItemNum % _menuItemsPerScreen) * _menuItemHeight + _menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
 }
 
-void GEM::printMenuItems() {
+void GEM_u8g2::printMenuItems() {
   byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-  GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
+  GEMItem* menuItemTmp = (_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
+  char valueStringTmp[GEM_STR_LEN];
   while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
-    _glcd.setY(y + getMenuItemInsetOffset());
+    byte yText = y + getMenuItemInsetOffset();
     byte yDraw = y + getMenuItemInsetOffset(true);
     switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
-        _glcd.setX(5);
+        _u8g2.setCursor(5, yText);
         if (menuItemTmp->readonly) {
           printMenuItemTitle(menuItemTmp->title, -1);
-          _glcd.putstr("^");
+          _u8g2.print("^");
         } else {
           printMenuItemTitle(menuItemTmp->title);
         }
-        _glcd.setX(_menuValuesLeftOffset);
+        
+        _u8g2.setCursor(_menuValuesLeftOffset, yText);
         switch (menuItemTmp->linkedType) {
           case GEM_VAL_INTEGER:
-            itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
-            printMenuItemValue(_valueString);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+              drawEditValueCursor();
+            } else {
+              itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+              printMenuItemValue(valueStringTmp);
+            }
             break;
           case GEM_VAL_BYTE:
-            itoa(*(byte*)menuItemTmp->linkedVariable, _valueString, 10);
-            printMenuItemValue(_valueString);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+              drawEditValueCursor();
+            } else {
+              itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+              printMenuItemValue(valueStringTmp);
+            }
             break;
           case GEM_VAL_CHAR:
-            printMenuItemValue((char*)menuItemTmp->linkedVariable);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+              drawEditValueCursor();
+            } else {
+              printMenuItemValue((char*)menuItemTmp->linkedVariable);
+            }
             break;
           case GEM_VAL_BOOLEAN:
             if (*(boolean*)menuItemTmp->linkedVariable) {
-              _glcd.drawSprite(_menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+              _u8g2.drawXBMP(_menuValuesLeftOffset, yDraw, checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits);
             } else {
-              _glcd.drawSprite(_menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+              _u8g2.drawXBMP(_menuValuesLeftOffset, yDraw, checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits);
             }
             break;
           case GEM_VAL_SELECT:
             GEMSelect* select = menuItemTmp->select;
-            printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-            _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+              printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
+              _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+              drawEditValueCursor();
+            } else {
+              printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
+              _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+            }
             break;
         }
         break;
       case GEM_ITEM_LINK:
-        _glcd.setX(5);
+        _u8g2.setCursor(5, yText);
         printMenuItemFull(menuItemTmp->title);
-        _glcd.drawSprite(_glcd.xdim-8, yDraw, GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
+        _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 8, yDraw, arrowRight_width, arrowRight_height, arrowRight_bits);
         break;
       case GEM_ITEM_BACK:
-        _glcd.setX(11);
-        _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
+        _u8g2.setCursor(11, yText);
+        _u8g2.drawXBMP(5, yDraw, arrowLeft_width, arrowLeft_height, arrowLeft_bits);
         break;
       case GEM_ITEM_BUTTON:
-        _glcd.setX(11);
+        _u8g2.setCursor(11, yText);
         printMenuItemFull(menuItemTmp->title);
-        _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
+        _u8g2.drawXBMP(5, yDraw, arrowBtn_width, arrowBtn_height, arrowBtn_bits);
         break;
     }
     menuItemTmp = menuItemTmp->menuItemNext;    
     y += _menuItemHeight;
     i++;
   }
-  memset(_valueString, '\0', GEM_STR_LEN - 1);
+  memset(valueStringTmp, '\0', GEM_STR_LEN - 1);
 }
 
-void GEM::drawMenuPointer() {
+void GEM_u8g2::drawMenuPointer() {
   if (_menuPageCurrent->itemsCount > 0) {
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
-      _glcd.eraseBox(0, _menuPageScreenTopOffset, 1, _glcd.ydim-1);
-      _glcd.drawBox(0, pointerPosition, 1, pointerPosition + _menuItemHeight - 2, GLCD_MODE_NORMAL);
-    } else {
-      _glcd.drawMode(GLCD_MODE_XOR);
-      _glcd.fillBox(0, pointerPosition-1, _glcd.xdim-3, pointerPosition + _menuItemHeight - 1);
-      _glcd.drawMode(GLCD_MODE_NORMAL);
+      _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
+    } else if (!_editValueMode) {
+      _u8g2.setDrawColor(2);
+      _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1);
+      _u8g2.setDrawColor(1);
     }
   }
 }
 
-void GEM::drawScrollbar() {
+void GEM_u8g2::drawScrollbar() {
   byte screensCount = (_menuPageCurrent->itemsCount % _menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / _menuItemsPerScreen : _menuPageCurrent->itemsCount / _menuItemsPerScreen + 1;
   if (screensCount > 1) {
     byte currentScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-    byte scrollbarHeight = (_glcd.ydim - _menuPageScreenTopOffset) / screensCount;
+    byte scrollbarHeight = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset) / screensCount;
     byte scrollbarPosition = currentScreenNum * scrollbarHeight + _menuPageScreenTopOffset;
-    _glcd.drawLine(_glcd.xdim-1, scrollbarPosition, _glcd.xdim-1, scrollbarPosition + scrollbarHeight-1, GLCD_MODE_NORMAL);
+    _u8g2.drawLine(_u8g2.getDisplayWidth() - 1, scrollbarPosition, _u8g2.getDisplayWidth() - 1, scrollbarPosition + scrollbarHeight-1);
   }
 }
 
 //====================== MENU ITEMS NAVIGATION
 
-void GEM::nextMenuItem() {
-  if (_menuPointerType != GEM_POINTER_DASH) {
-    drawMenuPointer();
-  }
+void GEM_u8g2::nextMenuItem() {
   if (_menuPageCurrent->currentItemNum == _menuPageCurrent->itemsCount-1) {
     _menuPageCurrent->currentItemNum = 0;
   } else {
     _menuPageCurrent->currentItemNum++;
   }
-  boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
-  if (redrawMenu) {
-    drawMenu();
-  } else {
-    drawMenuPointer();
-  }
+  drawMenu();
 }
 
-void GEM::prevMenuItem() {
-  if (_menuPointerType != GEM_POINTER_DASH) {
-    drawMenuPointer();
-  }
-  boolean redrawMenu = (_menuPageCurrent->itemsCount > 1 && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
+void GEM_u8g2::prevMenuItem() {
   if (_menuPageCurrent->currentItemNum == 0) {
     _menuPageCurrent->currentItemNum = _menuPageCurrent->itemsCount-1;
   } else {
     _menuPageCurrent->currentItemNum--;
   }
-  if (redrawMenu) {
-    drawMenu();
-  } else {
-    drawMenuPointer();
-  }
+  drawMenu();
 }
 
-void GEM::menuItemSelect() {
+void GEM_u8g2::menuItemSelect() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   switch (menuItemTmp->type) {
     case GEM_ITEM_VAL:
@@ -376,13 +443,10 @@ void GEM::menuItemSelect() {
 
 //====================== VALUE EDIT
 
-void GEM::enterEditValueMode() {
+void GEM_u8g2::enterEditValueMode() {
   _editValueMode = true;
   
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  if (_menuPointerType != GEM_POINTER_DASH) {
-    drawMenuPointer();
-  }
   _editValueType = menuItemTmp->linkedType;
   switch (_editValueType) {
     case GEM_VAL_INTEGER:
@@ -402,6 +466,7 @@ void GEM::enterEditValueMode() {
       break;
     case GEM_VAL_BOOLEAN:
       checkboxToggle();
+      drawMenu();
       break;
     case GEM_VAL_SELECT:
       GEMSelect* select = menuItemTmp->select;
@@ -411,7 +476,7 @@ void GEM::enterEditValueMode() {
   }
 }
 
-void GEM::checkboxToggle() {
+void GEM_u8g2::checkboxToggle() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   int topOffset = getCurrentItemTopOffset(true, true);
   boolean checkboxValue = *(boolean*)menuItemTmp->linkedVariable;
@@ -420,75 +485,49 @@ void GEM::checkboxToggle() {
     menuItemTmp->saveAction();
     exitEditValue();
   } else {
-    if (!checkboxValue) {
-      _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
-    } else {
-      _glcd.drawSprite(_menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
-    }
-    if (_menuPointerType != GEM_POINTER_DASH) {
-      drawMenuPointer();
-    }
     _editValueMode = false;
   }
 }
 
-void GEM::clearValueVisibleRange() {
-  int pointerPosition = getCurrentItemTopOffset(false);
-  byte cursorLeftOffset = _menuValuesLeftOffset;
-  _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, _glcd.xdim - 3, pointerPosition + _menuItemHeight - 1, 0x00);
-  _glcd.setX(_menuValuesLeftOffset);
-  _glcd.setY(getCurrentItemTopOffset());
-}
-
-void GEM::initEditValueCursor() {
+void GEM_u8g2::initEditValueCursor() {
   _editValueCursorPosition = 0;
   _editValueVirtualCursorPosition = 0;
-  drawEditValueCursor();
+  drawMenu();
 }
 
-void GEM::nextEditValueCursorPosition() {
-  drawEditValueCursor();
+void GEM_u8g2::nextEditValueCursorPosition() {
   if ((_editValueCursorPosition != _menuItemValueLength - 1) && (_editValueCursorPosition != _editValueLength - 1) && (_valueString[_editValueCursorPosition] != '\0')) {
     _editValueCursorPosition++;
   }
   if ((_editValueVirtualCursorPosition != _editValueLength - 1) && (_valueString[_editValueVirtualCursorPosition] != '\0')) {
     _editValueVirtualCursorPosition++;
-    if (_editValueCursorPosition == _menuItemValueLength - 1) {
-      clearValueVisibleRange();
-      printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
-    }
   }
-  drawEditValueCursor();
+  drawMenu();
 }
 
-void GEM::prevEditValueCursorPosition() {
-  drawEditValueCursor();
+void GEM_u8g2::prevEditValueCursorPosition() {
   if (_editValueCursorPosition != 0) {
     _editValueCursorPosition--;
   }
   if (_editValueVirtualCursorPosition != 0) {
     _editValueVirtualCursorPosition--;
-    if (_editValueCursorPosition == 0) {
-      clearValueVisibleRange();
-      printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition);
-    }
   }
-  drawEditValueCursor();
+  drawMenu();
 }
 
-void GEM::drawEditValueCursor() {
+void GEM_u8g2::drawEditValueCursor() {
   int pointerPosition = getCurrentItemTopOffset(false);
   byte cursorLeftOffset = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width;
-  _glcd.drawMode(GLCD_MODE_XOR);
+  _u8g2.setDrawColor(2);
   if (_editValueType == GEM_VAL_SELECT) {
-    _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, _glcd.xdim - 3, pointerPosition + _menuItemHeight - 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - cursorLeftOffset - 1, _menuItemHeight + 1);
   } else {
-    _glcd.fillBox(cursorLeftOffset - 1, pointerPosition - 1, cursorLeftOffset + _menuItemFont[_menuItemFontSize].width - 1, pointerPosition + _menuItemHeight - 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width + 1, _menuItemHeight + 1);
   }
-  _glcd.drawMode(GLCD_MODE_NORMAL);
+  _u8g2.setDrawColor(1);
 }
 
-void GEM::nextEditValueDigit() {
+void GEM_u8g2::nextEditValueDigit() {
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
   if (_editValueType == GEM_VAL_CHAR) {
@@ -499,9 +538,27 @@ void GEM::nextEditValueDigit() {
       case GEM_CHAR_CODE_TILDA:
         code = GEM_CHAR_CODE_SPACE;
         break;
-      case GEM_CHAR_CODE_LINE - 1:
-        code = GEM_CHAR_CODE_LINE + 1;
+      /*
+      // WIP for Cyrillic values support
+      case GEM_CHAR_CODE_TILDA:
+        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_A : GEM_CHAR_CODE_SPACE;
         break;
+      case GEM_CHAR_CODE_CYR_YA_SM:
+        code = GEM_CHAR_CODE_SPACE;
+        break;
+      case GEM_CHAR_CODE_CYR_E:
+        code = GEM_CHAR_CODE_CYR_YO;
+        break;
+      case GEM_CHAR_CODE_CYR_YO:
+        code = GEM_CHAR_CODE_CYR_E + 1;
+        break;
+      case GEM_CHAR_CODE_CYR_E_SM:
+        code = GEM_CHAR_CODE_CYR_YO_SM;
+        break;
+      case GEM_CHAR_CODE_CYR_YO_SM:
+        code = GEM_CHAR_CODE_CYR_E_SM + 1;
+        break;
+      */
       default:
         code++;
         break;
@@ -528,7 +585,7 @@ void GEM::nextEditValueDigit() {
   drawEditValueDigit(code);
 }
 
-void GEM::prevEditValueDigit() {
+void GEM_u8g2::prevEditValueDigit() {
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
   if (_editValueType == GEM_VAL_CHAR) {
@@ -539,9 +596,30 @@ void GEM::prevEditValueDigit() {
       case GEM_CHAR_CODE_SPACE:
         code = GEM_CHAR_CODE_TILDA;
         break;
-      case GEM_CHAR_CODE_LINE + 1:
-        code = GEM_CHAR_CODE_LINE - 1;
+      /*
+      // WIP for Cyrillic values support
+      case 0:
+        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
         break;
+      case GEM_CHAR_CODE_SPACE:
+        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
+        break;
+      case GEM_CHAR_CODE_CYR_A:
+        code = GEM_CHAR_CODE_TILDA;
+        break;
+      case GEM_CHAR_CODE_CYR_E + 1:
+        code = GEM_CHAR_CODE_CYR_YO;
+        break;
+      case GEM_CHAR_CODE_CYR_YO:
+        code = GEM_CHAR_CODE_CYR_E;
+        break;
+      case GEM_CHAR_CODE_CYR_E_SM + 1:
+        code = GEM_CHAR_CODE_CYR_YO_SM;
+        break;
+      case GEM_CHAR_CODE_CYR_YO_SM:
+        code = GEM_CHAR_CODE_CYR_E_SM;
+        break;
+      */
       default:
         code--;
         break;
@@ -568,45 +646,31 @@ void GEM::prevEditValueDigit() {
   drawEditValueDigit(code);
 }
 
-void GEM::drawEditValueDigit(byte code) {
+void GEM_u8g2::drawEditValueDigit(byte code) {
   char chrNew = (char)code;
   _valueString[_editValueVirtualCursorPosition] = chrNew;
-  drawEditValueCursor();
-  _glcd.setX(_menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width);
-  int pointerPosition = getCurrentItemTopOffset();
-  _glcd.setY(pointerPosition);
-  _glcd.put(code);
-  drawEditValueCursor();
+  drawMenu();
 }
 
-void GEM::nextEditValueSelect() {
+void GEM_u8g2::nextEditValueSelect() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum+1 < select->getLength()) {
     _valueSelectNum++;
   }
-  drawEditValueSelect();
+  drawMenu();
 }
 
-void GEM::prevEditValueSelect() {
+void GEM_u8g2::prevEditValueSelect() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
   }
-  drawEditValueSelect();
+  drawMenu();
 }
 
-void GEM::drawEditValueSelect() {
-  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  GEMSelect* select = menuItemTmp->select;
-  clearValueVisibleRange();
-  printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
-  _glcd.drawSprite(_glcd.xdim - 7, getCurrentItemTopOffset(true, true), GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
-  drawEditValueCursor();
-}
-
-void GEM::saveEditValue() {
+void GEM_u8g2::saveEditValue() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   void* temp;
   switch (menuItemTmp->linkedType) {
@@ -630,11 +694,11 @@ void GEM::saveEditValue() {
   exitEditValue();
 }
 
-void GEM::cancelEditValue() {
+void GEM_u8g2::cancelEditValue() {
   exitEditValue();
 }
 
-void GEM::exitEditValue() {
+void GEM_u8g2::exitEditValue() {
   memset(_valueString, '\0', GEM_STR_LEN - 1);
   _valueSelectNum = -1;
   _editValueMode = false;
@@ -644,7 +708,7 @@ void GEM::exitEditValue() {
 
 // Trim leading/trailing whitespaces
 // Author: Adam Rosenfield, https://stackoverflow.com/a/122721
-char* GEM::trimString(char* str) {
+char* GEM_u8g2::trimString(char* str) {
   char *end;
 
   // Trim leading space
@@ -665,7 +729,7 @@ char* GEM::trimString(char* str) {
 
 //====================== KEY DETECTION
 
-boolean GEM::readyForKey() {
+boolean GEM_u8g2::readyForKey() {
   if ( (context.loop == nullptr) ||
       ((context.loop != nullptr) && (context.allowExit)) ) {
     return true;
@@ -676,12 +740,12 @@ boolean GEM::readyForKey() {
 
 }
 
-void GEM::registerKeyPress(byte keyCode) {
+void GEM_u8g2::registerKeyPress(byte keyCode) {
   _currentKey = keyCode;
   dispatchKeyPress();
 }
 
-void GEM::dispatchKeyPress() {
+void GEM_u8g2::dispatchKeyPress() {
 
   if (context.loop != nullptr) {
     if ((context.allowExit) && (_currentKey == GEM_KEY_CANCEL)) {
