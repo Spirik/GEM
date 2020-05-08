@@ -6,7 +6,8 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Requires U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
+  Supports AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html)
+  and U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
 
   For documentation visit:
   https://github.com/Spirik/GEM
@@ -29,33 +30,19 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HEADER_GEM
-#define HEADER_GEM
+#ifndef HEADER_GEM_U8G2
+#define HEADER_GEM_U8G2
 
 #include <U8g2lib.h>
 #include "GEMPage.h"
 #include "GEMSelect.h"
+#include "constants.h"
 
 // Macro constants (aliases) for u8g2 font families used to draw menu
 #define GEM_FONT_BIG        u8g2_font_6x12_tr
 #define GEM_FONT_SMALL      u8g2_font_tom_thumb_4x6_tr
 #define GEM_FONT_BIG_CYR    u8g2_font_6x12_t_cyrillic
 #define GEM_FONT_SMALL_CYR  u8g2_font_4x6_t_cyrillic
-
-// Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
-#define GEM_STR_LEN 17
-
-// Macro constants (aliases) for menu pointer visual appearance
-#define GEM_POINTER_DASH 0  // Current menu item is marked with pointer (filled square) to the left of its name
-#define GEM_POINTER_ROW 1   // Current menu item is marked with filled background
-
-// Macro constants (aliases) for supported types of associated with menu item variable
-#define GEM_VAL_INTEGER 0  // Associated variable is of type int
-#define GEM_VAL_BYTE 1     // Associated variable is of type byte
-#define GEM_VAL_CHAR 2     // Associated variable is of type char[GEM_STR_LEN]
-#define GEM_VAL_BOOLEAN 3  // Associated variable is of type boolean
-#define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
-                           // (note that char[] array should be big enough to hold select option with the longest value)
 
 // Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu (mapped to corresponsding u8g2 constants)
 #define GEM_KEY_NONE    0                         // No key presses are detected
