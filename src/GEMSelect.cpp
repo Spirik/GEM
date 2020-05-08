@@ -8,9 +8,8 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Requires AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html).
-  LCD screen must be equipped with SparkFun Graphic LCD Serial Backpack and properly set up
-  to operate using firmware provided with aforementioned library.
+  Supports AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html)
+  and U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
 
   For documentation visit:
   https://github.com/Spirik/GEM
@@ -35,7 +34,7 @@
 
 #include <Arduino.h>
 #include "GEMSelect.h"
-#include "GEM.h"
+#include "constants.h"
 
 GEMSelect::GEMSelect(byte length_, SelectOptionInt* options_)
   : _type(GEM_VAL_INTEGER)

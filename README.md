@@ -10,7 +10,9 @@ Supports buttons that can invoke user-defined actions and create action-specific
 <img src="https://github.com/Spirik/GEM/wiki/images/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" height="360" alt="Party hard!" />
 </p>
 
-Requires either [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0) or [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) graphic libraries.
+Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0) and [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) graphic libraries.
+
+> Note that both AltSerialGraphicLCD and U8g2 libraries are currently required, regardless of which one of them is actually used to drive display.
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
@@ -55,6 +57,8 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 - Using Library Manager (since Arduino IDE 1.6.2): navigate to `Sketch > Include Library > Manage Libraries` inside your Arduino IDE and search for GEM library, then click `Install`. (Alternatively you can add previously downloaded ZIP through `Sketch > Include Library > Add .ZIP Library` menu).
 
 Whichever option you choose you may need to reload IDE afterwards.
+
+Both [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) and [U8g2](https://github.com/olikraus/U8g2_Arduino) libraries are required to be installed as well.
 
 How to use with AltSerialGraphicLCD
 -----------------------------------
