@@ -864,7 +864,7 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback]);
 #### Link to menu page
 
 ```cpp
-GEMItem menuItemLink(title, linkedPage);
+GEMItem menuItemLink(title, linkedPage[, readonly]);
 ```
 
 * **title**  
@@ -875,10 +875,16 @@ GEMItem menuItemLink(title, linkedPage);
   *Type*: `GEMPage`  
   Menu page `GEMPage` that menu item is associated with.
 
+* **readonly** [*optional*]  
+  *Type*: `boolean`  
+  *Values*: `GEM_READONLY` (alias for `true`), `false`  
+  *Default*: `false`  
+  Sets readonly mode for the link (user won't be able to navigate to linked page).
+
 #### Button
 
 ```cpp
-GEMItem menuItemButton(title, buttonAction);
+GEMItem menuItemButton(title, buttonAction[, readonly]);
 ```
 
 * **title**  
@@ -888,6 +894,12 @@ GEMItem menuItemButton(title, buttonAction);
 * **buttonAction**  
   *Type*: `pointer to function`  
   Pointer to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+
+* **readonly** [*optional*]  
+  *Type*: `boolean`  
+  *Values*: `GEM_READONLY` (alias for `true`), `false`  
+  *Default*: `false`  
+  Sets readonly mode for the button (user won't be able to call action associated with it).
 
 #### Constants
 
@@ -906,11 +918,11 @@ GEMItem menuItemButton(title, buttonAction);
 * **setReadonly(** _boolean_ mode = true **)**  
   *Accepts*: `boolean`  
   *Returns*: nothing  
-  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with. Relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select.
+  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select), or menu button `GEM_ITEM_BUTTON` and menu link `GEM_ITEM_LINK`, pressing of which won't result in any action, associated with them.
 
 * *boolean* **getReadonly()**  
   *Returns*: `boolean`  
-  Get readonly state for variable that menu item is associated with: `true` for readonly state, `false` otherwise.
+  Get readonly state for variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
 
 
 ----------

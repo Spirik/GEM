@@ -267,7 +267,12 @@ void GEM::printMenuItems() {
         break;
       case GEM_ITEM_LINK:
         _glcd.setX(5);
-        printMenuItemFull(menuItemTmp->title);
+        if (menuItemTmp->readonly) {
+          printMenuItemFull(menuItemTmp->title, -1);
+          _glcd.putstr("^");
+        } else {
+          printMenuItemFull(menuItemTmp->title);
+        }
         _glcd.drawSprite(_glcd.xdim-8, yDraw, GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BACK:
@@ -276,7 +281,12 @@ void GEM::printMenuItems() {
         break;
       case GEM_ITEM_BUTTON:
         _glcd.setX(11);
-        printMenuItemFull(menuItemTmp->title);
+        if (menuItemTmp->readonly) {
+          printMenuItemFull(menuItemTmp->title, -1);
+          _glcd.putstr("^");
+        } else {
+          printMenuItemFull(menuItemTmp->title);
+        }
         _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
         break;
     }
@@ -356,8 +366,10 @@ void GEM::menuItemSelect() {
       }
       break;
     case GEM_ITEM_LINK:
-      _menuPageCurrent = menuItemTmp->linkedPage;
-      drawMenu();
+      if (!menuItemTmp->readonly) {
+        _menuPageCurrent = menuItemTmp->linkedPage;
+        drawMenu();
+      }
       break;
     case GEM_ITEM_BACK:
       _menuPageCurrent->currentItemNum = (_menuPageCurrent->itemsCount > 1) ? 1 : 0;
@@ -365,7 +377,9 @@ void GEM::menuItemSelect() {
       drawMenu();
       break;
     case GEM_ITEM_BUTTON:
-      menuItemTmp->buttonAction();
+      if (!menuItemTmp->readonly) {
+        menuItemTmp->buttonAction();
+      }
       break;
   }
 }

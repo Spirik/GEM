@@ -102,24 +102,31 @@ class GEMItem {
       Constructor for menu item that represents link to another menu page (via reference)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedPage_' - reference to GEMPage menu page that menu item is associated with
+      @param 'readonly_' (optional) - set readonly mode for the link (user won't be able to navigate to linked page)
+      values GEM_READONLY (alias for true)
     */
-    GEMItem(char* title_, GEMPage& linkedPage_);
+    GEMItem(char* title_, GEMPage& linkedPage_, boolean readonly_ = false);
     /* 
       Constructor for menu item that represents link to another menu page (via pointer)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedPage_' - pointer to GEMPage menu page that menu item is associated with
+      @param 'readonly_' (optional) - set readonly mode for the link (user won't be able to navigate to linked page)
+      values GEM_READONLY (alias for true)
     */
-    GEMItem(char* title_, GEMPage* linkedPage_);
+    GEMItem(char* title_, GEMPage* linkedPage_, boolean readonly_ = false);
     /* 
       Constructor for menu item that represents button
       @param 'title_' - title of the menu item displayed on the screen
       @param 'buttonAction_' - pointer to function that will be executed when menu item is activated
+      @param 'readonly_' (optional) - set readonly mode for the button (user won't be able to call action associated with it)
+      values GEM_READONLY (alias for true)
     */
-    GEMItem(char* title_, void (*buttonAction_)());
+    GEMItem(char* title_, void (*buttonAction_)(), boolean readonly_ = false);
     void setReadonly(boolean mode = true);  // Explicitly set or unset readonly mode for variable that menu item is associated with
                                             // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN variable
-                                            // menu items and GEM_VAL_SELECT option select)
-    boolean getReadonly();                  // Get readonly state for variable that menu item is associated with
+                                            // menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON and
+                                            // menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
+    boolean getReadonly();                  // Get readonly state for variable that menu item is associated with (as well as menu link or button)
   private:
     char* title;
     byte type;
