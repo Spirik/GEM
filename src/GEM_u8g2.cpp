@@ -353,7 +353,12 @@ void GEM_u8g2::printMenuItems() {
         break;
       case GEM_ITEM_LINK:
         _u8g2.setCursor(5, yText);
-        printMenuItemFull(menuItemTmp->title);
+        if (menuItemTmp->readonly) {
+          printMenuItemFull(menuItemTmp->title, -1);
+          _u8g2.print("^");
+        } else {
+          printMenuItemFull(menuItemTmp->title);
+        }
         _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 8, yDraw, arrowRight_width, arrowRight_height, arrowRight_bits);
         break;
       case GEM_ITEM_BACK:
@@ -362,7 +367,12 @@ void GEM_u8g2::printMenuItems() {
         break;
       case GEM_ITEM_BUTTON:
         _u8g2.setCursor(11, yText);
-        printMenuItemFull(menuItemTmp->title);
+        if (menuItemTmp->readonly) {
+          printMenuItemFull(menuItemTmp->title, -1);
+          _u8g2.print("^");
+        } else {
+          printMenuItemFull(menuItemTmp->title);
+        }
         _u8g2.drawXBMP(5, yDraw, arrowBtn_width, arrowBtn_height, arrowBtn_bits);
         break;
     }
@@ -425,8 +435,10 @@ void GEM_u8g2::menuItemSelect() {
       }
       break;
     case GEM_ITEM_LINK:
-      _menuPageCurrent = menuItemTmp->linkedPage;
-      drawMenu();
+      if (!menuItemTmp->readonly) {
+        _menuPageCurrent = menuItemTmp->linkedPage;
+        drawMenu();
+      }
       break;
     case GEM_ITEM_BACK:
       _menuPageCurrent->currentItemNum = (_menuPageCurrent->itemsCount > 1) ? 1 : 0;
@@ -434,7 +446,9 @@ void GEM_u8g2::menuItemSelect() {
       drawMenu();
       break;
     case GEM_ITEM_BUTTON:
-      menuItemTmp->buttonAction();
+      if (!menuItemTmp->readonly) {
+        menuItemTmp->buttonAction();
+      }
       break;
   }
 }

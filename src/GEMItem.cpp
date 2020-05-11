@@ -162,21 +162,24 @@ GEMItem::GEMItem(char* title_, boolean& linkedVariable_, boolean readonly_)
 
 //---
 
-GEMItem::GEMItem(char* title_, GEMPage& linkedPage_)
+GEMItem::GEMItem(char* title_, GEMPage& linkedPage_, boolean readonly_)
   : title(title_)
   , linkedPage(&linkedPage_)
+  , readonly(readonly_)
   , type(GEM_ITEM_LINK)
 { }
 
-GEMItem::GEMItem(char* title_, GEMPage* linkedPage_)
+GEMItem::GEMItem(char* title_, GEMPage* linkedPage_, boolean readonly_)
   : title(title_)
   , linkedPage(linkedPage_)
+  , readonly(readonly_)
   , type(GEM_ITEM_LINK)
 { }
 
-GEMItem::GEMItem(char* title_, void (*buttonAction_)())
+GEMItem::GEMItem(char* title_, void (*buttonAction_)(), boolean readonly_)
   : title(title_)
   , buttonAction(buttonAction_)
+  , readonly(readonly_)
   , type(GEM_ITEM_BUTTON)
 { }
 
