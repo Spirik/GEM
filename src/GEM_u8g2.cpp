@@ -396,6 +396,22 @@ void GEM_u8g2::drawMenuPointer() {
       } else {
         _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
       }
+    // Checkers version
+    } else if (!_editValueMode) {
+      _u8g2.setDrawColor(2);
+      _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1);
+      _u8g2.setDrawColor(1);
+      if (menuItemTmp->readonly) {
+        _u8g2.setDrawColor(0);
+        for (byte i = 0; i < (_menuItemHeight + 2) / 2; i++) {
+          _u8g2.drawPixel(0, pointerPosition + i * 2);
+          _u8g2.drawPixel(1, pointerPosition + i * 2 - 1);
+        }
+        _u8g2.setDrawColor(1);
+      }
+    }
+    // Frame version
+    /*
     } else if (!_editValueMode) {
       if (menuItemTmp->readonly) {
         _u8g2.drawRFrame(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1, 1);
@@ -405,6 +421,7 @@ void GEM_u8g2::drawMenuPointer() {
         _u8g2.setDrawColor(1);
       }
     }
+    */
   }
 }
 
