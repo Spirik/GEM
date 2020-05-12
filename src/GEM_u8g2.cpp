@@ -385,13 +385,29 @@ void GEM_u8g2::printMenuItems() {
 
 void GEM_u8g2::drawMenuPointer() {
   if (_menuPageCurrent->itemsCount > 0) {
+    GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
-      _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
+      if (menuItemTmp->readonly) {
+        for (byte i = 0; i < (_menuItemHeight - 1) / 2; i++) {
+          _u8g2.drawPixel(0, pointerPosition + i * 2);
+          _u8g2.drawPixel(1, pointerPosition + i * 2 + 1);
+        }
+      } else {
+        _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
+      }
     } else if (!_editValueMode) {
       _u8g2.setDrawColor(2);
       _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1);
       _u8g2.setDrawColor(1);
+      if (menuItemTmp->readonly) {
+        _u8g2.setDrawColor(0);
+        for (byte i = 0; i < (_menuItemHeight + 2) / 2; i++) {
+          _u8g2.drawPixel(0, pointerPosition + i * 2);
+          _u8g2.drawPixel(1, pointerPosition + i * 2 - 1);
+        }
+        _u8g2.setDrawColor(1);
+      }
     }
   }
 }

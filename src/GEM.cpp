@@ -299,14 +299,28 @@ void GEM::printMenuItems() {
 
 void GEM::drawMenuPointer() {
   if (_menuPageCurrent->itemsCount > 0) {
+    GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
       _glcd.eraseBox(0, _menuPageScreenTopOffset, 1, _glcd.ydim-1);
-      _glcd.drawBox(0, pointerPosition, 1, pointerPosition + _menuItemHeight - 2, GLCD_MODE_NORMAL);
+      if (menuItemTmp->readonly) {
+        for (byte i = 0; i < (_menuItemHeight - 1) / 2; i++) {
+          _glcd.drawPixel(0, pointerPosition + i * 2, GLCD_MODE_NORMAL);
+          _glcd.drawPixel(1, pointerPosition + i * 2 + 1, GLCD_MODE_NORMAL);
+        }
+      } else {
+        _glcd.drawBox(0, pointerPosition, 1, pointerPosition + _menuItemHeight - 2, GLCD_MODE_NORMAL);
+      }
     } else {
       _glcd.drawMode(GLCD_MODE_XOR);
       _glcd.fillBox(0, pointerPosition-1, _glcd.xdim-3, pointerPosition + _menuItemHeight - 1);
       _glcd.drawMode(GLCD_MODE_NORMAL);
+      if (menuItemTmp->readonly) {
+        for (byte i = 0; i < (_menuItemHeight + 2) / 2; i++) {
+          _glcd.drawPixel(0, pointerPosition + i * 2, GLCD_MODE_REVERSE);
+          _glcd.drawPixel(1, pointerPosition + i * 2 - 1, GLCD_MODE_REVERSE);
+        }
+      }
     }
   }
 }
