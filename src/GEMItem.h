@@ -2,8 +2,8 @@
   GEMItem - menu item for GEM library.
 
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, boolean, char[17] data types) and
-  option selects. User-defined callback function can be specified to invoke when menu item is saved.
+  editable menu items, such as variables (supports int, byte, boolean, char[17], float, double data types)
+  and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -31,6 +31,8 @@
   You should have received a copy of the GNU Lesser General Public License
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "constants.h"
 
 #ifndef HEADER_GEMITEM
 #define HEADER_GEMITEM
@@ -57,17 +59,19 @@ class GEMItem {
     /* 
       Constructors for menu item that represents option select, w/ callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, or char*)
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, float, or double)
       @param 'select_' - reference to GEMSelect option select
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
     GEMItem(char* title_, byte& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
     GEMItem(char* title_, int& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
     GEMItem(char* title_, char* linkedVariable_, GEMSelect& select_, void (*saveAction_)());
+    GEMItem(char* title_, float& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
+    GEMItem(char* title_, double& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
     /* 
       Constructors for menu item that represents option select, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, or char*)
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, float, or double)
       @param 'select_' - reference to GEMSelect option select
       @param 'readonly_' (optional) - set readonly mode for variable that option select is associated with
       values GEM_READONLY (alias for true)
@@ -76,20 +80,24 @@ class GEMItem {
     GEMItem(char* title_, byte& linkedVariable_, GEMSelect& select_, boolean readonly_ = false);
     GEMItem(char* title_, int& linkedVariable_, GEMSelect& select_, boolean readonly_ = false);
     GEMItem(char* title_, char* linkedVariable_, GEMSelect& select_, boolean readonly_ = false);
+    GEMItem(char* title_, float& linkedVariable_, GEMSelect& select_, boolean readonly_ = false);
+    GEMItem(char* title_, double& linkedVariable_, GEMSelect& select_, boolean readonly_ = false);
     /* 
       Constructors for menu item that represents variable, w/ callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, or boolean)
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, boolean, float, or double)
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
     GEMItem(char* title_, byte& linkedVariable_, void (*saveAction_)());
     GEMItem(char* title_, int& linkedVariable_, void (*saveAction_)());
     GEMItem(char* title_, char* linkedVariable_, void (*saveAction_)());
     GEMItem(char* title_, boolean& linkedVariable_, void (*saveAction_)());
+    GEMItem(char* title_, float& linkedVariable_, void (*saveAction_)());
+    GEMItem(char* title_, double& linkedVariable_, void (*saveAction_)());
     /* 
       Constructors for menu item that represents variable, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
-      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, or boolean)
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, boolean, float, or double)
       @param 'readonly_' (optional) - set readonly mode for variable that menu item is associated with
       values GEM_READONLY (alias for true)
       default false
@@ -98,6 +106,8 @@ class GEMItem {
     GEMItem(char* title_, int& linkedVariable_, boolean readonly_ = false);
     GEMItem(char* title_, char* linkedVariable_, boolean readonly_ = false);
     GEMItem(char* title_, boolean& linkedVariable_, boolean readonly_ = false);
+    GEMItem(char* title_, float& linkedVariable_, boolean readonly_ = false);
+    GEMItem(char* title_, double& linkedVariable_, boolean readonly_ = false);
     /* 
       Constructor for menu item that represents link to another menu page (via reference)
       @param 'title_' - title of the menu item displayed on the screen
@@ -127,11 +137,14 @@ class GEMItem {
                                             // menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON and
                                             // menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
     boolean getReadonly();                  // Get readonly state for variable that menu item is associated with (as well as menu link or button)
+    void setPrecision(byte prec);           // Explicitly set precision for float or double variables as required by dtostrf() conversion,
+                                            // i.e. the number of digits after the decimal sign
   private:
     char* title;
     byte type;
     void* linkedVariable;
     byte linkedType;
+    byte precision = GEM_FLOAT_PREC;
     boolean readonly = false;
     GEMSelect* select;
     GEMPage* linkedPage;

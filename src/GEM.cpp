@@ -1,7 +1,7 @@
 /*
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, boolean, char[17] data types) and
-  option selects. User-defined callback function can be specified to invoke when menu item is saved.
+  editable menu items, such as variables (supports int, byte, boolean, char[17], float, double data types)
+  and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -12,7 +12,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -32,6 +32,12 @@
 
 #include <Arduino.h>
 #include "GEM.h"
+
+// AVR-based Arduinos have suppoort for dtostrf, others require manual inclusion,
+// see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
+#ifndef __AVR__
+#include <avr/dtostrf.h>
+#endif
 
 // Macro constants (aliases) for IDs of sprites of UI elements used to draw menu
 #define GEM_SPR_SELECT_ARROWS 0
@@ -259,10 +265,24 @@ void GEM::printMenuItems() {
             }
             break;
           case GEM_VAL_SELECT:
-            GEMSelect* select = menuItemTmp->select;
-            printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-            _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+            {
+              GEMSelect* select = menuItemTmp->select;
+              printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
+              _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+            }
             break;
+          #ifdef GEM_SUPPORT_FLOAT_EDIT
+          case GEM_VAL_FLOAT:
+            // sprintf(_valueString,"%.6f", *(float*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+            dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
+            printMenuItemValue(_valueString);
+            break;
+          case GEM_VAL_DOUBLE:
+            // sprintf(_valueString,"%.6f", *(double*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+            dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
+            printMenuItemValue(_valueString);
+            break;
+          #endif
         }
         break;
       case GEM_ITEM_LINK:
@@ -428,10 +448,26 @@ void GEM::enterEditValueMode() {
       checkboxToggle();
       break;
     case GEM_VAL_SELECT:
-      GEMSelect* select = menuItemTmp->select;
-      _valueSelectNum = select->getSelectedOptionNum(menuItemTmp->linkedVariable);
+      {
+        GEMSelect* select = menuItemTmp->select;
+        _valueSelectNum = select->getSelectedOptionNum(menuItemTmp->linkedVariable);
+        initEditValueCursor();
+      }
+      break;
+    #ifdef GEM_SUPPORT_FLOAT_EDIT
+    case GEM_VAL_FLOAT:
+      // sprintf(_valueString,"%.6f", *(float*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+      dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
+      _editValueLength = GEM_STR_LEN - 1;
       initEditValueCursor();
       break;
+    case GEM_VAL_DOUBLE:
+      // sprintf(_valueString,"%.6f", *(double*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+      dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
+      _editValueLength = GEM_STR_LEN - 1;
+      initEditValueCursor();
+      break;
+    #endif
   }
 }
 
@@ -536,12 +572,15 @@ void GEM::nextEditValueDigit() {
         code = GEM_CHAR_CODE_0;
         break;
       case GEM_CHAR_CODE_9:
-        code = (_editValueCursorPosition == 0 && _editValueType == GEM_VAL_INTEGER) ? GEM_CHAR_CODE_MINUS : GEM_CHAR_CODE_SPACE;
+        code = (_editValueCursorPosition == 0 && (_editValueType == GEM_VAL_INTEGER || _editValueType == GEM_VAL_FLOAT || _editValueType == GEM_VAL_DOUBLE)) ? GEM_CHAR_CODE_MINUS : GEM_CHAR_CODE_SPACE;
         break;
       case GEM_CHAR_CODE_MINUS:
         code = GEM_CHAR_CODE_SPACE;
         break;
       case GEM_CHAR_CODE_SPACE:
+        code = (_editValueCursorPosition != 0 && (_editValueType == GEM_VAL_FLOAT || _editValueType == GEM_VAL_DOUBLE)) ? GEM_CHAR_CODE_DOT : GEM_CHAR_CODE_0;
+        break;
+      case GEM_CHAR_CODE_DOT:
         code = GEM_CHAR_CODE_0;
         break;
       default:
@@ -573,16 +612,19 @@ void GEM::prevEditValueDigit() {
   } else {
     switch (code) {
       case 0:
-        code = (_editValueCursorPosition == 0 && _editValueType == GEM_VAL_INTEGER) ? GEM_CHAR_CODE_MINUS : GEM_CHAR_CODE_9;
+        code = (_editValueCursorPosition == 0 && (_editValueType == GEM_VAL_INTEGER || _editValueType == GEM_VAL_FLOAT || _editValueType == GEM_VAL_DOUBLE)) ? GEM_CHAR_CODE_MINUS : GEM_CHAR_CODE_9;
         break;
       case GEM_CHAR_CODE_MINUS:
         code = GEM_CHAR_CODE_9;
         break;
       case GEM_CHAR_CODE_0:
-        code = GEM_CHAR_CODE_SPACE;
+        code = (_editValueCursorPosition != 0 && (_editValueType == GEM_VAL_FLOAT || _editValueType == GEM_VAL_DOUBLE)) ? GEM_CHAR_CODE_DOT : GEM_CHAR_CODE_SPACE;
         break;
       case GEM_CHAR_CODE_SPACE:
-        code = (_editValueCursorPosition == 0 && _editValueType == GEM_VAL_INTEGER) ? GEM_CHAR_CODE_MINUS : GEM_CHAR_CODE_9;
+        code = (_editValueCursorPosition == 0 && (_editValueType == GEM_VAL_INTEGER || _editValueType == GEM_VAL_FLOAT || _editValueType == GEM_VAL_DOUBLE)) ? GEM_CHAR_CODE_MINUS : GEM_CHAR_CODE_9;
+        break;
+      case GEM_CHAR_CODE_DOT:
+        code = GEM_CHAR_CODE_SPACE;
         break;
       default:
         code--;
@@ -644,9 +686,19 @@ void GEM::saveEditValue() {
       strcpy((char*)menuItemTmp->linkedVariable, trimString(_valueString)); // Potential overflow if string length is not defined
       break;
     case GEM_VAL_SELECT:
-      GEMSelect* select = menuItemTmp->select;
-      select->setValue(menuItemTmp->linkedVariable, _valueSelectNum);
+      {
+        GEMSelect* select = menuItemTmp->select;
+        select->setValue(menuItemTmp->linkedVariable, _valueSelectNum);
+      }
       break;
+    #ifdef GEM_SUPPORT_FLOAT_EDIT
+    case GEM_VAL_FLOAT:
+      *(float*)menuItemTmp->linkedVariable = atof(_valueString);
+      break;
+    case GEM_VAL_DOUBLE:
+      *(double*)menuItemTmp->linkedVariable = atof(_valueString);
+      break;
+    #endif
   }
   if (menuItemTmp->saveAction != nullptr) {
     menuItemTmp->saveAction();

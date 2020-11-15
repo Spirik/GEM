@@ -1,0 +1,3 @@
+#ifndef GEM_SUPPORT_FLOAT_EDIT
+#define GEM_SUPPORT_FLOAT_EDIT
+#endif

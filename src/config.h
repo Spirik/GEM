@@ -1,0 +1,1 @@
+#include "config/support-float-edit.h" // Support for editable float and double variables (option selects support them regardless of this setting)
