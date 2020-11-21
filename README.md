@@ -959,7 +959,15 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
   *Returns*: `boolean`  
   Get readonly state for variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
 
-* *boolean* **setPrecision()**  
+* **setTitle(** _char*_ title **)**  
+  *Returns*: nothing  
+  Set title of the menu item. Can be used to update menu item title dynamically.
+
+* *char** **getTitle()**  
+  *Returns*: `char*`  
+  Get title of the menu item.
+
+* **setPrecision()**  
   *Returns*: nothing  
   Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
 
