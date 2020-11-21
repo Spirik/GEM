@@ -2,7 +2,7 @@
 ![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
 ===========
 
-GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
+GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
@@ -12,11 +12,13 @@ Supports buttons that can invoke user-defined actions and create action-specific
 
 Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0) and [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) graphic libraries.
 
-> Note that both AltSerialGraphicLCD and U8g2 libraries are currently required, regardless of which one of them is actually used to drive display.
+> Note that both AltSerialGraphicLCD and U8g2 libraries are currently required, regardless of which one of them is actually used to drive display (although the one that is not used won't affect compiled sketch size).
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
 > Cyrillic is partially supported in U8g2 version of GEM (since 1.1). Can be used in menu title, menu item labels (including variables, buttons, and menu page links), and select options. Editable strings with Cyrillic characters are not supported.
+
+> Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) for details.
 
 * [When to use](#when-to-use)
 * [Structure](#structure)
@@ -30,6 +32,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
   * [AppContext](#appcontext)
+* [Floating-point variables](#floating-point-variables)
 * [Examples](#examples)
 * [License](#license)
 * [**Wiki**](https://github.com/Spirik/GEM/wiki)
@@ -123,7 +126,7 @@ Create an array of `Key` objects. It will hold information about which button pr
 Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, downPin}, {GEM_KEY_LEFT, leftPin}, {GEM_KEY_CANCEL, cancelPin}, {GEM_KEY_OK, okPin}};
 ```
 
-> **Note:** aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
+> **Note:** aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending to menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
 
 Create `KeyDetector` object called `myKeyDetector` and supply its constructor with `keys` array created at the previous step and explicitly pass the size of the array:
 
@@ -175,7 +178,7 @@ GEMItem menuItemBool("Enable print:", enablePrint);
 Create menu button that will trigger `printData()` function. It will print value of our `number` variable to Serial monitor if `enablePrint` is `true`. We will write (define) this function later. However we should forward-declare it in order to pass its reference to `GEMItem` constructor. Let's name our button "Print":
 
 ```cpp
-void printData(); //Forward declaration
+void printData(); // Forward declaration
 GEMItem menuItemButton("Print", printData);
 ```
 
@@ -425,7 +428,7 @@ GEMItem menuItemBool("Enable print:", enablePrint);
 Create menu button that will trigger `printData()` function. It will print value of our `number` variable to Serial monitor if `enablePrint` is `true`. We will write (define) this function later. However we should forward-declare it in order to pass its reference to `GEMItem` constructor. Let's name our button "Print":
 
 ```cpp
-void printData(); //Forward declaration
+void printData(); // Forward declaration
 GEMItem menuItemButton("Print", printData);
 ```
 
@@ -435,7 +438,7 @@ Create menu page object of class `GEMPage`. Menu page holds menu items (`GEMItem
 GEMPage menuPageMain("Main Menu");
 ```
 
-And finally, create menu object of class `GEM`. Supply its constructor with a reference to `glcd` object we created earlier:
+And finally, create menu object of class `GEM_u8g2`. Supply its constructor with a reference to `u8g2` object we created earlier:
 
 ```cpp
 GEM_u8g2 menu(u8g2);
@@ -655,33 +658,63 @@ For more details on customization see corresponding section of the [wiki](https:
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that no key presses were detected.
 
 * **GEM_KEY_UP**  
-  *Type*: macro `#define GEM_KEY_UP 1`  
-  *Value*: `1`  
+  * `GEM`:  
+    *Type*: macro `#define GEM_KEY_UP 1`  
+    *Value*: `1`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_KEY_UP U8X8_MSG_GPIO_MENU_UP`  
+    *Value*: `U8X8_MSG_GPIO_MENU_UP`  
+  
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select).
 
 * **GEM_KEY_RIGHT**  
-  *Type*: macro `#define GEM_KEY_RIGHT 2`  
-  *Value*: `2`  
+  * `GEM`:  
+    *Type*: macro `#define GEM_KEY_RIGHT 2`  
+    *Value*: `2`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_KEY_RIGHT U8X8_MSG_GPIO_MENU_NEXT`  
+    *Value*: `U8X8_MSG_GPIO_MENU_NEXT`  
+  
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button).
 
 * **GEM_KEY_DOWN**  
-  *Type*: macro `#define GEM_KEY_DOWN 3`  
-  *Value*: `3`  
+  * `GEM`:  
+    *Type*: macro `#define GEM_KEY_DOWN 3`  
+    *Value*: `3`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_KEY_DOWN U8X8_MSG_GPIO_MENU_DOWN`  
+    *Value*: `U8X8_MSG_GPIO_MENU_DOWN`
+
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select).
 
 * **GEM_KEY_LEFT**  
-  *Type*: macro `#define GEM_KEY_LEFT 4`  
-  *Value*: `4`  
+  * `GEM`:  
+    *Type*: macro `#define GEM_KEY_LEFT 4`  
+    *Value*: `4`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_KEY_LEFT U8X8_MSG_GPIO_MENU_PREV`  
+    *Value*: `U8X8_MSG_GPIO_MENU_PREV`  
+  
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable).
 
 * **GEM_KEY_CANCEL**  
-  *Type*: macro `#define GEM_KEY_CANCEL 5`  
-  *Value*: `5`  
+  * `GEM`:  
+    *Type*: macro `#define GEM_KEY_CANCEL 5`  
+    *Value*: `5`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_KEY_CANCEL U8X8_MSG_GPIO_MENU_HOME`  
+    *Value*: `U8X8_MSG_GPIO_MENU_HOME`
+
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings).
 
-* **GEM_KEY_OK**  
-  *Type*: macro `#define GEM_KEY_OK 6`  
-  *Value*: `6`  
+* **GEM_KEY_OK** 
+  * `GEM`:   
+    *Type*: macro `#define GEM_KEY_OK 6`  
+    *Value*: `6`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_KEY_OK U8X8_MSG_GPIO_MENU_SELECT`  
+    *Value*: `U8X8_MSG_GPIO_MENU_SELECT`
+
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button).
 
 #### Methods
@@ -775,7 +808,7 @@ GEMPage menuPage(title);
   *Type*: `char*`  
   Title of the menu page displayed at top of the screen.
   
-  > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD and U8g2 vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD version and will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
+  > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD and U8g2 vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD version, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
 
 #### Methods
 
@@ -795,7 +828,9 @@ GEMPage menuPage(title);
 
 ### GEMItem
 
-Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `boolean`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `char[n]`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
+Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `boolean`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
+
+> **Note:** support for editable variables of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO). See [Floating-point variables](#floating-point-variables) for more details.
 
 #### Variable
 
@@ -812,7 +847,7 @@ GEMItem menuItemVar(title, linkedVariable[, saveCallback]);
   Title of the menu item displayed on the screen.
 
 * **linkedVariable**  
-  *Type*: `int`, `byte`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact), `boolean`  
+  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact)  
   Reference to variable that menu item is associated with.
 
 * **readonly** [*optional*]  
@@ -842,8 +877,8 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback]);
   Title of the menu item displayed on the screen.
 
 * **linkedVariable**  
-  *Type*: `int`, `byte`, `char[n]`  
-  Reference to variable that menu item is associated with. Note that in case of `char[n]` variable, character array should be big enough to hold select option with the longest value to avoid overflows. It can be greater then `GEM_STR_LEN` (i.e. it is possible to have `n` > 17) limit set for non-select menu item variable.
+  *Type*: `int`, `byte`, `float`, `double`, `char[n]`  
+  Reference to variable that menu item is associated with. Note that in case of `char[n]` variable, character array should be big enough to hold select option with the longest value to avoid overflows. It can be greater than `GEM_STR_LEN` limit (i.e. it is possible to have `n` > 17) set for non-select menu item variable.
 
 * **select**  
   *Type*: `GEMSelect`  
@@ -911,18 +946,22 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
 * **GEM_STR_LEN**  
   *Type*: macro `#define GEM_STR_LEN 17`  
   *Value*: `17`  
-  Alias for supported length of the string (character sequence) variable of type `char[GEM_STR_LEN]`. Note, that this limits the length of the string that can be used with editable character menu item variable, but option select variable doesn't have this restriction. But you still have to make sure that in the latter case character array should be big enough to hold select option with the longest value to avoid overflows.
+  Alias for supported length of the string (character sequence) variable of type `char[GEM_STR_LEN]`. Note that this limits the length of the string that can be used with editable character menu item variable, but option select variable doesn't have this restriction. But you still have to make sure that in the latter case character array should be big enough to hold select option with the longest value to avoid overflows.
 
 #### Methods
 
 * **setReadonly(** _boolean_ mode = true **)**  
   *Accepts*: `boolean`  
   *Returns*: nothing  
-  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select), or menu button `GEM_ITEM_BUTTON` and menu link `GEM_ITEM_LINK`, pressing of which won't result in any action, associated with them.
+  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select), or menu button `GEM_ITEM_BUTTON` and menu link `GEM_ITEM_LINK`, pressing of which won't result in any action, associated with them.
 
 * *boolean* **getReadonly()**  
   *Returns*: `boolean`  
   Get readonly state for variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
+
+* *boolean* **setPrecision()**  
+  *Returns*: nothing  
+  Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
 
 
 ----------
@@ -938,11 +977,11 @@ GEMSelect mySelect(length, optionsArray);
 
 * **length**  
   *Type*: `byte`  
-  Length of `optionsArray`. Should be explicitly supplied because array is passed as a pointer. Easy way to provide array length is to calculate it using the following expression: `sizeof(optionsArray)/sizeof(SelectOptionInt)`, or `sizeof(optionsArray)/sizeof(SelectOptionByte)`, or `sizeof(optionsArray)/sizeof(SelectOptionChar)` depending on the type of the array used.
+  Length of `optionsArray`. Should be explicitly supplied because array is passed as a pointer. Easy way to provide array length is to calculate it using the following expression: `sizeof(optionsArray)/sizeof(SelectOptionInt)`, or `sizeof(optionsArray)/sizeof(SelectOptionByte)`, or `sizeof(optionsArray)/sizeof(SelectOptionFloat)`, or `sizeof(optionsArray)/sizeof(SelectOptionDouble)`, or `sizeof(optionsArray)/sizeof(SelectOptionChar)` depending on the type of the array used.
 
 * **optionsArray**  
-  *Type*: `void*` (pointer to array of type either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionChar`)  
-  Array of the available options. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionChar` depending on the kind of data options are selected from. See the following section for definition of these custom types.
+  *Type*: `void*` (pointer to array of type either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar`)  
+  Array of the available options. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar` depending on the kind of data options are selected from. See the following section for definition of these custom types.
 
 Example of use:
 
@@ -994,6 +1033,38 @@ SelectOptionByte selectOption = {name, val_byte};
 
 * **val_byte**  
   *Type*: `byte`  
+  Value of the option that is assigned to linked variable upon option selection.
+
+### SelectOptionFloat
+
+Data structure that represents option of the select of type `float`. Object of type `SelectOptionFloat` defines as follows:
+
+```cpp
+SelectOptionFloat selectOption = {name, val_float};
+```
+
+* **name**  
+  *Type*: `char*`  
+  Text label of the option as displayed in select.
+
+* **val_float**  
+  *Type*: `float`  
+  Value of the option that is assigned to linked variable upon option selection.
+
+### SelectOptionDouble
+
+Data structure that represents option of the select of type `double`. Object of type `SelectOptionDouble` defines as follows:
+
+```cpp
+SelectOptionDouble selectOption = {name, val_double};
+```
+
+* **name**  
+  *Type*: `char*`  
+  Text label of the option as displayed in select.
+
+* **val_double**  
+  *Type*: `double`  
   Value of the option that is assigned to linked variable upon option selection.
 
 ### SelectOptionChar
@@ -1050,7 +1121,7 @@ Basic example of use:
 ```cpp
 ...
 
-void buttonAction(); //Forward declaration
+void buttonAction(); // Forward declaration
 GEMItem menuItemButton("Blink!", buttonAction);
 
 ...
@@ -1100,6 +1171,30 @@ void buttonContextExit() {
 To exit currently running context and return to menu, press button associated with `GEM_KEY_CANCEL` key (only if `context.allowExit` flag is set to its default value of `true`, otherwise you should handle exit from the loop manually and call `context.exit()` explicitly) - `context.exit()` callback will be called.
 
 For more details see supplied example on context usage and read corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+Floating-point variables
+-----------
+The [`float`](https://www.arduino.cc/reference/en/language/variables/data-types/float/) data type has only 6-7 decimal digits of precision ("[mantissa](https://en.wikipedia.org/wiki/Scientific_notation)"). For AVR based Arduino boards (like UNO) [`double`](https://www.arduino.cc/reference/en/language/variables/data-types/double/) data type has basically the same precision, being only 32 bit wide (the same as `float`). On some other boards (like SAMD boards, e.g. with M0 chips) double is actually a 64 bit number, so it has more precision (up to 15 digits).
+
+Internally in GEM, [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) and [`atof()`](http://www.cplusplus.com/reference/cstdlib/atof/) are used to convert floating-point number to and from a string. Support for `dtostrf()` comes with `stdlib.h` for AVR, and hence available out of the box for AVR-based boards. While it is possible to use [`sprintf()`](http://www.cplusplus.com/reference/cstdio/sprintf/) for some other boards (like SAMD), `dtostrf()` is used for them instead as well, for consistency through explicit inclusion of `avr/dtostrf.h`. See [this thread](https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647) for some more details on `dtostrf()` support across different boards.
+
+Default precision (the number of digits **after** the decimal sign, in terms of `dtostrf()`) is set to 6, but can be individually set for each editable menu item using `GEMItem::setPrecision()` method.
+
+Note that maximum length of the number should not exceed `GEM_STR_LEN` (i.e. 17) - otherwise overflows and undetermined behavior may occur (that includes the value of precision specified through `GEMItem::setPrecision()` method or default one, which will increase length of the number with trailing zeros if necessary). This is result of using `char[GEM_STR_LEN]` buffer during `dtostrf()` conversion. It is not possible to enter number with the length exceeding this limit during edit of the variable, however, additional caution should be taken to verify that initial value of the variable (or externally changed value) in combination with specified precision does not exceed this limit.
+
+It is possible to exclude support for editable `float` and `double` variables to save some space on your chip (up to 10% of program storage space on UNO). For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
+
+```cpp
+#include "config/support-float-edit.h"
+```
+
+to
+
+```cpp
+// #include "config/support-float-edit.h"
+```
+
+Note that option selects support `float` and `double` variables regardless of this setting.
 
 Examples
 -----------

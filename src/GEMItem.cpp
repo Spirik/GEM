@@ -2,8 +2,8 @@
   GEMItem - menu item for GEM library.
 
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, boolean, char[17] data types) and
-  option selects. User-defined callback function can be specified to invoke when menu item is saved.
+  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -63,6 +63,24 @@ GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect& select_, void (
   , type(GEM_ITEM_VAL)
 { }
 
+GEMItem::GEMItem(char* title_, float& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(&select_)
+  , saveAction(saveAction_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, double& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(&select_)
+  , saveAction(saveAction_)
+  , type(GEM_ITEM_VAL)
+{ }
+
 //---
 
 GEMItem::GEMItem(char* title_, byte& linkedVariable_, GEMSelect& select_, boolean readonly_)
@@ -86,6 +104,24 @@ GEMItem::GEMItem(char* title_, int& linkedVariable_, GEMSelect& select_, boolean
 GEMItem::GEMItem(char* title_, char* linkedVariable_, GEMSelect& select_, boolean readonly_)
   : title(title_)
   , linkedVariable(linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(&select_)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, float& linkedVariable_, GEMSelect& select_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SELECT)
+  , select(&select_)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, double& linkedVariable_, GEMSelect& select_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
   , select(&select_)
   , readonly(readonly_)
@@ -126,6 +162,24 @@ GEMItem::GEMItem(char* title_, boolean& linkedVariable_, void (*saveAction_)())
   , saveAction(saveAction_)
 { }
 
+GEMItem::GEMItem(char* title_, float& linkedVariable_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_FLOAT)
+  , precision(GEM_FLOAT_PREC)
+  , type(GEM_ITEM_VAL)
+  , saveAction(saveAction_)
+{ }
+
+GEMItem::GEMItem(char* title_, double& linkedVariable_, void (*saveAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_DOUBLE)
+  , precision(GEM_DOUBLE_PREC)
+  , type(GEM_ITEM_VAL)
+  , saveAction(saveAction_)
+{ }
+
 //---
 
 GEMItem::GEMItem(char* title_, byte& linkedVariable_, boolean readonly_)
@@ -160,6 +214,24 @@ GEMItem::GEMItem(char* title_, boolean& linkedVariable_, boolean readonly_)
   , type(GEM_ITEM_VAL)
 { }
 
+GEMItem::GEMItem(char* title_, float& linkedVariable_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_FLOAT)
+  , precision(GEM_FLOAT_PREC)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
+GEMItem::GEMItem(char* title_, double& linkedVariable_, boolean readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_DOUBLE)
+  , precision(GEM_DOUBLE_PREC)
+  , readonly(readonly_)
+  , type(GEM_ITEM_VAL)
+{ }
+
 //---
 
 GEMItem::GEMItem(char* title_, GEMPage& linkedPage_, boolean readonly_)
@@ -189,4 +261,8 @@ void GEMItem::setReadonly(boolean mode) {
 
 boolean GEMItem::getReadonly() {
   return readonly;
+}
+
+void GEMItem::setPrecision(byte prec) {
+  precision = prec;
 }

@@ -2,8 +2,8 @@
   GEMSelect - option select for GEM library.
 
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, boolean, char[17] data types) and
-  option selects. User-defined callback function can be specified to invoke when menu item is saved.
+  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -54,6 +54,18 @@ GEMSelect::GEMSelect(byte length_, SelectOptionChar* options_)
   , _options(options_)
 { }
 
+GEMSelect::GEMSelect(byte length_, SelectOptionFloat* options_)
+  : _type(GEM_VAL_FLOAT)
+  , _length(length_)
+  , _options(options_)
+{ }
+
+GEMSelect::GEMSelect(byte length_, SelectOptionDouble* options_)
+  : _type(GEM_VAL_DOUBLE)
+  , _length(length_)
+  , _options(options_)
+{ }
+
 byte GEMSelect::getType() {
   return _type;
 }
@@ -66,6 +78,8 @@ int GEMSelect::getSelectedOptionNum(void* variable) {
   SelectOptionInt* optsInt = (SelectOptionInt*)_options;
   SelectOptionByte* optsByte = (SelectOptionByte*)_options;
   SelectOptionChar* optsChar = (SelectOptionChar*)_options;
+  SelectOptionFloat* optsFloat = (SelectOptionFloat*)_options;
+  SelectOptionDouble* optsDouble = (SelectOptionDouble*)_options;
   boolean found = false;
   for (byte i=0; i<_length; i++) {
     switch (_type) {
@@ -77,6 +91,12 @@ int GEMSelect::getSelectedOptionNum(void* variable) {
         break;
       case GEM_VAL_CHAR:
         if (strcmp(optsChar[i].val_char, (char*)variable) == 0) { found = true; }
+        break;
+      case GEM_VAL_FLOAT:
+        if (optsFloat[i].val_float == *(float*)variable) { found = true; }
+        break;
+      case GEM_VAL_DOUBLE:
+        if (optsDouble[i].val_double == *(double*)variable) { found = true; }
         break;
     }
     if (found) { return i; }
@@ -94,6 +114,8 @@ char* GEMSelect::getOptionNameByIndex(int index) {
   SelectOptionInt* optsInt = (SelectOptionInt*)_options;
   SelectOptionByte* optsByte = (SelectOptionByte*)_options;
   SelectOptionChar* optsChar = (SelectOptionChar*)_options;
+  SelectOptionFloat* optsFloat = (SelectOptionFloat*)_options;
+  SelectOptionDouble* optsDouble = (SelectOptionDouble*)_options;
   switch (_type) {
     case GEM_VAL_INTEGER:
       name = (index > -1 && index < _length) ? optsInt[index].name : "";
@@ -104,6 +126,12 @@ char* GEMSelect::getOptionNameByIndex(int index) {
     case GEM_VAL_CHAR:
       name = (index > -1 && index < _length) ? optsChar[index].name : "";
       break;
+    case GEM_VAL_FLOAT:
+      name = (index > -1 && index < _length) ? optsFloat[index].name : "";
+      break;
+    case GEM_VAL_DOUBLE:
+      name = (index > -1 && index < _length) ? optsDouble[index].name : "";
+      break;
   }
   return const_cast<char*>(name);
 }
@@ -112,6 +140,8 @@ void GEMSelect::setValue(void* variable, int index) {
   SelectOptionInt* optsInt = (SelectOptionInt*)_options;
   SelectOptionByte* optsByte = (SelectOptionByte*)_options;
   SelectOptionChar* optsChar = (SelectOptionChar*)_options;
+  SelectOptionFloat* optsFloat = (SelectOptionFloat*)_options;
+  SelectOptionDouble* optsDouble = (SelectOptionDouble*)_options;
   if (index > -1 && index < _length) {
     switch (_type) {
       case GEM_VAL_INTEGER:
@@ -122,6 +152,13 @@ void GEMSelect::setValue(void* variable, int index) {
         break;
       case GEM_VAL_CHAR:
         strcpy((char*)variable, optsChar[index].val_char);
+        break;
+      case GEM_VAL_FLOAT:
+        *(float*)variable = optsFloat[index].val_float;
+        break;
+        break;
+      case GEM_VAL_DOUBLE:
+        *(double*)variable = optsDouble[index].val_double;
         break;
     }
   }

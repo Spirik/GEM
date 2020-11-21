@@ -2,8 +2,8 @@
   GEMSelect - option select for GEM library.
 
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, boolean, char[17] data types) and
-  option selects. User-defined callback function can be specified to invoke when menu item is saved.
+  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -53,6 +53,18 @@ struct SelectOptionChar {
   char* val_char;
 };
 
+// Declaration of SelectOptionFloat type
+struct SelectOptionFloat {
+  char* name;
+  float val_float;
+};
+
+// Declaration of SelectOptionDouble type
+struct SelectOptionDouble {
+  char* name;
+  double val_double;
+};
+
 // Declaration of GEMSelect class
 class GEMSelect {
   friend class GEM;
@@ -65,6 +77,8 @@ class GEMSelect {
     GEMSelect(byte length_, SelectOptionInt* options_);
     GEMSelect(byte length_, SelectOptionByte* options_);
     GEMSelect(byte length_, SelectOptionChar* options_);
+    GEMSelect(byte length_, SelectOptionFloat* options_);
+    GEMSelect(byte length_, SelectOptionDouble* options_);
   private:
     byte _type;
     byte _length;
