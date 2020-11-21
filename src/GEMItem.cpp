@@ -263,6 +263,14 @@ boolean GEMItem::getReadonly() {
   return readonly;
 }
 
+void GEMItem::setTitle(char* title_) {
+  title = title_;
+}
+
+char* GEMItem::getTitle() {
+  return title;
+}
+
 void GEMItem::setPrecision(byte prec) {
   precision = prec;
 }

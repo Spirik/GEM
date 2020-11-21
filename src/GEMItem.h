@@ -137,6 +137,8 @@ class GEMItem {
                                             // menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON and
                                             // menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
     boolean getReadonly();                  // Get readonly state for variable that menu item is associated with (as well as menu link or button)
+    void setTitle(char* title_);            // Set title of the menu item
+    char* getTitle();                       // Get title of the menu item
     void setPrecision(byte prec);           // Explicitly set precision for float or double variables as required by dtostrf() conversion,
                                             // i.e. the number of digits after the decimal sign
   private:

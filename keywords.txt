@@ -40,6 +40,8 @@ getReadonly	KEYWORD2
 addMenuItem	KEYWORD2
 setParentMenuPage	KEYWORD2
 setPrecision	KEYWORD2
+getTitle	KEYWORD2
+setTitle	KEYWORD2
 
 ####################################################
 # Constants (LITERAL1)
