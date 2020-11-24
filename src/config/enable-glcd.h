@@ -1,0 +1,3 @@
+#ifndef GEM_ENABLE_GLCD_VERSION
+#define GEM_ENABLE_GLCD_VERSION
+#endif

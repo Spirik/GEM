@@ -12,13 +12,13 @@ Supports buttons that can invoke user-defined actions and create action-specific
 
 Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0) and [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) graphic libraries.
 
-> Note that both AltSerialGraphicLCD and U8g2 libraries are currently required, regardless of which one of them is actually used to drive display (although the one that is not used won't affect compiled sketch size).
+> Note that both AltSerialGraphicLCD and U8g2 libraries are required by default, regardless of which one of them is actually used to drive display (although the one that is not used won't affect compiled sketch size). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used one. See [Configuration](#configuration) section for details.
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
 > Cyrillic is partially supported in U8g2 version of GEM (since 1.1). Can be used in menu title, menu item labels (including variables, buttons, and menu page links), and select options. Editable strings with Cyrillic characters are not supported.
 
-> Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) for details.
+> Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) section for details.
 
 * [When to use](#when-to-use)
 * [Structure](#structure)
@@ -33,6 +33,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMSelect](#gemselect)
   * [AppContext](#appcontext)
 * [Floating-point variables](#floating-point-variables)
+* [Configuration](#configuration)
 * [Examples](#examples)
 * [License](#license)
 * [**Wiki**](https://github.com/Spirik/GEM/wiki)
@@ -61,7 +62,7 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 
 Whichever option you choose you may need to reload IDE afterwards.
 
-Both [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) and [U8g2](https://github.com/olikraus/U8g2_Arduino) libraries are required to be installed as well.
+Both [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) and [U8g2](https://github.com/olikraus/U8g2_Arduino) libraries are required to be installed by default as well. However, it is possible (since GEM ver. 1.2.2) to exclude support fot not used one. See [Configuration](#configuration) section for details.
 
 How to use with AltSerialGraphicLCD
 -----------------------------------
@@ -1203,6 +1204,30 @@ to
 ```
 
 Note that option selects support `float` and `double` variables regardless of this setting.
+
+Configuration
+-----------
+It is possible to configure GEM library by excluding some features not needed in your project. That may help to save some additional program storage space. E.g., you can disable support for editable floating-point variables (see previous [section](#floating-point-variables)).
+
+You can also choose which version of GEM library (`AltSerialGraphicLCD` or `U8g2` based) should be compiled. That way, there won't be requirement to have both of the supported graphics libraries installed in the system at the same time (regardless of which one is actually used).
+
+For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion.
+
+To disable `AltSerialGraphicLCD` support comment out the following line:
+
+```cpp
+#include "config/enable-glcd.h"
+```
+
+To disable `U8g2` support comment out the following line:
+
+```cpp
+#include "config/enable-u8g2.h"
+```
+
+More configuration options may be be added in the future.
+
+> Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 Examples
 -----------
