@@ -33,11 +33,14 @@
 #ifndef HEADER_GEM_U8G2
 #define HEADER_GEM_U8G2
 
+#include "config.h"
+
+#ifdef GEM_ENABLE_U8G2_VERSION
+
 #include <U8g2lib.h>
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
-#include "config.h"
 
 // Macro constants (aliases) for u8g2 font families used to draw menu
 #define GEM_FONT_BIG        u8g2_font_6x12_tr
@@ -200,5 +203,7 @@ class GEM_u8g2 {
     byte _currentKey;
     void dispatchKeyPress();
 };
+
+#endif
 
 #endif

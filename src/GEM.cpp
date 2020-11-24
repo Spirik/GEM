@@ -33,6 +33,8 @@
 #include <Arduino.h>
 #include "GEM.h"
 
+#ifdef GEM_ENABLE_GLCD_VERSION
+
 // AVR-based Arduinos have suppoort for dtostrf, others require manual inclusion,
 // see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
 #ifndef __AVR__
@@ -839,3 +841,5 @@ void GEM::dispatchKeyPress() {
 
   }
 }
+
+#endif

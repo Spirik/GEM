@@ -33,11 +33,14 @@
 #ifndef HEADER_GEM
 #define HEADER_GEM
 
+#include "config.h"
+
+#ifdef GEM_ENABLE_GLCD_VERSION
+
 #include <AltSerialGraphicLCD.h>
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
-#include "config.h"
 
 // Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu
 #define GEM_KEY_NONE 0    // No key presses are detected
@@ -187,5 +190,7 @@ class GEM {
     byte _currentKey;
     void dispatchKeyPress();
 };
+
+#endif
 
 #endif

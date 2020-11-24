@@ -33,6 +33,8 @@
 #include <Arduino.h>
 #include "GEM_u8g2.h"
 
+#ifdef GEM_ENABLE_U8G2_VERSION
+
 // AVR-based Arduinos have suppoort for dtostrf, others require manual inclusion,
 // see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
 #ifndef __AVR__
@@ -917,3 +919,5 @@ void GEM_u8g2::dispatchKeyPress() {
 
   }
 }
+
+#endif
