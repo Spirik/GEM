@@ -67,6 +67,9 @@ Both [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) and [U8g2](htt
 How to use with AltSerialGraphicLCD
 -----------------------------------
 
+<details>
+<summary>Click here to view</summary>
+
 ### Requirements
 
 GEM supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
@@ -364,8 +367,13 @@ After compiling and uploading sketch to Arduino, wait while LCD screen boots and
 
 To learn more about GEM library, see the [Reference](#reference) section and visit [wiki](https://github.com/Spirik/GEM/wiki).
 
+</details>
+
 How to use with U8g2
 --------------------
+
+<details>
+<summary>Click here to view</summary>
 
 ### Requirements
 
@@ -574,6 +582,8 @@ After compiling and uploading sketch to Arduino, wait while LCD screen boots and
 ![Basic example](https://github.com/Spirik/GEM/wiki/images/gem-ex-01-basic-run.gif)
 
 To learn more about GEM library, see the [Reference](#reference) section and visit [wiki](https://github.com/Spirik/GEM/wiki).
+
+</details>
 
 Reference
 -----------
