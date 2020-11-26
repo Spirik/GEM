@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -74,4 +74,12 @@ GEMItem* GEMPage::getMenuItem(byte index) {
 
 GEMItem* GEMPage::getCurrentMenuItem() {
   return getMenuItem(currentItemNum);
+}
+
+void GEMPage::setTitle(char* title_) {
+  title = title_;
+}
+
+char* GEMPage::getTitle() {
+  return title;
 }

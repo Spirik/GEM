@@ -833,6 +833,14 @@ GEMPage menuPage(title);
   *Returns*: nothing  
   Specify parent level menu page (to know where to go back to when pressing Back button, that will be added automatically). Accepts `GEMPage` object.
 
+* **setTitle(** _char*_ title **)**  
+  *Returns*: nothing  
+  Set title of the menu page. Can be used to update menu page title dynamically.
+
+* *char** **getTitle()**  
+  *Returns*: `char*`  
+  Get title of the menu page.
+
 
 ----------
 
