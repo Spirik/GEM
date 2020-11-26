@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -49,6 +49,8 @@ class GEMPage {
     GEMPage(char* title_ = "");
     void addMenuItem(GEMItem& menuItem);              // Add menu item to menu page
     void setParentMenuPage(GEMPage& parentMenuPage);  // Specify parent level menu page (to know where to go back to when pressing Back button)
+    void setTitle(char* title_);                      // Set title of the menu page
+    char* getTitle();                                 // Get title of the menu page
   private:
     char* title;
     byte currentItemNum = 0;                          // Currently selected (focused) menu item of the page
