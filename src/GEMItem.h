@@ -33,6 +33,7 @@
 */
 
 #include "constants.h"
+#include "GEMPage.h"
 
 #ifndef HEADER_GEMITEM
 #define HEADER_GEMITEM
@@ -45,6 +46,9 @@
 
 // Macro constant (alias) for readonly modifier of associated with menu item variable
 #define GEM_READONLY true
+
+// Macro constant (alias) for hidden state of the menu item
+#define GEM_HIDDEN true
 
 // Forward declaration of necessary classes
 class GEMPage;
@@ -132,15 +136,18 @@ class GEMItem {
       values GEM_READONLY (alias for true)
     */
     GEMItem(char* title_, void (*buttonAction_)(), boolean readonly_ = false);
-    void setReadonly(boolean mode = true);  // Explicitly set or unset readonly mode for variable that menu item is associated with
-                                            // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOLEAN variable
-                                            // menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON and
-                                            // menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
-    boolean getReadonly();                  // Get readonly state for variable that menu item is associated with (as well as menu link or button)
     void setTitle(char* title_);            // Set title of the menu item
     char* getTitle();                       // Get title of the menu item
     void setPrecision(byte prec);           // Explicitly set precision for float or double variables as required by dtostrf() conversion,
                                             // i.e. the number of digits after the decimal sign
+    void setReadonly(boolean mode = true);  // Explicitly set or unset readonly mode for variable that menu item is associated with
+                                            // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_FLOAT, GEM_VAL_DOUBLE, GEM_VAL_CHAR,
+                                            // GEM_VAL_BOOLEAN variable menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON
+                                            // and menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
+    boolean getReadonly();                  // Get readonly state of the variable that menu item is associated with (as well as menu link or button)
+    void hide(boolean hide = true);         // Explicitly hide or show menu item
+    void show();                            // Explicitly show menu item
+    boolean getHidden();                    // Get hidden state of the menu item
   private:
     char* title;
     byte type;
@@ -148,9 +155,12 @@ class GEMItem {
     byte linkedType;
     byte precision = GEM_FLOAT_PREC;
     boolean readonly = false;
+    boolean hidden = false;
     GEMSelect* select;
+    GEMPage* parentPage = nullptr;
     GEMPage* linkedPage;
     GEMItem* menuItemNext;
+    GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
     void (*buttonAction)();
     void (*saveAction)();
 };

@@ -410,7 +410,7 @@ void GEM_u8g2::printMenuItems() {
         _u8g2.drawXBMP(5, yDraw, arrowBtn_width, arrowBtn_height, arrowBtn_bits);
         break;
     }
-    menuItemTmp = menuItemTmp->menuItemNext;    
+    menuItemTmp = menuItemTmp->getMenuItemNext();
     y += _menuItemHeight;
     i++;
   }

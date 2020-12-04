@@ -314,7 +314,7 @@ void GEM::printMenuItems() {
         _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
         break;
     }
-    menuItemTmp = menuItemTmp->menuItemNext;    
+    menuItemTmp = menuItemTmp->getMenuItemNext();
     y += _menuItemHeight;
     i++;
   }
