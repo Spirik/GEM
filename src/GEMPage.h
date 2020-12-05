@@ -42,6 +42,7 @@
 class GEMPage {
   friend class GEM;
   friend class GEM_u8g2;
+  friend class GEMItem;
   public:
     /* 
       @param 'title_' - title of the menu page displayed at top of the screen
@@ -54,9 +55,13 @@ class GEMPage {
   private:
     char* title;
     byte currentItemNum = 0;                          // Currently selected (focused) menu item of the page
-    byte itemsCount = 0;
-    GEMItem* getMenuItem(byte index);
+    byte itemsCount = 0;                              // Items count excluding hidden ones
+    byte itemsCountTotal = 0;                         // Items count incuding hidden ones
+    GEMItem* getMenuItem(byte index, boolean total = false);
     GEMItem* getCurrentMenuItem();
+    int getMenuItemNum(GEMItem& menuItem);            // Find index of the supplied menu item
+    void hideMenuItem(GEMItem& menuItem);
+    void showMenuItem(GEMItem& menuItem);
     GEMItem* _menuItem;                                         // First menu item of the page (the following ones are linked from within one another)
     GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)}; // Local instance of Back button (created when parent level menu page is specified through
                                                                 // setParentMenuPage(); always becomes the first menu item in a list)

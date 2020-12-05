@@ -255,14 +255,6 @@ GEMItem::GEMItem(char* title_, void (*buttonAction_)(), boolean readonly_)
   , type(GEM_ITEM_BUTTON)
 { }
 
-void GEMItem::setReadonly(boolean mode) {
-  readonly = mode;
-}
-
-boolean GEMItem::getReadonly() {
-  return readonly;
-}
-
 void GEMItem::setTitle(char* title_) {
   title = title_;
 }
@@ -273,4 +265,48 @@ char* GEMItem::getTitle() {
 
 void GEMItem::setPrecision(byte prec) {
   precision = prec;
+}
+
+void GEMItem::setReadonly(boolean mode) {
+  readonly = mode;
+}
+
+boolean GEMItem::getReadonly() {
+  return readonly;
+}
+
+void GEMItem::hide(boolean hide) {
+  if (hide) {
+    if (!hidden) {
+      if (parentPage != nullptr) {
+        parentPage->hideMenuItem(*this);
+      } else {
+        hidden = true;
+      }
+    }
+  } else {
+    show();
+  }
+}
+
+void GEMItem::show() {
+  if (hidden) {
+    if (parentPage != nullptr) {
+      parentPage->showMenuItem(*this);
+    } else {
+      hidden = false;
+    }
+  }
+}
+
+boolean GEMItem::getHidden() {
+  return hidden;
+}
+
+GEMItem* GEMItem::getMenuItemNext() {
+  GEMItem* menuItemTmp = menuItemNext;
+  while (menuItemTmp != 0 && menuItemTmp->hidden) {
+    menuItemTmp = menuItemTmp->menuItemNext;
+  }
+  return menuItemTmp;
 }

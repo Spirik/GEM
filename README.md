@@ -962,21 +962,17 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
   *Value*: `true`  
   Alias for readonly modifier of associated with menu item variable. Submitted as **readonly** setting to `GEMItem` constructor of variable menu items and option select.
 
+* **GEM_HIDDEN**  
+  *Type*: macro `#define GEM_HIDDEN true`  
+  *Value*: `true`  
+  Alias for hidden state of the menu item. Submitted as **hide** option to `GEMItem::hide()` method.
+
 * **GEM_STR_LEN**  
   *Type*: macro `#define GEM_STR_LEN 17`  
   *Value*: `17`  
   Alias for supported length of the string (character sequence) variable of type `char[GEM_STR_LEN]`. Note that this limits the length of the string that can be used with editable character menu item variable, but option select variable doesn't have this restriction. But you still have to make sure that in the latter case character array should be big enough to hold select option with the longest value to avoid overflows.
 
 #### Methods
-
-* **setReadonly(** _boolean_ mode = true **)**  
-  *Accepts*: `boolean`  
-  *Returns*: nothing  
-  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select), or menu button `GEM_ITEM_BUTTON` and menu link `GEM_ITEM_LINK`, pressing of which won't result in any action, associated with them.
-
-* *boolean* **getReadonly()**  
-  *Returns*: `boolean`  
-  Get readonly state for variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
 
 * **setTitle(** _char*_ title **)**  
   *Returns*: nothing  
@@ -989,6 +985,28 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
 * **setPrecision()**  
   *Returns*: nothing  
   Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
+
+* **setReadonly(** _boolean_ mode = true **)**  
+  *Accepts*: `boolean`  
+  *Returns*: nothing  
+  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select), or menu button `GEM_ITEM_BUTTON` and menu link `GEM_ITEM_LINK`, pressing of which won't result in any action, associated with them.
+
+* *boolean* **getReadonly()**  
+  *Returns*: `boolean`  
+  Get readonly state of the variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
+
+* **hide(** _boolean_ hide = true **)**  
+  *Accepts*: `boolean`  
+  *Returns*: nothing  
+  Hide (`hide(true)`, or `hide(GEM_HIDDEN)`, or `hide()`) or show (`hide(false)`) menu item. Hidden menu items won't be printed to the screen the next time menu is drawn.
+
+* **show()**  
+  *Returns*: nothing  
+  Show previously hidden menu item.
+
+* *boolean* **getHidden()**  
+  *Returns*: `boolean`  
+  Get hidden state of the menu item: `true` when menu item is hidden, `false` otherwise.
 
 
 ----------
