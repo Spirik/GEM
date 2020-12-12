@@ -35,8 +35,9 @@
 #include <Arduino.h>
 #include "GEMPage.h"
 
-GEMPage::GEMPage(char* title_)
+GEMPage::GEMPage(char* title_, void (*exitAction_)())
   : title(title_)
+  , exitAction(exitAction_)
 { }
 
 void GEMPage::addMenuItem(GEMItem& menuItem) {

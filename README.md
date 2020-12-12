@@ -812,7 +812,7 @@ For more details on customization see corresponding section of the [wiki](https:
 Menu page holds menu items `GEMItem` and represents menu level. Menu can have multiple menu pages (linked to each other) with multiple menu items each. Object of class `GEMPage` defines as follows:
 
 ```cpp
-GEMPage menuPage(title);
+GEMPage menuPage(title[, exitAction]);
 ```
 
 * **title**  
@@ -820,6 +820,10 @@ GEMPage menuPage(title);
   Title of the menu page displayed at top of the screen.
   
   > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD and U8g2 vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD version, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
+
+* **exitAction** [*optional*]  
+  *Type*: `pointer to function`  
+  Pointer to function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page). Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
 
 #### Methods
 

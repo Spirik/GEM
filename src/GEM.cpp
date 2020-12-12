@@ -833,6 +833,9 @@ void GEM::dispatchKeyPress() {
           if (_menuPageCurrent->getMenuItem(0)->type == GEM_ITEM_BACK) {
             _menuPageCurrent->currentItemNum = 0;
             menuItemSelect();
+          } else if (_menuPageCurrent->exitAction != nullptr) {
+            _menuPageCurrent->currentItemNum = 0;
+            _menuPageCurrent->exitAction();
           }
           break;
         case GEM_KEY_OK:
