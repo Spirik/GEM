@@ -823,7 +823,7 @@ GEMPage menuPage(title[, exitAction]);
 
 * **exitAction** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page). Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+  Pointer to function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
 
 #### Methods
 
