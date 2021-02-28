@@ -743,11 +743,16 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: nothing  
   Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
+* **setSplashDelay(** _uint16_t_ value **)**  
+  *Accepts*: `uint16_t`  
+  *Returns*: nothing  
+  Set splash screen delay (in ms). By default splash screen will be visible for 1000ms. Maximum supported value is 65535ms. Setting to 0 will disable splash screen. Should be called before `GEM::init()` and `GEM_u8g2::init()`.
+  > **Note:** internally splash screen delay is implemented via `delay()` function. This is the only place in library where `delay()` is utilized (aside of example sketches).
+
 * **hideVersion(** _boolean_ flag = true **)**  
   *Accepts*: `boolean`  
   *Returns*: nothing  
   Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `GEM::init()` and `GEM_u8g2::init()`.
-  Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 * **enableCyrillic(** _boolean_ flag = true **)**  `U8g2 version only`  
   *Accepts*: `boolean`  

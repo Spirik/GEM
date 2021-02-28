@@ -12,7 +12,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2020-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -142,6 +142,10 @@ void GEM_u8g2::setSplash(byte width, byte height, const unsigned char U8X8_PROGM
   _splash = {width, height, image};
 }
 
+void GEM_u8g2::setSplashDelay(uint16_t value) {
+  _splashDelay = value;
+}
+
 void GEM_u8g2::hideVersion(boolean flag) {
   _enableVersion = !flag;
 }
@@ -165,33 +169,37 @@ void GEM_u8g2::init() {
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
   _menuItemValueLength = (_u8g2.getDisplayWidth() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
 
-  _u8g2.firstPage();
-  do {
-    _u8g2.drawXBMP((_u8g2.getDisplayWidth() - _splash.width) / 2, (_u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
-  } while (_u8g2.nextPage());
+  if (_splashDelay > 0) {
 
-  if (_enableVersion) {
-    delay(500);
     _u8g2.firstPage();
     do {
       _u8g2.drawXBMP((_u8g2.getDisplayWidth() - _splash.width) / 2, (_u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
-      _u8g2.setFont(_fontFamilies.small);
-      byte x = _u8g2.getDisplayWidth() - strlen(GEM_VER)*4;
-      byte y = _u8g2.getDisplayHeight() - 7;
-      if (_splash.image != logo_bits) {
-        _u8g2.setCursor(x - 12, y);
-        _u8g2.print("GEM");
-      } else {
-        _u8g2.setCursor(x, y);
-      }
-      _u8g2.print(GEM_VER);
     } while (_u8g2.nextPage());
-    delay(500);
-  } else {
-    delay(1000);
-  }
 
-  _u8g2.clear();
+    if (_enableVersion) {
+      delay(_splashDelay / 2);
+      _u8g2.firstPage();
+      do {
+        _u8g2.drawXBMP((_u8g2.getDisplayWidth() - _splash.width) / 2, (_u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
+        _u8g2.setFont(_fontFamilies.small);
+        byte x = _u8g2.getDisplayWidth() - strlen(GEM_VER)*4;
+        byte y = _u8g2.getDisplayHeight() - 7;
+        if (_splash.image != logo_bits) {
+          _u8g2.setCursor(x - 12, y);
+          _u8g2.print("GEM");
+        } else {
+          _u8g2.setCursor(x, y);
+        }
+        _u8g2.print(GEM_VER);
+      } while (_u8g2.nextPage());
+      delay(_splashDelay / 2);
+    } else {
+      delay(_splashDelay);
+    }
+
+    _u8g2.clear();
+
+  }
 }
 
 void GEM_u8g2::reInit() {

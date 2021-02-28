@@ -12,7 +12,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2020-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -114,6 +114,7 @@ class GEM_u8g2 {
     /* INIT OPERATIONS */
 
     void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
     void enableCyrillic(boolean flag = true);            // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
     void init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
@@ -149,6 +150,7 @@ class GEM_u8g2 {
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
     Splash _splash;
+    uint16_t _splashDelay = 1000;
     boolean _enableVersion = true;
 
     /* DRAW OPERATIONS */

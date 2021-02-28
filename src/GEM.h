@@ -12,7 +12,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -103,6 +103,7 @@ class GEM {
                                                          // by the next row of 8 vertical pixels and so on.
                                                          // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
                                                          // (although this does not matter).
+    void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
@@ -135,6 +136,7 @@ class GEM {
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
     const uint8_t PROGMEM *_splash;
+    uint16_t _splashDelay = 1000;
     boolean _enableVersion = true;
 
     /* DRAW OPERATIONS */

@@ -12,7 +12,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -126,6 +126,10 @@ void GEM::setSplash(const uint8_t PROGMEM *sprite) {
   _splash = sprite;
 }
 
+void GEM::setSplashDelay(uint16_t value) {
+  _splashDelay = value;
+}
+
 void GEM::hideVersion(boolean flag) {
   _enableVersion = !flag;
 }
@@ -146,22 +150,27 @@ void GEM::init() {
   
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
   _menuItemValueLength = (_glcd.xdim - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
-  _glcd.bitblt_P(_glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, _glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, GLCD_MODE_NORMAL, _splash);
+  
+  if (_splashDelay > 0) {
 
-  if (_enableVersion) {
-    delay(500);
-    _glcd.fontFace(1);
-    _glcd.setY(_glcd.ydim - 6);
-    if (_splash != logo) {
-      _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4 - 12);
-      _glcd.putstr("GEM");
+    _glcd.bitblt_P(_glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, _glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, GLCD_MODE_NORMAL, _splash);
+
+    if (_enableVersion) {
+      delay(_splashDelay / 2);
+      _glcd.fontFace(1);
+      _glcd.setY(_glcd.ydim - 6);
+      if (_splash != logo) {
+        _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4 - 12);
+        _glcd.putstr("GEM");
+      } else {
+        _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4);
+      }
+      _glcd.putstr(GEM_VER);
+      delay(_splashDelay / 2);
     } else {
-      _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4);
+      delay(_splashDelay);
     }
-    _glcd.putstr(GEM_VER);
-    delay(500);
-  } else {
-    delay(1000);
+
   }
 }
 
