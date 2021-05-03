@@ -34,6 +34,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [AppContext](#appcontext)
 * [Floating-point variables](#floating-point-variables)
 * [Configuration](#configuration)
+* [Compatibility](#compatibility)
 * [Examples](#examples)
 * [License](#license)
 * [**Wiki**](https://github.com/Spirik/GEM/wiki)
@@ -1273,6 +1274,10 @@ To disable `U8g2` support comment out the following line:
 More configuration options may be be added in the future.
 
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
+
+Compatibility
+-----------
+When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp` or `GEM_u8g2.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips). ESP32-based boards should be fine as well.
 
 Examples
 -----------
