@@ -35,12 +35,10 @@
 
 #ifdef GEM_ENABLE_GLCD_VERSION
 
-// AVR-based Arduinos have suppoort for dtostrf, others require manual inclusion,
-// see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647;
-// the same goes for itoa support on some non-AVR boards
-#ifndef __AVR__
+// AVR-based Arduinos have suppoort for dtostrf, some others may require manual inclusion (e.g. SAMD),
+// see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
+#if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM))
 #include <avr/dtostrf.h>
-#include <itoa.h>
 #endif
 
 // Macro constants (aliases) for IDs of sprites of UI elements used to draw menu
