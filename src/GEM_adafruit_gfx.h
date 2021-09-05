@@ -13,7 +13,7 @@
 
   For documentation visit:
   https://github.com/Spirik/GEM
-  
+
   Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
@@ -32,17 +32,23 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HEADER_GEM
-#define HEADER_GEM
+#ifndef HEADER_GEM_ADAFRUIT_GFX
+#define HEADER_GEM_ADAFRUIT_GFX
 
 #include "config.h"
 
-#ifdef GEM_ENABLE_GLCD_VERSION
+#ifdef GEM_ENABLE_ADAFRUIT_GFX_VERSION
 
-#include <AltSerialGraphicLCD.h>
+#include <Adafruit_GFX.h>
+#include "fonts/TomThumbMono.h"
+#include "fonts/Fixed6x12.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
+
+// Macro constants (aliases) for Adafruit GFX font families used to draw menu
+#define GEM_FONT_BIG       &Fixed6x12
+#define GEM_FONT_SMALL     &TomThumbMono
 
 // Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu
 #define GEM_KEY_NONE 0    // No key presses are detected
@@ -53,10 +59,24 @@
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button)
 
+// Declaration of Splash type
+struct Splash {
+  byte width;                         // Width of the splash lmage
+  byte height;                        // Height of the splash image
+  const uint8_t PROGMEM *image;       // Pointer to bitmap image to be shown as splash
+};
+
 // Declaration of FontSize type
 struct FontSize {
-  byte width;   // Width of the character
-  byte height;  // Height of the character
+  byte width;           // Width of the character
+  byte height;          // Height of the character
+  byte baselineOffset;  // Baseline position relative to the top edge of the character box
+};
+
+// Declaration of FontFamiliesAGFX type
+struct FontFamiliesAGFX {
+  const GFXfont *big;    // Big font family (i.e., 6x12)
+  const GFXfont *small;  // Small font family (i.e., 4x6)
 };
 
 // Declaration of AppContext type
@@ -75,11 +95,11 @@ struct AppContext {
 // Forward declaration of necessary classes
 class GEMItem;
 
-// Declaration of GEM class
-class GEM {
+// Declaration of GEM_adafruit_gfx class
+class GEM_adafruit_gfx {
   public:
     /* 
-      @param 'glcd_' - reference to the instance of the GLCD class created with AltSerialGraphicLCD library
+      @param 'agfx_' - reference to an object created with Adafruit GFX library and used for communication with display
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
       values GEM_POINTER_ROW, GEM_POINTER_DASH
       default GEM_POINTER_ROW
@@ -93,21 +113,17 @@ class GEM {
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
     */
-    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
 
     /* INIT OPERATIONS */
 
-    void setSplash(const uint8_t PROGMEM *sprite);       // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
-                                                         // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
-                                                         // The sprite commences with two bytes which are the width and height of the image in pixels.
-                                                         // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
-                                                         // is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel.
-                                                         // A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed
-                                                         // by the next row of 8 vertical pixels and so on.
-                                                         // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
-                                                         // (although this does not matter).
+    void setSplash(byte width, byte height, const uint8_t PROGMEM *image); // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
+                                                                           // The following is the format of the bitmap as described in Adafruit GFX library documentation.
+                                                                           // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    void setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
+    void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -127,20 +143,23 @@ class GEM {
     void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
                                                          // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
-    GLCD& _glcd;
+    Adafruit_GFX& _agfx;
     byte _menuPointerType;
     byte _menuItemsPerScreen;
     byte _menuItemHeight;
     byte _menuPageScreenTopOffset;
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
-    FontSize _menuItemFont[2] = {{6,8},{4,6}};
+    FontSize _menuItemFont[2] = {{6,12,10},{4,6,6}};
+    FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
-    const uint8_t PROGMEM *_splash;
+    Splash _splash;
     uint16_t _splashDelay = 1000;
     boolean _enableVersion = true;
+    uint16_t _menuBackgroundColor = 0x0000;
+    uint16_t _menuForegroundColor = 0xFFFF;
 
     /* DRAW OPERATIONS */
 
@@ -153,8 +172,9 @@ class GEM {
     void printMenuItemFull(char* str, int offset = 0);
     byte getMenuItemInsetOffset(boolean forSprite = false);
     byte getCurrentItemTopOffset(boolean withInsetOffset = true, boolean forSprite = false);
+    void printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color);
     void printMenuItems();
-    void drawMenuPointer();
+    void drawMenuPointer(boolean clear = false);
     void drawScrollbar();
 
     /* MENU ITEMS NAVIGATION */
@@ -178,16 +198,16 @@ class GEM {
     void initEditValueCursor();
     void nextEditValueCursorPosition();
     void prevEditValueCursorPosition();
-    void drawEditValueCursor();
+    void drawEditValueCursor(boolean clear = false);
     void nextEditValueDigit();
     void prevEditValueDigit();
-    void drawEditValueDigit(byte code);
+    void drawEditValueDigit(byte code, boolean clear = false);
     void nextEditValueSelect();
     void prevEditValueSelect();
     void drawEditValueSelect();
     void saveEditValue();
     void cancelEditValue();
-    void exitEditValue();
+    void exitEditValue(boolean redrawMenu = true);
     char* trimString(char* str);
 
     /* KEY DETECTION */

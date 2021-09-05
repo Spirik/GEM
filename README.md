@@ -2,6 +2,8 @@
 ![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
 ===========
 
+> ⚠️ __This is work-in-progress version of GEM with Adafruit GFX support. Use with caution or wait till proper release:)__
+
 GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -27,7 +29,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [With AltSerialGraphicLCD](#how-to-use-with-altserialgraphiclcd)
   * [With U8g2](#how-to-use-with-u8g2)
 * [Reference](#reference)
-  * [GEM](#gem)
+  * [GEM](#gem-gem_u8g2)
   * [GEMPage](#gempage)
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)

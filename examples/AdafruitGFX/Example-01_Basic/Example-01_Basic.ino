@@ -4,7 +4,7 @@
   Simple one page menu with one editable menu item associated with int variable, one with boolean variable,
   and a button, pressing of which will result in int variable value printed to Serial monitor if boolean variable is set to true.
 
-  AltSerialGraphicLCD library is used to draw menu.
+  Adafruit GFX library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
   
   Additional info (including the breadboard view) available on GitHub:
@@ -13,8 +13,12 @@
   This example code is in the public domain.
 */
 
-#include <GEM.h>
+#include <GEM_adafruit_gfx.h>
 #include <KeyDetector.h>
+
+// Hardware-specific library for ST7735.
+// Include library that matches your setup (see https://learn.adafruit.com/adafruit-gfx-graphics-library for details)
+#include <Adafruit_ST7735.h>
 
 // Pins the buttons are connected to
 const byte downPin = 2;
@@ -33,14 +37,17 @@ KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key));
 // as the third argument to KeyDetector constructor:
 // KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key), 10);
 
-// Constants for the pins SparkFun Graphic LCD Serial Backpack is connected to and SoftwareSerial object
-const byte rxPin = 8;
-const byte txPin = 9;
-SoftwareSerial serialLCD(rxPin, txPin);
+// Macro constants (aliases) for the pins TFT display is connected to. Please update the pin numbers according to your setup
+#define TFT_CS    A5
+#define TFT_RST   -1 // Set to -1 and connect to Arduino RESET pin
+#define TFT_DC    A4
 
-// Create an instance of the GLCD class. This instance is used to call all the subsequent GLCD functions
-// (internally from GEM library, or manually in your sketch if it is required)
-GLCD glcd(serialLCD);
+// Create an instance of the Adafruit GFX library.
+// Use constructor that matches your setup (see https://learn.adafruit.com/adafruit-gfx-graphics-library for details).
+// ST7735 based display is used in the example.
+// This instance is used to call all the subsequent Adafruit GFX functions (internally from GEM library,
+// or manually in your sketch if it is required)
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 // Create variables that will be editable through the menu and assign them initial values
 int number = -512;
@@ -60,8 +67,8 @@ GEMItem menuItemButton("Print", printData);
 // Menu can have multiple menu pages (linked to each other) with multiple menu items each
 GEMPage menuPageMain("Main Menu");
 
-// Create menu object of class GEM. Supply its constructor with reference to glcd object we created earlier
-GEM menu(glcd);
+// Create menu object of class GEM_adafruit_gfx. Supply its constructor with reference to tft object we created earlier
+GEM_adafruit_gfx menu(tft, GEM_POINTER_ROW, GEM_ITEMS_COUNT_AUTO);
 
 void setup() {
   // Push-buttons pin modes
@@ -74,16 +81,15 @@ void setup() {
 
   // Serial communications setup
   Serial.begin(115200);
-  serialLCD.begin(115200);
 
-  // LCD reset
-  delay(500);
-  glcd.reset();
-  delay(1000);
-  // Uncomment the following lines in dire situations
-  // (e.g. when screen becomes unresponsive after shutdown)
-  glcd.reset();
-  delay(1000);
+  // Use this initializer if using a 1.8" TFT screen:
+  tft.initR(INITR_BLACKTAB);      // Init ST7735S chip, black tab
+  // OR use this initializer if using a 1.8" TFT screen with offset such as WaveShare:
+  // tft.initR(INITR_GREENTAB);   // Init ST7735S chip, green tab
+  // See more options in Adafruit GFX library documentation
+
+  // Optionally, rotate display
+  // tft.setRotation(3); // See Adafruit GFX library documentation for details
 
   // Menu init, setup and draw
   menu.init();
