@@ -46,9 +46,9 @@ KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key));
 // KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key), 10);
 
 // Macro constants (aliases) for the pins TFT display is connected to. Please update the pin numbers according to your setup
-#define TFT_CS    A5
+#define TFT_CS    A2
 #define TFT_RST   -1 // Set to -1 and connect to Arduino RESET pin
-#define TFT_DC    A4
+#define TFT_DC    A3
 
 // Create an instance of the Adafruit GFX library.
 // Use constructor that matches your setup (see https://learn.adafruit.com/adafruit-gfx-graphics-library for details).
