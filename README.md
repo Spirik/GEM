@@ -597,7 +597,7 @@ How to use with Adafruit GFX
 
 GEM supports [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) library.
 
-In theory GEM is compatible with any display, that is supported by Adafruit library (given that it is properly set up and configured as required by the library). Guaranteed to work with [Adafruit 1.8" 128x160](https://www.adafruit.com/products/358) TFT LCD display, based on ST7735 controller. Other ST77** based ones should also work, theoretically as well as any other display that is supported by Adafruit GFX, although it is yet to be tested.
+In theory GEM is compatible with any display, that is supported by Adafruit GFX library (given that it is properly set up and configured as required by the library). Guaranteed to work with [Adafruit 1.8" 128x160](https://www.adafruit.com/products/358) TFT LCD display, based on ST7735 controller. Other ST77** based ones should also work, theoretically as well as any other display that is supported by Adafruit GFX, although it is yet to be tested.
 
 ### Import
 
@@ -707,13 +707,13 @@ Create menu page object of class `GEMPage`. Menu page holds menu items (`GEMItem
 GEMPage menuPageMain("Main Menu");
 ```
 
-And finally, create menu object of class `GEM`. Supply its constructor with a reference to `glcd` object we created earlier:
+And finally, create menu object of class `GEM_adafruit_gfx`. Supply its constructor with a reference to `tft` object we created earlier:
 
 ```cpp
-GEM menu(glcd);
+GEM_adafruit_gfx menu(tft);
 ```
 
-> **Note:** `GEM` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+> **Note:** `GEM_adafruit_gfx` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
 
 We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
 
