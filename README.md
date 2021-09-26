@@ -1587,7 +1587,7 @@ Configuration
 -----------
 It is possible to configure GEM library by excluding some features not needed in your project. That may help to save some additional program storage space. E.g., you can disable support for editable floating-point variables (see previous [section](#floating-point-variables)).
 
-You can also choose which version of GEM library (`AltSerialGraphicLCD`, `U8g2` or `Adafruit GFX` based) should be compiled. That way, there won't be requirement to have all of the supported graphic libraries installed in the system at the same time (regardless of which one is actually used).
+You can also choose which version of GEM library (`AltSerialGraphicLCD`, `U8g2` or `Adafruit GFX` based) should be compiled. That way, there won't be requirement to have all of the supported graphics libraries installed in the system at the same time (regardless of which one is actually used).
 
 For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion.
 
