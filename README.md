@@ -2,8 +2,6 @@
 ![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
 ===========
 
-> ⚠️ __This is work-in-progress version of GEM with Adafruit GFX support. Use with caution or wait till proper release:)__
-
 GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -12,9 +10,9 @@ Supports buttons that can invoke user-defined actions and create action-specific
 <img src="https://github.com/Spirik/GEM/wiki/images/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" height="360" alt="Party hard!" />
 </p>
 
-Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0) and [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) graphic libraries.
+Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0), [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) (since GEM ver. 1.3) graphics libraries.
 
-> Note that both AltSerialGraphicLCD and U8g2 libraries are required by default, regardless of which one of them is actually used to drive display (although the one that is not used won't affect compiled sketch size). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used one. See [Configuration](#configuration) section for details.
+> Note that each of AltSerialGraphicLCD, U8g2 and Adafruit GFX libraries are required by default, regardless of which one of them is actually used to drive display (although the one that is not used won't affect compiled sketch size). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used one. See [Configuration](#configuration) section for details.
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
@@ -28,8 +26,9 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
 * How to use
   * [With AltSerialGraphicLCD](#how-to-use-with-altserialgraphiclcd)
   * [With U8g2](#how-to-use-with-u8g2)
+  * [With Adafruit GFX](#how-to-use-with-adafruit-gfx)
 * [Reference](#reference)
-  * [GEM](#gem-gem_u8g2)
+  * [GEM, GEM_u8g2, GEM_adafruit_gfx](#gem-gem_u8g2-gem_adafruit_gfx)
   * [GEMPage](#gempage)
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
@@ -43,7 +42,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
 
 When to use
 -----------
-If you want to equip your project with graphical LCD display and let user choose different options and settings to configure its operation. Whether it is control panel of smart home or simple configurable LED strip, GEM will provide all necessary controls for editing variables and navigating through submenus, as well as running user-defined functions.
+If you want to equip your project with graphic LCD display and let user choose different options and settings to configure its operation. Whether it is control panel of smart home or simple configurable LED strip, GEM will provide all necessary controls for editing variables and navigating through submenus, as well as running user-defined functions.
 
 Structure
 -----------
@@ -51,7 +50,7 @@ Menu created with GEM library comprises of three base elements:
 
  - menu item (`GEMItem` class) - represents associated variable, button, or link to the next menu level (menu page);
  - menu page (`GEMPage` class) - consists of list of menu items and represents menu level;
- - menu object itself (`GEM` class) - can have multiple menu pages (linked to each other) with multiple menu items each.
+ - menu object itself (`GEM`, or `GEM_u8g2`, or `GEM_adafruit_gfx` class) - can have multiple menu pages (linked to each other) with multiple menu items each.
 
 ![GEM structure](https://github.com/Spirik/GEM/wiki/images/gem-structure.png)
 
@@ -65,7 +64,7 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 
 Whichever option you choose you may need to reload IDE afterwards.
 
-Both [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) and [U8g2](https://github.com/olikraus/U8g2_Arduino) libraries are required to be installed by default as well. However, it is possible (since GEM ver. 1.2.2) to exclude support fot not used one. See [Configuration](#configuration) section for details.
+Each of [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html), [U8g2](https://github.com/olikraus/U8g2_Arduino) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) libraries are required to be installed by default as well. However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. See [Configuration](#configuration) section for details.
 
 How to use with AltSerialGraphicLCD
 -----------------------------------
@@ -294,7 +293,7 @@ void setup() {
 
 #### setupMenu() function
 
-Let's assemble our menu. First, add menu items to menu page:
+Let's assemble our menu in `setupMenu()` function. First, add menu items to menu page:
 
 ```cpp
 menuPageMain.addMenuItem(menuItemInt);
@@ -308,7 +307,7 @@ Because we don't have multiple menu levels, all we left to do now is to add our 
 menu.setMenuPageCurrent(menuPageMain);
 ```
 
-`setupMenu()` is now complete:
+`setupMenu()` function is now complete:
 
 ```cpp
 void setupMenu() {
@@ -512,7 +511,7 @@ void setup() {
 
 #### setupMenu() function
 
-Let's assemble our menu. First, add menu items to menu page:
+Let's assemble our menu in `setupMenu()` function. First, add menu items to menu page:
 
 ```cpp
 menuPageMain.addMenuItem(menuItemInt);
@@ -526,7 +525,7 @@ Because we don't have multiple menu levels, all we left to do now is to add our 
 menu.setMenuPageCurrent(menuPageMain);
 ```
 
-`setupMenu()` is now complete:
+`setupMenu()` function is now complete:
 
 ```cpp
 void setupMenu() {
@@ -588,12 +587,302 @@ To learn more about GEM library, see the [Reference](#reference) section and vis
 
 </details>
 
+How to use with Adafruit GFX
+----------------------------
+
+<details>
+<summary>Click here to view</summary>
+
+### Requirements
+
+GEM supports [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) library.
+
+In theory GEM is compatible with any display, that is supported by Adafruit library (given that it is properly set up and configured as required by the library). Guaranteed to work with [Adafruit 1.8" 128x160](https://www.adafruit.com/products/358) TFT LCD display, based on ST7735 controller. Other ST77** based ones should also work, theoretically as well as any other display that is supported by Adafruit GFX, although it is yet to be tested.
+
+### Import
+
+To include Adafruit GFX-compatible version of GEM library add the following line at the top of your sketch:
+
+```cpp
+#include <GEM_adafruit_gfx.h>
+```
+
+Adafruit GFX library will be included automatically through GEM library, so no need to include it explicitly in your sketch (although it still needs to be installed in your system, of course).
+
+However, in order to communicate with your display it is required to install and explicitly include library specific to controller of your display, e.g. ST7735:
+
+```cpp
+#include <Adafruit_ST7735.h>
+```
+
+One more additional library that may come in handy (although is not necessary) is [KeyDetector](https://github.com/Spirik/KeyDetector) - it is small and lightweight library for key press events detection. It is used in some of the supplied examples (as well as the following one) to detect button presses for navigation through menu. To include KeyDetector library, install it first and then add the following line:
+
+```cpp
+#include <KeyDetector.h>
+```
+### Use
+
+Assume you have a simple setup as follows:
+
+ - 128x160 TFT LCD display based on (or compatible with) ST7735 controller, e.g. [Adafruit 1.8" TFT Display with microSD](http://www.adafruit.com/products/358), connected as shown below;
+ - also you have 6 push-buttons (momentary switches) connected to the digital pins 2 to 7, wired with 10kOhm pulldown resistors (so the HIGH means that the button is pressed).
+
+![Basic example breadboard](https://raw.githubusercontent.com/wiki/Spirik/GEM/images/ex_GEM_01_basic_agfx_breadboard_bb_edited_1590_o.png)
+
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
+
+> For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
+
+#### Navigation buttons initial setup (via KeyDetector library)
+
+Create constants for the pins you want to detect signals on (these are the pins the push-buttons are connected to):
+
+```cpp
+const byte downPin = 2;
+const byte leftPin = 3;
+const byte rightPin = 4;
+const byte upPin = 5;
+const byte cancelPin = 6;
+const byte okPin = 7;
+```
+
+Create an array of `Key` objects. It will hold information about which button press event should be detected on which input pin:
+
+```cpp
+Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, downPin}, {GEM_KEY_LEFT, leftPin}, {GEM_KEY_CANCEL, cancelPin}, {GEM_KEY_OK, okPin}};
+```
+
+> **Note:** aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending to menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
+
+Create `KeyDetector` object called `myKeyDetector` and supply its constructor with `keys` array created at the previous step and explicitly pass the size of the array:
+
+```cpp
+KeyDetector myKeyDetector(keys, sizeof(keys)/sizeof(Key));
+```
+
+Navigation buttons initial setup is now complete.
+
+#### LCD initial setup (via Adafruit GFX library)
+
+Adafruit GFX library supports several different display controllers (through separately installed and included libraries). Choose a matching library for the correct initialization of the display. See available libraries and supported controllers in the [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library) for Adafruit GFX library.
+
+In our case we included Adafruit_ST7735 library, and now we need to create an instance of the `Adafruit_ST7735` class named `tft`. This instance is used to call all the subsequent Adafruit GFX functions (internally from GEM library, or manually in your sketch if it is required). Before that, we define aliases for the pins display is connected to.
+
+```cpp
+#define TFT_CS    A2
+#define TFT_RST   -1
+#define TFT_DC    A3
+
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+```
+
+LCD initial setup is now complete.
+
+#### Menu initial setup
+
+Create variables that you would like to be editable through the menu. Assign them initial values:
+
+```cpp
+int number = -512;
+boolean enablePrint = false;
+```
+
+Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" respectively - these names will be printed on screen:
+
+```cpp
+GEMItem menuItemInt("Number:", number);
+GEMItem menuItemBool("Enable print:", enablePrint);
+```
+
+Create menu button that will trigger `printData()` function. It will print value of our `number` variable to Serial monitor if `enablePrint` is `true`. We will write (define) this function later. However we should forward-declare it in order to pass its reference to `GEMItem` constructor. Let's name our button "Print":
+
+```cpp
+void printData(); // Forward declaration
+GEMItem menuItemButton("Print", printData);
+```
+
+Create menu page object of class `GEMPage`. Menu page holds menu items (`GEMItem`) and, in fact, represents menu level. Menu can have multiple menu pages (linked to each other) with multiple menu items each. Let's call our only menu page "Main Menu":
+
+```cpp
+GEMPage menuPageMain("Main Menu");
+```
+
+And finally, create menu object of class `GEM`. Supply its constructor with a reference to `glcd` object we created earlier:
+
+```cpp
+GEM menu(glcd);
+```
+
+> **Note:** `GEM` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+
+We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
+
+#### setup() function
+
+In `setup()` function of the sketch define modes of the pins push-buttons are connected to:
+
+```cpp
+pinMode(downPin, INPUT);
+pinMode(leftPin, INPUT);
+pinMode(rightPin, INPUT);
+pinMode(upPin, INPUT);
+pinMode(cancelPin, INPUT);
+pinMode(okPin, INPUT);
+```
+
+Init serial communications:
+
+```cpp
+Serial.begin(115200);
+```
+
+Init `tft` instance of Adafruit_ST7735/Adafruit GFX library by calling `initR()` method and supplying it with tab initialization parameter, suitable for your display (in case of Adafruit 1.8" TFT Display set it to `INITR_BLACKTAB`):
+
+```cpp
+tft.initR(INITR_BLACKTAB);
+```
+
+You can optionally [rotate](https://learn.adafruit.com/adafruit-gfx-graphics-library/rotating-the-display) the display by calling `setRotation()` method, e.g.:
+
+```cpp
+tft.setRotation(3);
+```
+
+Init menu. That will run some initialization routines (e.g. load sprites into LCD Serial Backpack's internal memory), then show splash screen (which can be customized).
+
+```cpp
+menu.init();
+```
+
+The next step is to gather all of the previously declared menu items and pages together and assign them to our menu. It is convenient to do that in a separate function. Let's call it `setupMenu()`. We will define it later.
+
+```cpp
+setupMenu();
+```
+
+And finally, draw menu to the screen:
+
+```cpp
+menu.drawMenu();
+```
+
+`setup()` function of the sketch is now complete:
+
+```cpp
+void setup() {
+  // Push-buttons pin modes
+  pinMode(downPin, INPUT);
+  pinMode(leftPin, INPUT);
+  pinMode(rightPin, INPUT);
+  pinMode(upPin, INPUT);
+  pinMode(cancelPin, INPUT);
+  pinMode(okPin, INPUT);
+
+  // Serial communications setup
+  Serial.begin(115200);
+
+  // Use this initializer if using a 1.8" TFT screen:
+  tft.initR(INITR_BLACKTAB);      // Init ST7735S chip, black tab
+  // OR use this initializer if using a 1.8" TFT screen with offset such as WaveShare:
+  // tft.initR(INITR_GREENTAB);   // Init ST7735S chip, green tab
+  // See more options in Adafruit GFX library documentation
+
+  // Optionally, rotate display
+  // tft.setRotation(3); // See Adafruit GFX library documentation for details
+
+  // Menu init, setup and draw
+  menu.init();
+  setupMenu();
+  menu.drawMenu();
+}
+```
+
+#### setupMenu() function
+
+Let's assemble our menu in `setupMenu()` function. First, add menu items to menu page:
+
+```cpp
+menuPageMain.addMenuItem(menuItemInt);
+menuPageMain.addMenuItem(menuItemBool);
+menuPageMain.addMenuItem(menuItemButton);
+```
+
+Because we don't have multiple menu levels, all we left to do now is to add our only menu page to menu and set it as initial menu page (loaded when menu first drawn):
+
+```cpp
+menu.setMenuPageCurrent(menuPageMain);
+```
+
+`setupMenu()` function is now complete:
+
+```cpp
+void setupMenu() {
+  // Add menu items to menu page
+  menuPageMain.addMenuItem(menuItemInt);
+  menuPageMain.addMenuItem(menuItemBool);
+  menuPageMain.addMenuItem(menuItemButton);
+
+  // Add menu page to menu and set it as current
+  menu.setMenuPageCurrent(menuPageMain);
+}
+```
+
+#### loop() function
+
+In the `loop()` function of the sketch we'll be listening to push-buttons presses (using `KeyDetector`) and delegate pressed button to menu: 
+
+```cpp
+void loop() {
+  // If menu is ready to accept button press...
+  if (menu.readyForKey()) {
+    // ...detect key press using KeyDetector library
+    myKeyDetector.detect();
+    // Pass pressed button to menu
+    // (pressed button ID is stored in trigger property of KeyDetector object)
+    menu.registerKeyPress(myKeyDetector.trigger);
+  }
+}
+```
+
+#### Button action
+
+Let's define `printData()` function that we declared earlier. It will be invoked each time the "Print" button in our menu is pressed.  It should print value of our `number` variable to Serial monitor if `enablePrint` is `true`.
+
+```cpp
+void printData() {
+  // If enablePrint flag is set to true (checkbox on screen is checked)...
+  if (enablePrint) {
+    // ...print the number to Serial
+    Serial.print("Number is: ");
+    Serial.println(number);
+  } else {
+    Serial.println("Printing is disabled, sorry:(");
+  }
+}
+```
+
+> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#appcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
+
+#### Sketch
+
+Full version of this basic example is shipped with the library and can be found at "examples/AdafruitGFX/Example-01_Basic/[Example-01_Basic.ino](https://github.com/Spirik/GEM/blob/master/examples/AdafruitGFX/Example-01_Basic/Example-01_Basic.ino)".
+
+#### Run
+
+After compiling and uploading sketch to Arduino, wait while LCD screen boots and menu is being initialized and drawn to the screen. Then start pressing the push-buttons and navigate through the menu. Pressing "Ok" button (attached to pin 7) will trigger edit mode of the "Number" variable, or change state of "Enable print" option, or invoke action associated with "Print" menu button (depending on which menu item is currently selected). If "Enable print" option is checked, then pressing "Print" button will result in `number` variable printed to the Serial Monitor.
+
+![Basic example](https://github.com/Spirik/GEM/wiki/images/gem-agfx-ex-01-basic-run.gif)
+
+To learn more about GEM library, see the [Reference](#reference) section and visit [wiki](https://github.com/Spirik/GEM/wiki).
+
+</details>
+
 Reference
 -----------
 
-### GEM, GEM_u8g2
+### GEM, GEM_u8g2, GEM_adafruit_gfx
 
-Primary class of library. Responsible for appearance of the menu, communication with LCD screen (via supplied `GLCD` or `U8g2` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of class `GEM` defines as follows.
+Primary class of library. Responsible for appearance of the menu, communication with LCD screen (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
 
 AltSerialGraphicLCD version:
 
@@ -607,15 +896,25 @@ U8g2 version:
 GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
 ```
 
+Adafruit GFX version:
+
+```cpp
+GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+```
+
 * **glcd**  `AltSerialGraphicLCD version`  
   *Type*: `GLCD`  
   Holds the reference to a `GLCD` object created with AltSerialGraphicLCD library and used for communication with SparkFun Graphic LCD Serial Backpack.
 
 * **u8g2**  `U8g2 version`  
-  *Type*: `U8g2`  
+  *Type*: `U8G2`  
   Holds the reference to an object created with U8g2 library and used for communication with LCD. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
 
   > **Note:** GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
+
+* **tft**  `Adafruit GFX version`  
+  *Type*: `Adafruit_GFX`  
+  Holds the reference to an object created with Adafruit GFX library and used for communication with LCD. Choose a matching library for the correct initialization of the display. See available libraries and supported controllers in the [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library) for Adafruit GFX library.
 
 * **menuPointerType**  [*optional*]  
   *Type*: `byte`  
@@ -625,26 +924,27 @@ GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, men
 
 * **menuItemsPerScreen** [*optional*]  
   *Type*: `byte`   
+  *Values*: number, `GEM_ITEMS_COUNT_AUTO` (alias for `0`)  
   *Default*: `5`  
-  Count of the menu items per screen. Suitable for 128x64 screen with other variables at their default values.
+  Count of the menu items per screen. Default value is suitable for 128x64 screen with other parameters at their default values. If set to `GEM_ITEMS_COUNT_AUTO` (available since GEM ver. 1.3), the number of menu items will be determined automatically based on actual height of the screen.
 
 * **menuItemHeight** [*optional*]  
   *Type*: `byte`  
   *Units*: dots  
   *Default*: `10`  
-  Height of the menu item. Suitable for 128x64 screen with other variables at their default values.
+  Height of the menu item. Default value is suitable for 128x64 screen with other parameters at their default values.
 
 * **menuPageScreenTopOffset** [*optional*]  
   *Type*: `byte`  
   *Units*: dots  
   *Default*: `10`  
-  Offset from the top of the screen to accommodate title of the menu page. Suitable for 128x64 screen with other variables at their default values.
+  Offset from the top of the screen to accommodate title of the menu page. Default value is suitable for 128x64 screen with other parameters at their default values.
 
 * **menuValuesLeftOffset** [*optional*]  
   *Type*: `byte`  
   *Units*: dots  
   *Default*: `86`  
-  Offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen). Suitable for 128x64 screen with other variables at their default values; 86 - recommended value for 128x64 screen.
+  Offset from the left of the screen to the value of variable associated with the menu item (effectively the space left for the title of the menu item to be printed on screen). Default value is suitable for 128x64 screen with other parameters at their default values; 86 - recommended value for 128x64 screen.
 
 ![GEM customization](https://github.com/Spirik/GEM/wiki/images/customization.gif)
 
@@ -659,77 +959,82 @@ For more details on customization see corresponding section of the [wiki](https:
 * **GEM_POINTER_DASH**  
   *Type*: macro `#define GEM_POINTER_DASH 0`  
   *Value*: `0`  
-  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM` and `GEM_u8g2` constructors): pointer to the left of the row.
+  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM`, `GEM_u8g2` and `GEM_adafruit_gfx` constructors): pointer to the left of the row.
 
 * **GEM_POINTER_ROW**  
   *Type*: macro `#define GEM_POINTER_ROW 1`  
   *Value*: `1`  
-  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM` and `GEM_u8g2` constructors): highlighted row.
+  Alias for the type of menu pointer visual appearance (submitted as **menuPointerType** setting to `GEM`, `GEM_u8g2` and `GEM_adafruit_gfx` constructors): highlighted row.
+
+* **GEM_ITEMS_COUNT_AUTO**  
+  *Type*: macro `#define GEM_ITEMS_COUNT_AUTO 0`  
+  *Value*: `0`  
+  Alias for the option to automatically determine the number of menu items that will fit on the screen based on actual height of the screen (submitted as **menuItemsPerScreen** setting to `GEM`, `GEM_u8g2` and `GEM_adafruit_gfx` constructors).
 
 * **GEM_KEY_NONE**  
   *Type*: macro `#define GEM_KEY_NONE 0`  
   *Value*: `0`  
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that no key presses were detected.
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that no key presses were detected.
 
 * **GEM_KEY_UP**  
-  * `GEM`:  
+  * `GEM`, `GEM_adafruit_gfx`:  
     *Type*: macro `#define GEM_KEY_UP 1`  
     *Value*: `1`  
   * `GEM_u8g2`:  
     *Type*: macro `#define GEM_KEY_UP U8X8_MSG_GPIO_MENU_UP`  
     *Value*: `U8X8_MSG_GPIO_MENU_UP`  
   
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Up key is pressed (navigate up through the menu items list, select next value of the digit/char of editable variable, or previous option in select).
 
 * **GEM_KEY_RIGHT**  
-  * `GEM`:  
+  * `GEM`, `GEM_adafruit_gfx`:  
     *Type*: macro `#define GEM_KEY_RIGHT 2`  
     *Value*: `2`  
   * `GEM_u8g2`:  
     *Type*: macro `#define GEM_KEY_RIGHT U8X8_MSG_GPIO_MENU_NEXT`  
     *Value*: `U8X8_MSG_GPIO_MENU_NEXT`  
   
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Right key is pressed (navigate through the link to another (child) menu page, select next digit/char of editable variable, execute code associated with button).
 
 * **GEM_KEY_DOWN**  
-  * `GEM`:  
+  * `GEM`, `GEM_adafruit_gfx`:  
     *Type*: macro `#define GEM_KEY_DOWN 3`  
     *Value*: `3`  
   * `GEM_u8g2`:  
     *Type*: macro `#define GEM_KEY_DOWN U8X8_MSG_GPIO_MENU_DOWN`  
     *Value*: `U8X8_MSG_GPIO_MENU_DOWN`
 
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select).
 
 * **GEM_KEY_LEFT**  
-  * `GEM`:  
+  * `GEM`, `GEM_adafruit_gfx`:  
     *Type*: macro `#define GEM_KEY_LEFT 4`  
     *Value*: `4`  
   * `GEM_u8g2`:  
     *Type*: macro `#define GEM_KEY_LEFT U8X8_MSG_GPIO_MENU_PREV`  
     *Value*: `U8X8_MSG_GPIO_MENU_PREV`  
   
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable).
 
 * **GEM_KEY_CANCEL**  
-  * `GEM`:  
+  * `GEM`, `GEM_adafruit_gfx`:  
     *Type*: macro `#define GEM_KEY_CANCEL 5`  
     *Value*: `5`  
   * `GEM_u8g2`:  
     *Type*: macro `#define GEM_KEY_CANCEL U8X8_MSG_GPIO_MENU_HOME`  
     *Value*: `U8X8_MSG_GPIO_MENU_HOME`
 
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings).
 
 * **GEM_KEY_OK** 
-  * `GEM`:   
+  * `GEM`, `GEM_adafruit_gfx`:   
     *Type*: macro `#define GEM_KEY_OK 6`  
     *Value*: `6`  
   * `GEM_u8g2`:  
     *Type*: macro `#define GEM_KEY_OK U8X8_MSG_GPIO_MENU_SELECT`  
     *Value*: `U8X8_MSG_GPIO_MENU_SELECT`
 
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()` and `GEM_u8g2::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button).
 
 #### Methods
 
@@ -745,6 +1050,14 @@ For more details on customization see corresponding section of the [wiki](https:
   *Accepts*: `byte`, `byte`, `_const unsigned char U8X8_PROGMEM_ *`  
   *Returns*: nothing  
   Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+* **setSplash(** _byte_ width, _byte_ height, _const uint8_t PROGMEM_ *image **)**  `Adafruit GFX version`  
+  *Accepts*: `byte`, `byte`, `_const uint8_t PROGMEM_ *`  
+  *Returns*: nothing  
+  Set custom bitmap image displayed as the splash screen when GEM is being initialized. The following is the format of the bitmap as described in Adafruit GFX library documentation:
+  > A contiguous block of bits, where each `1` bit sets the corresponding pixel to 'color', while each `0` bit is skipped.
+
+  Bitmap must be presented as a byte array and located in program memory using the PROGMEM directive, width and height of the bitmap must be supplied as a first and second argument to the function respectively. Should be called before `GEM_adafruit_gfx::init()`. See [Bitmaps](https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives#bitmaps-2002806-39) section of Adafruit GFX documentation for more details and [image2cpp](http://javl.github.io/image2cpp/) webtool for online bitmap conversion. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 * **setSplashDelay(** _uint16_t_ value **)**  
   *Accepts*: `uint16_t`  
@@ -773,15 +1086,32 @@ For more details on customization see corresponding section of the [wiki](https:
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
   
-  > The following `U8g2` object settings will be applied during `init()`: 
+  > The following `U8G2` object settings will be applied during `init()`: 
   > * `u8g2.setDrawColor(1)`;
   > * `u8g2.setFontPosTop()`.
+  > 
+  > Keep this in mind if you are planning to use the same object in your own routines.
+  
+  > The following `Adafruit_GFX` object settings will be applied during `init()`: 
+  > * `tft.setTextSize(1)`;
+  > * `tft.setTextWrap(false)`;
+  > * `tft.setTextColor(_menuForegroundColor)` (sets text color to default value 0xFFFF or value set through `setForegroundColor()`).
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
 
 * **reInit()**  
   *Returns*: nothing  
-  Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD or U8g2 graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#appcontext) for more details.
+  Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD, U8g2 or Adafruit GFX graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#appcontext) for more details.
+
+* **setForegroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
+  *Accepts*: `uint16_t`  
+  *Returns*: nothing  
+  Set foreground color to supplied value. Accepts 16-bit RGB color representation. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/coordinate-system-and-units) for detailed description of a format. Will take effect next time menu is drawn. If not called explicitly, foreground color will be set to 0xFFFF. For more details on color customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+* **setBackgroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
+  *Accepts*: `uint16_t`  
+  *Returns*: nothing  
+  Set background color to supplied value. Accepts 16-bit RGB color representation. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/coordinate-system-and-units) for detailed description of a format. Will take effect next time menu is drawn. If not called explicitly, background color will be set to 0x0000. For more details on color customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 * **setMenuPageCurrent(** _GEMPage&_ menuPageCurrent **)**  
   *Accepts*: `GEMPage`  
@@ -790,7 +1120,7 @@ For more details on customization see corresponding section of the [wiki](https:
 
 * **drawMenu()**  
   *Returns*: nothing  
-  Draw menu on screen, with menu page set earlier in `GEM::setMenuPageCurrent()` or `GEM_u8g2::setMenuPageCurrent()`.
+  Draw menu on screen, with menu page set earlier in `setMenuPageCurrent()`.
 
 * *boolean* **readyForKey()**  
   *Returns*: `boolean`  
@@ -827,11 +1157,11 @@ GEMPage menuPage(title[, exitAction]);
   *Type*: `char*`  
   Title of the menu page displayed at top of the screen.
   
-  > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD and U8g2 vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD version, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
+  > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD, U8g2 and Adafruit GFX vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD and Adafruit GFX versions, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD and Adafruit GFX versions it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
 
 * **exitAction** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
 
 #### Methods
 
@@ -1146,7 +1476,7 @@ SelectOptionChar selectOption = {name, val_char};
 
 ### AppContext
 
-Data structure that represents "context" of the currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` (and `GEM_u8g2`) object is of type `AppContext`. 
+Data structure that represents "context" of the currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` (`GEM_u8g2`, `GEM_adafruit_gfx`) object is of type `AppContext`. 
 
 Consists of pointers to user-supplied functions that represent setup and loop functions (named `context.enter()` and `context.loop()` respectively) of the context. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
@@ -1166,7 +1496,7 @@ AppContext myContext = {loop, enter, exit, allowExit};
 
 * **exit** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to `exit()` function of current context. Called automatically when user exits currently running context if `context.allowExit` (see below) is set to `true`. Should be invoked manually otherwise. Usually contains instructions to do some cleanup after context's `loop()` and to draw menu on screen again (by calling `drawMenu()` method of `GEM` or `GEM_u8g2` object). If no user-defined function specified, default action will be invoked that consists of call to three methods of `GEM` or `GEM_u8g2` object: `reInit()`, `drawMenu()`, and `clearContext()`.
+  Pointer to `exit()` function of current context. Called automatically when user exits currently running context if `context.allowExit` (see below) is set to `true`. Should be invoked manually otherwise. Usually contains instructions to do some cleanup after context's `loop()` and to draw menu on screen again (by calling `drawMenu()` method of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object). If no user-defined function specified, default action will be invoked that consists of call to three methods of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object: `reInit()`, `drawMenu()`, and `clearContext()`.
 
 * **allowExit**
   *Type*: `boolean`  
@@ -1257,7 +1587,7 @@ Configuration
 -----------
 It is possible to configure GEM library by excluding some features not needed in your project. That may help to save some additional program storage space. E.g., you can disable support for editable floating-point variables (see previous [section](#floating-point-variables)).
 
-You can also choose which version of GEM library (`AltSerialGraphicLCD` or `U8g2` based) should be compiled. That way, there won't be requirement to have both of the supported graphics libraries installed in the system at the same time (regardless of which one is actually used).
+You can also choose which version of GEM library (`AltSerialGraphicLCD`, `U8g2` or `Adafruit GFX` based) should be compiled. That way, there won't be requirement to have all of the supported graphic libraries installed in the system at the same time (regardless of which one is actually used).
 
 For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion.
 
@@ -1273,13 +1603,19 @@ To disable `U8g2` support comment out the following line:
 #include "config/enable-u8g2.h"
 ```
 
+To disable `Adafruit GFX` support comment out the following line:
+
+```cpp
+#include "config/enable-adafruit-gfx.h"
+```
+
 More configuration options may be be added in the future.
 
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 Compatibility
 -----------
-When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp` or `GEM_u8g2.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips). ESP32-based boards should be fine as well.
+When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp`, `GEM_u8g2.cpp` or `GEM_adafruit_gfx.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips). ESP32-based boards should be fine as well.
 
 Examples
 -----------

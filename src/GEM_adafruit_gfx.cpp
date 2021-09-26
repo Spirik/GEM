@@ -141,17 +141,16 @@ void GEM_adafruit_gfx::hideVersion(boolean flag) {
   _enableVersion = !flag;
 }
 
-void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
-  _menuBackgroundColor = color;
-}
-
 void GEM_adafruit_gfx::setForegroundColor(uint16_t color) {
   _menuForegroundColor = color;
 }
 
+void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
+  _menuBackgroundColor = color;
+}
+
 void GEM_adafruit_gfx::init() {
   _agfx.setTextSize(1);
-  _agfx.setFont(_fontFamilies.small);
   _agfx.setTextWrap(false);
   _agfx.setTextColor(_menuForegroundColor);
   _agfx.fillScreen(_menuBackgroundColor);
@@ -168,6 +167,7 @@ void GEM_adafruit_gfx::init() {
 
     if (_enableVersion) {
       delay(_splashDelay / 2);
+      _agfx.setFont(_fontFamilies.small);
       byte x = _agfx.width() - strlen(GEM_VER)*4;
       byte y = _agfx.height() - 1;
       if (_splash.image != logo_bits) {

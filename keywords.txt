@@ -28,8 +28,8 @@ SelectOptionDouble	KEYWORD1
 setSplash	KEYWORD2
 setSplashDelay	KEYWORD2
 hideVersion	KEYWORD2
-setBackgroundColor	KEYWORD2
 setForegroundColor	KEYWORD2
+setBackgroundColor	KEYWORD2
 enableCyrillic	KEYWORD2
 init	KEYWORD2
 reInit	KEYWORD2
