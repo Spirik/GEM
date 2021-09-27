@@ -6,13 +6,15 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Supports AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html)
-  and U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
+  Supports:
+  - AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html);
+  - U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino);
+  - Adafruit GFX library by Adafruit (https://github.com/adafruit/Adafruit-GFX-Library).
 
   For documentation visit:
   https://github.com/Spirik/GEM
-  
-  Copyright (c) 2020-2021 Alexander 'Spirik' Spiridonov
+
+  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -166,6 +168,9 @@ void GEM_u8g2::init() {
   
   _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
   _menuItemValueLength = (_u8g2.getDisplayWidth() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
+  if (_menuItemsPerScreen == GEM_ITEMS_COUNT_AUTO) {
+    _menuItemsPerScreen = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset) / _menuItemHeight;
+  }
 
   if (_splashDelay > 0) {
 
@@ -302,7 +307,7 @@ byte GEM_u8g2::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprit
 
 void GEM_u8g2::printMenuItems() {
   byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-  GEMItem* menuItemTmp = (_menuPageCurrent)->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
+  GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
   char valueStringTmp[GEM_STR_LEN];
@@ -456,9 +461,9 @@ void GEM_u8g2::drawScrollbar() {
   byte screensCount = (_menuPageCurrent->itemsCount % _menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / _menuItemsPerScreen : _menuPageCurrent->itemsCount / _menuItemsPerScreen + 1;
   if (screensCount > 1) {
     byte currentScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-    byte scrollbarHeight = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset) / screensCount;
-    byte scrollbarPosition = currentScreenNum * scrollbarHeight + _menuPageScreenTopOffset;
-    _u8g2.drawLine(_u8g2.getDisplayWidth() - 1, scrollbarPosition, _u8g2.getDisplayWidth() - 1, scrollbarPosition + scrollbarHeight-1);
+    byte scrollbarHeight = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset + 1) / screensCount;
+    byte scrollbarPosition = currentScreenNum * scrollbarHeight + _menuPageScreenTopOffset - 1;
+    _u8g2.drawLine(_u8g2.getDisplayWidth() - 1, scrollbarPosition, _u8g2.getDisplayWidth() - 1, scrollbarPosition + scrollbarHeight);
   }
 }
 

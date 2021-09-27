@@ -8,13 +8,15 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Supports AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html)
-  and U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
+  Supports:
+  - AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html);
+  - U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino);
+  - Adafruit GFX library by Adafruit (https://github.com/adafruit/Adafruit-GFX-Library).
 
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -69,6 +71,7 @@ struct SelectOptionDouble {
 class GEMSelect {
   friend class GEM;
   friend class GEM_u8g2;
+  friend class GEM_adafruit_gfx;
   public:
     /* 
       @param 'length_' - length of the 'options_' array

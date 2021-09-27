@@ -6,13 +6,15 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Supports AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html)
-  and U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
+  Supports:
+  - AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html);
+  - U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino);
+  - Adafruit GFX library by Adafruit (https://github.com/adafruit/Adafruit-GFX-Library).
 
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2020-2021 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -70,10 +72,10 @@ struct FontSize {
   byte height;  // Height of the character
 };
 
-// Declaration of FontFamilies type
-struct FontFamilies {
-  const uint8_t * big;    // Big font family (i.e., 5x8)
-  const uint8_t * small;  // Small font family (i.e., 4x6)
+// Declaration of FontFamiliesU8g2 type
+struct FontFamiliesU8g2 {
+  const uint8_t *big;    // Big font family (i.e., 6x12)
+  const uint8_t *small;  // Small font family (i.e., 4x6)
 };
 
 // Declaration of AppContext type
@@ -101,7 +103,8 @@ class GEM_u8g2 {
       values GEM_POINTER_ROW, GEM_POINTER_DASH
       default GEM_POINTER_ROW
       @param 'menuItemsPerScreen_' (optional) - count of the menu items per screen
-      default 5 (suitable for 128x64 screen with other variables at their default values)
+      values GEM_ITEMS_COUNT_AUTO, number
+      default 5 (suitable for 128x64 screen with other variables at their default values); setting to GEM_ITEMS_COUNT_AUTO will enable auto count based on screen height
       @param 'menuItemHeight_' (optional) - height of the menu item
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuPageScreenTopOffset_' (optional) - offset from the top of the screen to accommodate title of the menu page
@@ -144,7 +147,7 @@ class GEM_u8g2 {
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
-    FontFamilies _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
+    FontFamiliesU8g2 _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     bool _cyrillicEnabled = false;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;

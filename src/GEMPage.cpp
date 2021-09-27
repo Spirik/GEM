@@ -8,13 +8,15 @@
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
-  Supports AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html)
-  and U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino).
+  Supports:
+  - AltSerialGraphicLCD library by Jon Green (http://www.jasspa.com/serialGLCD.html);
+  - U8g2 library by olikraus (https://github.com/olikraus/U8g2_Arduino);
+  - Adafruit GFX library by Adafruit (https://github.com/adafruit/Adafruit-GFX-Library).
 
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2020 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -82,7 +84,7 @@ char* GEMPage::getTitle() {
 }
 
 GEMItem* GEMPage::getMenuItem(byte index, boolean total) {
-  GEMItem* menuItemTmp = (_menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
+  GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
   for (byte i=0; i<index; i++) {
     menuItemTmp = (total) ? menuItemTmp->menuItemNext : menuItemTmp->getMenuItemNext();
   }
@@ -119,10 +121,10 @@ void GEMPage::hideMenuItem(GEMItem& menuItem) {
 }
 
 void GEMPage::showMenuItem(GEMItem& menuItem) {
-  int menuItemNum = getMenuItemNum(menuItem);
   menuItem.hidden = false;
   itemsCount++;
-  if (menuItemNum < currentItemNum) {
+  int menuItemNum = getMenuItemNum(menuItem);
+  if (menuItemNum <= currentItemNum) {
     if (currentItemNum < itemsCount-1) {
       currentItemNum++;
     }
