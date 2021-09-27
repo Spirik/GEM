@@ -710,10 +710,10 @@ GEMPage menuPageMain("Main Menu");
 And finally, create menu object of class `GEM_adafruit_gfx`. Supply its constructor with a reference to `tft` object we created earlier:
 
 ```cpp
-GEM_adafruit_gfx menu(tft);
+GEM_adafruit_gfx menu(tft, GEM_POINTER_ROW, GEM_ITEMS_COUNT_AUTO);
 ```
 
-> **Note:** `GEM_adafruit_gfx` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+> **Note:** `GEM_POINTER_ROW` option defines the look of the menu item pointer, `GEM_ITEMS_COUNT_AUTO` turns on automatic calculation of number of items that will fit on the screen based on screen's height. `GEM_adafruit_gfx` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
 
 We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
 
