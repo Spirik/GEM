@@ -153,9 +153,9 @@ class GEMItem {
     boolean getHidden();                    // Get hidden state of the menu item
   private:
     char* title;
-    byte type;
     void* linkedVariable;
     byte linkedType;
+    byte type;
     byte precision = GEM_FLOAT_PREC;
     boolean readonly = false;
     boolean hidden = false;
@@ -163,9 +163,10 @@ class GEMItem {
     GEMPage* parentPage = nullptr;
     GEMPage* linkedPage;
     GEMItem* menuItemNext;
-    GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
     void (*buttonAction)();
     void (*saveAction)();
+
+    GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
 };
   
 #endif
