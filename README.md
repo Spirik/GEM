@@ -1615,6 +1615,8 @@ More configuration options may be be added in the future.
 
 Compatibility
 -----------
+ESP8266-based boards currently supported in U8g2 version of GEM. ESP32-based boards supported in U8g2 and Adafruit GFX versions of GEM.
+
 When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp`, `GEM_u8g2.cpp` or `GEM_adafruit_gfx.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips). ESP32-based boards should be fine as well.
 
 Examples
