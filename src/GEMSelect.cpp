@@ -103,7 +103,6 @@ int GEMSelect::getSelectedOptionNum(void* variable) {
     }
     if (found) { return i; }
   }
-  // not found
   return -1;
 }
 

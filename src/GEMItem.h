@@ -165,7 +165,6 @@ class GEMItem {
     GEMItem* menuItemNext;
     void (*buttonAction)();
     void (*saveAction)();
-
     GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
 };
   
