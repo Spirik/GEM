@@ -103,7 +103,8 @@ int GEMSelect::getSelectedOptionNum(void* variable) {
     }
     if (found) { return i; }
   }
-  if (!found) { return -1; }
+  // not found
+  return -1;
 }
 
 char* GEMSelect::getSelectedOptionName(void* variable) {
