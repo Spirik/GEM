@@ -63,7 +63,7 @@
 struct Splash {
   byte width;                         // Width of the splash lmage
   byte height;                        // Height of the splash image
-  const uint8_t U8X8_PROGMEM *image;  // Pointer to XBM image to be shown as splash
+  const uint8_t *image;  // Pointer to XBM image to be shown as splash
 };
 
 // Declaration of FontSize type
@@ -116,7 +116,7 @@ class GEM_u8g2 {
 
     /* INIT OPERATIONS */
 
-    void setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    void setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
     void enableCyrillic(boolean flag = true);            // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).

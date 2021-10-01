@@ -138,7 +138,7 @@ GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_,
 
 //====================== INIT OPERATIONS
 
-void GEM_u8g2::setSplash(byte width, byte height, const unsigned char U8X8_PROGMEM *image) {
+void GEM_u8g2::setSplash(byte width, byte height, const unsigned char *image) {
   _splash = {width, height, image};
 }
 

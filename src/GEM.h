@@ -97,7 +97,7 @@ class GEM {
 
     /* INIT OPERATIONS */
 
-    void setSplash(const uint8_t PROGMEM *sprite);       // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+    void setSplash(const uint8_t *sprite);               // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                          // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                          // The sprite commences with two bytes which are the width and height of the image in pixels.
                                                          // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
@@ -138,7 +138,7 @@ class GEM {
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
-    const uint8_t PROGMEM *_splash;
+    const uint8_t *_splash;
     uint16_t _splashDelay = 1000;
     boolean _enableVersion = true;
 

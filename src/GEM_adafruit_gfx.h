@@ -61,9 +61,9 @@
 
 // Declaration of Splash type
 struct Splash {
-  byte width;                         // Width of the splash lmage
-  byte height;                        // Height of the splash image
-  const uint8_t PROGMEM *image;       // Pointer to bitmap image to be shown as splash
+  byte width;             // Width of the splash lmage
+  byte height;            // Height of the splash image
+  const uint8_t *image;   // Pointer to bitmap image to be shown as splash
 };
 
 // Declaration of FontSizeAgfx type
@@ -117,9 +117,9 @@ class GEM_adafruit_gfx {
 
     /* INIT OPERATIONS */
 
-    void setSplash(byte width, byte height, const uint8_t PROGMEM *image); // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
-                                                                           // The following is the format of the bitmap as described in Adafruit GFX library documentation.
-                                                                           // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
+    void setSplash(byte width, byte height, const uint8_t *image);  // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
+                                                                    // The following is the format of the bitmap as described in Adafruit GFX library documentation.
+                                                                    // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)

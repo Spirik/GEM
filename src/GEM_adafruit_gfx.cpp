@@ -129,7 +129,7 @@ GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, b
 
 //====================== INIT OPERATIONS
 
-void GEM_adafruit_gfx::setSplash(byte width, byte height, const uint8_t PROGMEM *image) {
+void GEM_adafruit_gfx::setSplash(byte width, byte height, const uint8_t *image) {
   _splash = {width, height, image};
 }
 
