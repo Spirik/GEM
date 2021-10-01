@@ -227,7 +227,7 @@ void GEM_adafruit_gfx::drawTitleBar() {
   _agfx.setFont(_menuItemFontSize ? _fontFamilies.small : _fontFamilies.big);
 }
 
-void GEM_adafruit_gfx::printMenuItemString(char* str, byte num, byte startPos) {
+void GEM_adafruit_gfx::printMenuItemString(const char* str, byte num, byte startPos) {
   byte i = startPos;
   while (i < num + startPos && str[i] != '\0') {
     _agfx.print(str[i]);
@@ -235,15 +235,15 @@ void GEM_adafruit_gfx::printMenuItemString(char* str, byte num, byte startPos) {
   }
 }
 
-void GEM_adafruit_gfx::printMenuItemTitle(char* str, int offset) {
+void GEM_adafruit_gfx::printMenuItemTitle(const char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + offset);
 }
 
-void GEM_adafruit_gfx::printMenuItemValue(char* str, int offset, byte startPos) {
+void GEM_adafruit_gfx::printMenuItemValue(const char* str, int offset, byte startPos) {
   printMenuItemString(str, _menuItemValueLength + offset, startPos);
 }
 
-void GEM_adafruit_gfx::printMenuItemFull(char* str, int offset) {
+void GEM_adafruit_gfx::printMenuItemFull(const char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + _menuItemValueLength + offset);
 }
 

@@ -1154,7 +1154,7 @@ GEMPage menuPage(title[, exitAction]);
 ```
 
 * **title**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Title of the menu page displayed at top of the screen.
   
   > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD, U8g2 and Adafruit GFX vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD and Adafruit GFX versions, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD and Adafruit GFX versions it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
@@ -1175,12 +1175,12 @@ GEMPage menuPage(title[, exitAction]);
   *Returns*: nothing  
   Specify parent level menu page (to know where to go back to when pressing Back button, that will be added automatically). Accepts `GEMPage` object.
 
-* **setTitle(** _char*_ title **)**  
+* **setTitle(** _const char*_ title **)**  
   *Returns*: nothing  
   Set title of the menu page. Can be used to update menu page title dynamically.
 
-* *char** **getTitle()**  
-  *Returns*: `char*`  
+* *const char** **getTitle()**  
+  *Returns*: `const char*`  
   Get title of the menu page.
 
 
@@ -1204,7 +1204,7 @@ GEMItem menuItemVar(title, linkedVariable[, saveCallback]);
 ```
 
 * **title**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Title of the menu item displayed on the screen.
 
 * **linkedVariable**  
@@ -1234,7 +1234,7 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback]);
 ```
 
 * **title**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Title of the menu item displayed on the screen.
 
 * **linkedVariable**  
@@ -1264,7 +1264,7 @@ GEMItem menuItemLink(title, linkedPage[, readonly]);
 ```
 
 * **title**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Title of the menu item displayed on the screen.
 
 * **linkedPage**  
@@ -1284,7 +1284,7 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
 ```
 
 * **title**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Title of the menu item displayed on the screen (in this case - name of the button).
 
 * **buttonAction**  
@@ -1316,12 +1316,12 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
 
 #### Methods
 
-* **setTitle(** _char*_ title **)**  
+* **setTitle(** _const char*_ title **)**  
   *Returns*: nothing  
   Set title of the menu item. Can be used to update menu item title dynamically.
 
-* *char** **getTitle()**  
-  *Returns*: `char*`  
+* *const char** **getTitle()**  
+  *Returns*: `const char*`  
   Get title of the menu item.
 
 * **setPrecision()**  
@@ -1399,7 +1399,7 @@ SelectOptionInt selectOption = {name, val_int};
 ```
 
 * **name**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Text label of the option as displayed in select.
 
 * **val_int**  
@@ -1415,7 +1415,7 @@ SelectOptionByte selectOption = {name, val_byte};
 ```
 
 * **name**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Text label of the option as displayed in select.
 
 * **val_byte**  
@@ -1431,7 +1431,7 @@ SelectOptionFloat selectOption = {name, val_float};
 ```
 
 * **name**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Text label of the option as displayed in select.
 
 * **val_float**  
@@ -1447,7 +1447,7 @@ SelectOptionDouble selectOption = {name, val_double};
 ```
 
 * **name**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Text label of the option as displayed in select.
 
 * **val_double**  
@@ -1463,11 +1463,11 @@ SelectOptionChar selectOption = {name, val_char};
 ```
 
 * **name**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Text label of the option as displayed in select.
 
 * **val_char**  
-  *Type*: `char*`  
+  *Type*: `const char*`  
   Value of the option that is assigned to linked variable upon option selection. Note that character array of associated with menu item variable (of type `char[n]`) should be big enough to hold select option with the longest value to avoid overflows.
 
 
