@@ -66,8 +66,8 @@ struct Splash {
   const uint8_t PROGMEM *image;       // Pointer to bitmap image to be shown as splash
 };
 
-// Declaration of FontSize type
-struct FontSize {
+// Declaration of FontSizeAgfx type
+struct FontSizeAgfx {
   byte width;           // Width of the character
   byte height;          // Height of the character
   byte baselineOffset;  // Baseline position relative to the top edge of the character box
@@ -150,7 +150,7 @@ class GEM_adafruit_gfx {
     byte _menuPageScreenTopOffset;
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
-    FontSize _menuItemFont[2] = {{6,12,10},{4,6,6}};
+    FontSizeAgfx _menuItemFont[2] = {{6,12,10},{4,6,6}};
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
