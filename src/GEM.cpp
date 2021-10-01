@@ -164,11 +164,11 @@ void GEM::init() {
       _glcd.setY(_glcd.ydim - 6);
       if (_splash != logo) {
         _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4 - 12);
-        _glcd.putstr("GEM");
+        _glcd.putstr((char*)"GEM");
       } else {
         _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4);
       }
-      _glcd.putstr(GEM_VER);
+      _glcd.putstr((char*)GEM_VER);
       delay(_splashDelay / 2);
     } else {
       delay(_splashDelay);
@@ -256,7 +256,7 @@ void GEM::printMenuItems() {
         _glcd.setX(5);
         if (menuItemTmp->readonly) {
           printMenuItemTitle(menuItemTmp->title, -1);
-          _glcd.putstr("^");
+          _glcd.putstr((char*)"^");
         } else {
           printMenuItemTitle(menuItemTmp->title);
         }
@@ -305,7 +305,7 @@ void GEM::printMenuItems() {
         _glcd.setX(5);
         if (menuItemTmp->readonly) {
           printMenuItemFull(menuItemTmp->title, -1);
-          _glcd.putstr("^");
+          _glcd.putstr((char*)"^");
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
@@ -319,7 +319,7 @@ void GEM::printMenuItems() {
         _glcd.setX(11);
         if (menuItemTmp->readonly) {
           printMenuItemFull(menuItemTmp->title, -1);
-          _glcd.putstr("^");
+          _glcd.putstr((char*)"^");
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
