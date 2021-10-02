@@ -39,31 +39,31 @@
 
 // Declaration of SelectOptionInt type
 struct SelectOptionInt {
-  char* name;    // Text label of the option as displayed in select
+  const char* name;    // Text label of the option as displayed in select
   int val_int;   // Value of the option that is assigned to linked variable upon option selection
 };
 
 // Declaration of SelectOptionByte type
 struct SelectOptionByte {
-  char* name;
+  const char* name;
   byte val_byte;
 };
 
 // Declaration of SelectOptionChar type
 struct SelectOptionChar {
-  char* name;
-  char* val_char;
+  const char* name;
+  const char* val_char;
 };
 
 // Declaration of SelectOptionFloat type
 struct SelectOptionFloat {
-  char* name;
+  const char* name;
   float val_float;
 };
 
 // Declaration of SelectOptionDouble type
 struct SelectOptionDouble {
-  char* name;
+  const char* name;
   double val_double;
 };
 
@@ -89,8 +89,8 @@ class GEMSelect {
     byte getType();
     byte getLength();
     int getSelectedOptionNum(void* variable);
-    char* getSelectedOptionName(void* variable);
-    char* getOptionNameByIndex(int index);
+    const char* getSelectedOptionName(void* variable);
+    const char* getOptionNameByIndex(int index);
     void setValue(void* variable, int index);  // Assign value of the selected option to supplied variable
 };
   

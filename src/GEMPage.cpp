@@ -37,7 +37,7 @@
 #include <Arduino.h>
 #include "GEMPage.h"
 
-GEMPage::GEMPage(char* title_, void (*exitAction_)())
+GEMPage::GEMPage(const char* title_, void (*exitAction_)())
   : title(title_)
   , exitAction(exitAction_)
 { }
@@ -75,11 +75,11 @@ void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
   currentItemNum = (itemsCount > 1) ? 1 : 0;
 }
 
-void GEMPage::setTitle(char* title_) {
+void GEMPage::setTitle(const char* title_) {
   title = title_;
 }
 
-char* GEMPage::getTitle() {
+const char* GEMPage::getTitle() {
   return title;
 }
 

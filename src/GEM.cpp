@@ -211,11 +211,11 @@ void GEM::drawMenu() {
 void GEM::drawTitleBar() {
   _glcd.fontFace(1);
   _glcd.setXY(5,1);
-  _glcd.putstr(_menuPageCurrent->title);
+  _glcd.putstr((char*)_menuPageCurrent->title);
   _glcd.fontFace(_menuItemFontSize);
 }
 
-void GEM::printMenuItemString(char* str, byte num, byte startPos) {
+void GEM::printMenuItemString(const char* str, byte num, byte startPos) {
   byte i = startPos;
   while (i < num + startPos && str[i] != '\0') {
     _glcd.put(str[i]);
@@ -223,15 +223,15 @@ void GEM::printMenuItemString(char* str, byte num, byte startPos) {
   }
 }
 
-void GEM::printMenuItemTitle(char* str, int offset) {
+void GEM::printMenuItemTitle(const char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + offset);
 }
 
-void GEM::printMenuItemValue(char* str, int offset, byte startPos) {
+void GEM::printMenuItemValue(const char* str, int offset, byte startPos) {
   printMenuItemString(str, _menuItemValueLength + offset, startPos);
 }
 
-void GEM::printMenuItemFull(char* str, int offset) {
+void GEM::printMenuItemFull(const char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + _menuItemValueLength + offset);
 }
 

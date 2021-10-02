@@ -4,7 +4,7 @@
   This Adafruit GFX modification also features creation of option select with callback (for changing color scheme).
 
   Two page menu with one editable menu item associated with int variable, one with char[17] variable,
-  and two buttons, pressing of which will result in blinking with internal LED: one button will launch
+  and two buttons, pressing of which will result in blinking of message on the screen: one button will launch
   delay() based routine and create context with context.allowExit set to true, and the second one - millis() based
   routine with context.allowExit set to false, that will require manual exit from the context's loop with
   explicit call to context.exit() routine. Callback function is attached to menu item linked to int variable,
@@ -64,8 +64,8 @@ char label[GEM_STR_LEN] = "Blink!"; // Maximum length of the string should not e
 // Supplementary variable used in millis based version of Blink routine
 unsigned long previousMillis = 0;
 
-// Variable to hold current LED state
-boolean ledOn = false;
+// Variable to hold current label state (visible or hidden)
+boolean labelOn = false;
 
 // Variables to hold currently set foreground and background colors
 int foreColor = ST77XX_WHITE;
@@ -87,12 +87,12 @@ GEMItem menuItemLabel("Label:", label);
 void applyScheme(); // Forward declaration
 GEMItem menuItemColorScheme("Color Scheme:", colorScheme, selectColorScheme, applyScheme);
 
-// Create menu button that will trigger blinkDelay() function. It will blink with built-in LED with delay()
+// Create menu button that will trigger blinkDelay() function. It will blink the label on the screen with delay()
 // set to the value of interval variable. We will write (define) this function later. However, we should
 // forward-declare it in order to pass to GEMItem constructor
 void blinkDelay(); // Forward declaration
 GEMItem menuItemDelayButton1("Blink v1", blinkDelay);
-// Likewise, create menu button that will trigger blinkMillis() function. It will blink with built-in LED with millis based
+// Likewise, create menu button that will trigger blinkMillis() function. It will blink the label on the screen with millis based
 // delay set to the value of interval variable. We will write (define) this function later. However, we should
 // forward-declare it in order to pass to GEMItem constructor
 void blinkMillis(); // Forward declaration
@@ -226,15 +226,10 @@ void printLabel() {
   tft.print(label);
 }
 
-// Toggle built-in LED on or off
-void toggleLED() {
-  ledOn = !ledOn;
-  digitalWrite(LED_BUILTIN, ledOn ? HIGH : LOW);
-}
-
 // Toggle label on screen
 void toggleLabel() {
-  if (ledOn) {
+  labelOn = !labelOn;
+  if (labelOn) {
     printLabel();
   } else {
     tft.fillScreen(backColor);
@@ -253,19 +248,15 @@ void blinkDelay() {
 
 // Invoked once when the button is pressed
 void blinkDelayContextEnter() {
-  // Set pin mode of the LED_BUILTIN pin (equals to pin 13 on Arduino UNO board)
-  pinMode(LED_BUILTIN, OUTPUT);
-
   Serial.println("Delay based Blink is in progress");
 }
 
 // Invoked every loop iteration
 void blinkDelayContextLoop() {
-  // Blink with LED attached to the LED_BUILTIN pin.
+  // Blink the label on the screen.
   // Delay based Blink makes it harder to exit the loop
   // due to the blocking nature of the delay() function - carefully match timing of
   // exit key presses with the blink cycles; millis based blink has no such restriction
-  toggleLED();
   toggleLabel();
   delay(interval);
 }
@@ -273,7 +264,7 @@ void blinkDelayContextLoop() {
 // Invoked once when the GEM_KEY_CANCEL key is pressed
 void blinkDelayContextExit() {
   // Reset variables
-  ledOn = false;
+  labelOn = false;
   
   // Draw menu back on screen and clear context
   menu.reInit();
@@ -296,9 +287,6 @@ void blinkMillis() {
 
 // Invoked once when the button is pressed
 void blinkMillisContextEnter() {
-  // Set pin mode of the LED_BUILTIN pin (equals to pin 13 on Arduino board)
-  pinMode(LED_BUILTIN, OUTPUT);
-
   Serial.println("Millis based Blink is in progress");
 }
 
@@ -310,12 +298,11 @@ void blinkMillisContextLoop() {
     // Exit Blink routine if GEM_KEY_CANCEL key was pressed
     menu.context.exit();
   } else {
-    // Test millis timer and toggle LED accordingly.
+    // Test millis timer and toggle label accordingly.
     // Program flow is not paused and key press allows to exit Blink routine immediately
     unsigned long currentMillis = millis();
     if (currentMillis - previousMillis >= interval) {
       previousMillis = currentMillis;
-      toggleLED();
       toggleLabel();
     }
   }
@@ -325,7 +312,7 @@ void blinkMillisContextLoop() {
 void blinkMillisContextExit() {
   // Reset variables
   previousMillis = 0;
-  ledOn = false;
+  labelOn = false;
   
   // Draw menu back on screen and clear context
   menu.reInit();

@@ -106,12 +106,12 @@ int GEMSelect::getSelectedOptionNum(void* variable) {
   return -1;
 }
 
-char* GEMSelect::getSelectedOptionName(void* variable) {
+const char* GEMSelect::getSelectedOptionName(void* variable) {
   int selectedOptionNum = getSelectedOptionNum(variable);
   return getOptionNameByIndex(selectedOptionNum);
 }
 
-char* GEMSelect::getOptionNameByIndex(int index) {
+const char* GEMSelect::getOptionNameByIndex(int index) {
   const char* name;
   SelectOptionInt* optsInt = (SelectOptionInt*)_options;
   SelectOptionByte* optsByte = (SelectOptionByte*)_options;
@@ -135,7 +135,7 @@ char* GEMSelect::getOptionNameByIndex(int index) {
       name = (index > -1 && index < _length) ? optsDouble[index].name : "";
       break;
   }
-  return const_cast<char*>(name);
+  return name;
 }
 
 void GEMSelect::setValue(void* variable, int index) {
