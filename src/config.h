@@ -1,4 +1,4 @@
-// GLCD support enabled by default.
+// AltSerialGraphicLCD support enabled by default.
 // Can be disabled either by defining GEM_DISABLE_GLCD (via compiler flag or define) or manual edition here.
 #ifndef GEM_DISABLE_GLCD
 #include "config/enable-glcd.h"         // Enable AltSerialGraphicLCD version of GEM

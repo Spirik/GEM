@@ -18,7 +18,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
 
 > Cyrillic is partially supported in U8g2 version of GEM (since 1.1). Can be used in menu title, menu item labels (including variables, buttons, and menu page links), and select options. Editable strings with Cyrillic characters are not supported.
 
-> Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) section for details.
+> Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library or by defining `GEM_DISABLE_FLOAT_EDIT` flag before build. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) section for details.
 
 * [When to use](#when-to-use)
 * [Structure](#structure)
@@ -1581,6 +1581,16 @@ to
 // #include "config/support-float-edit.h"
 ```
 
+> Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
+
+Or, alternatively, define `GEM_DISABLE_FLOAT_EDIT` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
+
+```ini
+build_flags =
+    ; Disable support for editable floats
+    -D GEM_DISABLE_FLOAT_EDIT
+```
+
 Note that option selects support `float` and `double` variables regardless of this setting.
 
 Configuration
@@ -1588,6 +1598,10 @@ Configuration
 It is possible to configure GEM library by excluding some features not needed in your project. That may help to save some additional program storage space. E.g., you can disable support for editable floating-point variables (see previous [section](#floating-point-variables)).
 
 You can also choose which version of GEM library (`AltSerialGraphicLCD`, `U8g2` or `Adafruit GFX` based) should be compiled. That way, there won't be requirement to have all of the supported graphics libraries installed in the system at the same time (regardless of which one is actually used).
+
+Currently there are two ways of achieving  that.
+
+### Manual `config.h` edition
 
 For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion.
 
@@ -1612,6 +1626,20 @@ To disable `Adafruit GFX` support comment out the following line:
 More configuration options may be be added in the future.
 
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
+
+### Defining build flags
+
+Alternatively, define corresponding flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
+
+```ini
+build_flags =
+    ; Disable AltSerialGraphicLCD support
+    -D GEM_DISABLE_GLCD
+    ; Disable U8g2 support
+    -D GEM_DISABLE_U8G2
+    ; Disable Adafruit GFX support
+    -D GEM_DISABLE_ADAFRUIT_GFX
+```
 
 Compatibility
 -----------
