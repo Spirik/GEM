@@ -70,11 +70,11 @@ class GEMItem {
       @param 'select_' - reference to GEMSelect option select
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
-    GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
-    GEMItem(const char* title_, int& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
-    GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, void (*saveAction_)());
-    GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
-    GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*saveAction_)());
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
     /* 
       Constructors for menu item that represents option select, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
@@ -95,12 +95,12 @@ class GEMItem {
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, boolean, float, or double)
       @param 'saveAction_' - pointer to callback function executed when associated variable is successfully saved
     */
-    GEMItem(const char* title_, byte& linkedVariable_, void (*saveAction_)());
-    GEMItem(const char* title_, int& linkedVariable_, void (*saveAction_)());
-    GEMItem(const char* title_, char* linkedVariable_, void (*saveAction_)());
-    GEMItem(const char* title_, boolean& linkedVariable_, void (*saveAction_)());
-    GEMItem(const char* title_, float& linkedVariable_, void (*saveAction_)());
-    GEMItem(const char* title_, double& linkedVariable_, void (*saveAction_)());
+    GEMItem(const char* title_, byte& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, int& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, char* linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, boolean& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, float& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
+    GEMItem(const char* title_, double& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item) = nullptr);
     /* 
       Constructors for menu item that represents variable, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
@@ -165,6 +165,7 @@ class GEMItem {
     GEMItem* menuItemNext;
     void (*buttonAction)();
     void (*saveAction)();
+    void (*enterAction)(GEMItem *item);
     GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
 };
   
