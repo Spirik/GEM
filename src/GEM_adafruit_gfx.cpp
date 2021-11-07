@@ -198,6 +198,72 @@ void GEM_adafruit_gfx::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
 }
 
+bool GEM_adafruit_gfx::isEditing() {
+  return _editValueMode;
+}
+
+int GEM_adafruit_gfx::availableOptions() {
+  if(_editValueMode) {
+    switch (_editValueType) {
+      case GEM_VAL_INTEGER:
+      case GEM_VAL_BYTE:
+        // position 0 allows 0-9, ' ', '-'
+        // later positions don't allow '-'
+        return _editValueCursorPosition == 0 ? 12 : 11;
+      case GEM_VAL_CHAR:
+        return GEM_CHAR_CODE_TILDA - GEM_CHAR_CODE_SPACE;
+      case GEM_VAL_SELECT:
+        {
+          GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+          GEMSelect* select = menuItemTmp->select;
+          return select->getLength();
+        }
+      case GEM_VAL_FLOAT:
+      case GEM_VAL_DOUBLE:
+        // position 0 allows 0-9, ' ', '-'
+        // later positions don't allow '-' but do allow '.'
+        return 12;
+    }
+  } else {
+    return _menuPageCurrent->itemsCount;
+  }
+}
+
+int GEM_adafruit_gfx::currentOption() {
+  if(_editValueMode) {
+    char chr;
+    switch (_editValueType) {
+      case GEM_VAL_INTEGER:
+      case GEM_VAL_BYTE:
+      case GEM_VAL_FLOAT:
+      case GEM_VAL_DOUBLE:
+        chr = _valueString[_editValueVirtualCursorPosition];
+        switch (chr) {
+          case GEM_CHAR_CODE_MINUS:
+            return 11;
+          case GEM_CHAR_CODE_SPACE:
+            // in position 0 we have minus before space
+            return (_editValueCursorPosition == 0) ? 12 : 11;
+          case GEM_CHAR_CODE_DOT:
+            return 13;
+          default:
+            return chr - GEM_CHAR_CODE_0;
+        }
+      case GEM_VAL_CHAR:
+        chr = _valueString[_editValueVirtualCursorPosition];
+        return chr - GEM_CHAR_CODE_SPACE;
+      case GEM_VAL_SELECT:
+        {
+          GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+          GEMSelect* select = menuItemTmp->select;
+          return _valueSelectNum = select->getSelectedOptionNum(menuItemTmp->linkedVariable);
+        }
+    }
+  } else {
+    return _menuPageCurrent->currentItemNum;
+  }
+}
+
 //====================== CONTEXT OPERATIONS
 
 void GEM_adafruit_gfx::clearContext() {
@@ -442,6 +508,7 @@ void GEM_adafruit_gfx::menuItemSelect() {
     case GEM_ITEM_VAL:
       if (!menuItemTmp->readonly) {
         enterEditValueMode();
+        if (menuItemTmp->enterAction) menuItemTmp->enterAction(menuItemTmp);
       }
       break;
     case GEM_ITEM_LINK:

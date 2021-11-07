@@ -38,49 +38,54 @@
 #include "GEMItem.h"
 #include "constants.h"
 
-GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
   , type(GEM_ITEM_VAL)
   , select(&select_)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
   , type(GEM_ITEM_VAL)
   , select(&select_)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
   , type(GEM_ITEM_VAL)
   , select(&select_)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
   , type(GEM_ITEM_VAL)
   , select(&select_)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_SELECT)
   , type(GEM_ITEM_VAL)
   , select(&select_)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
 //---
@@ -132,48 +137,53 @@ GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_
 
 //---
 
-GEMItem::GEMItem(const char* title_, byte& linkedVariable_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_BYTE)
   , type(GEM_ITEM_VAL)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, int& linkedVariable_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_INTEGER)
   , type(GEM_ITEM_VAL)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, char* linkedVariable_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, char* linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(linkedVariable_)
   , linkedType(GEM_VAL_CHAR)
   , type(GEM_ITEM_VAL)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, boolean& linkedVariable_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, boolean& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_BOOLEAN)
   , type(GEM_ITEM_VAL)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, float& linkedVariable_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_FLOAT)
   , type(GEM_ITEM_VAL)
   , precision(GEM_FLOAT_PREC)
   , saveAction(saveAction_)
+  , enterAction(enterAction_)
 { }
 
-GEMItem::GEMItem(const char* title_, double& linkedVariable_, void (*saveAction_)())
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, void (*saveAction_)(), void (*enterAction_)(GEMItem *item))
   : title(title_)
   , linkedVariable(&linkedVariable_)
   , linkedType(GEM_VAL_DOUBLE)
