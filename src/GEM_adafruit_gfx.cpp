@@ -341,7 +341,7 @@ void GEM_adafruit_gfx::printMenuItems() {
   GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
-  while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
+  while (menuItemTmp != nullptr && i < _menuItemsPerScreen) {
     byte yText = y + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
     byte yDraw = y + getMenuItemInsetOffset(true);
 

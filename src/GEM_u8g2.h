@@ -158,8 +158,7 @@ class GEM_u8g2 {
 
     /* DRAW OPERATIONS */
 
-    GEMPage* _menuPageCurrent;
-    GEMItem* _menuItemCurrent;
+    GEMPage* _menuPageCurrent = nullptr;
     void layoutMenu();
     void drawTitleBar();
     void printMenuItemString(const char* str, byte num, byte startPos = 0);

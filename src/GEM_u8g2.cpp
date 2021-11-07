@@ -311,7 +311,7 @@ void GEM_u8g2::printMenuItems() {
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
   char valueStringTmp[GEM_STR_LEN];
-  while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
+  while (menuItemTmp != nullptr && i < _menuItemsPerScreen) {
     byte yText = y + getMenuItemInsetOffset();
     byte yDraw = y + getMenuItemInsetOffset(true);
     switch (menuItemTmp->type) {

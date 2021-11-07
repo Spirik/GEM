@@ -248,7 +248,7 @@ void GEM::printMenuItems() {
   GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
-  while (menuItemTmp != 0 && i < _menuItemsPerScreen) {
+  while (menuItemTmp != nullptr && i < _menuItemsPerScreen) {
     _glcd.setY(y + getMenuItemInsetOffset());
     byte yDraw = y + getMenuItemInsetOffset(true);
     switch (menuItemTmp->type) {

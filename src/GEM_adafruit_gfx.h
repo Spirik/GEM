@@ -163,8 +163,7 @@ class GEM_adafruit_gfx {
 
     /* DRAW OPERATIONS */
 
-    GEMPage* _menuPageCurrent;
-    GEMItem* _menuItemCurrent;
+    GEMPage* _menuPageCurrent = nullptr;
     void drawTitleBar();
     void printMenuItemString(const char* str, byte num, byte startPos = 0);
     void printMenuItemTitle(const char* str, int offset = 0);

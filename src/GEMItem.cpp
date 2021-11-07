@@ -307,7 +307,7 @@ boolean GEMItem::getHidden() {
 
 GEMItem* GEMItem::getMenuItemNext() {
   GEMItem* menuItemTmp = menuItemNext;
-  while (menuItemTmp != 0 && menuItemTmp->hidden) {
+  while (menuItemTmp != nullptr && menuItemTmp->hidden) {
     menuItemTmp = menuItemTmp->menuItemNext;
   }
   return menuItemTmp;

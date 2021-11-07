@@ -67,7 +67,7 @@ void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
   // Back button menu item should be always inserted at first position in list
   GEMItem* menuItemTmp = _menuItem;
   _menuItem = &_menuItemBack;
-  if (menuItemTmp != 0) {
+  if (menuItemTmp != nullptr) {
     _menuItemBack.menuItemNext = menuItemTmp;
   }
   itemsCount++;
