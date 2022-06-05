@@ -428,7 +428,11 @@ void GEM::menuItemSelect() {
       break;
     case GEM_ITEM_BUTTON:
       if (!menuItemTmp->readonly) {
-        menuItemTmp->buttonAction();
+        if (menuItemTmp->callbackWithArgs) {
+          menuItemTmp->buttonActionArg(menuItemTmp->callbackData);
+        } else {
+          menuItemTmp->buttonAction();
+        }
       }
       break;
   }

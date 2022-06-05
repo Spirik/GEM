@@ -53,8 +53,24 @@
 #define GEM_HIDDEN true
 
 // Forward declaration of necessary classes
+class GEMItem;
 class GEMPage;
 class GEMSelect;
+
+// Declaration of GEMCallbackData type
+struct GEMCallbackData {
+  GEMItem* pMenuItem;     // Pointer to current menu item
+  union {                 // User-defined value for callback argument (as one of the types listed in the following union)
+    byte valByte;
+    int valInt;
+    float valFloat;
+    double valDouble;
+    boolean valBoolean;
+    bool valBool;
+    const char* valChar;
+    void* valPointer;
+  };
+};
 
 // Declaration of GEMItem class
 class GEMItem {
@@ -132,13 +148,36 @@ class GEMItem {
     */
     GEMItem(const char* title_, GEMPage* linkedPage_, boolean readonly_ = false);
     /* 
-      Constructor for menu item that represents button
+      Constructor for menu item that represents button w/o callback arguments
       @param 'title_' - title of the menu item displayed on the screen
       @param 'buttonAction_' - pointer to function that will be executed when menu item is activated
       @param 'readonly_' (optional) - set readonly mode for the button (user won't be able to call action associated with it)
       values GEM_READONLY (alias for true)
     */
     GEMItem(const char* title_, void (*buttonAction_)(), boolean readonly_ = false);
+    /* 
+      Constructor for menu item that represents button w/ callback arguments
+      @param 'title_' - title of the menu item displayed on the screen
+      @param 'buttonAction_' - pointer to function that will be executed when menu item is activated (with argument of type GEMCallbackData passed)
+      @param 'callbackVal_' - value of an argument that will be passed to callback within GEMCallbackData (either byte, int, boolean, float, double, char or void pointer)
+      @param 'readonly_' (optional) - set readonly mode for the button (user won't be able to call action associated with it)
+      values GEM_READONLY (alias for true)
+    */
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), byte callbackVal_, boolean readonly_ = false);
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), int callbackVal_, boolean readonly_ = false);
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), float callbackVal_, boolean readonly_ = false);
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), double callbackVal_, boolean readonly_ = false);
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), boolean callbackVal_, boolean readonly_ = false);
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), const char* callbackVal_, boolean readonly_ = false);
+    GEMItem(const char* title_, void (*buttonAction_)(GEMCallbackData), void* callbackVal_, boolean readonly_ = false);
+    void setCallbackVal(byte callbackVal_);
+    void setCallbackVal(int callbackVal_);
+    void setCallbackVal(float callbackVal_);
+    void setCallbackVal(double callbackVal_);
+    void setCallbackVal(boolean callbackVal_);
+    void setCallbackVal(const char* callbackVal_);
+    void setCallbackVal(void* callbackVal_);
+    GEMCallbackData getCallbackData();
     void setTitle(const char* title_);      // Set title of the menu item
     const char* getTitle();                 // Get title of the menu item
     void setPrecision(byte prec);           // Explicitly set precision for float or double variables as required by dtostrf() conversion,
@@ -163,8 +202,13 @@ class GEMItem {
     GEMPage* parentPage = nullptr;
     GEMPage* linkedPage = nullptr;
     GEMItem* menuItemNext = nullptr;
-    void (*buttonAction)();
+    boolean callbackWithArgs = false;
+    union {
+      void (*buttonAction)();
+      void (*buttonActionArg)(GEMCallbackData);
+    };
     void (*saveAction)();
+    GEMCallbackData callbackData;
     GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
 };
   
