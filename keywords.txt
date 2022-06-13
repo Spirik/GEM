@@ -11,6 +11,7 @@ GEM_u8g2	KEYWORD1
 GEMItem	KEYWORD1
 GEMPage	KEYWORD1
 GEMSelect	KEYWORD1
+GEMCallbackData	KEYWORD1
 Splash	KEYWORD1
 FontSize	KEYWORD1
 FontFamilies	KEYWORD1
@@ -38,6 +39,8 @@ drawMenu	KEYWORD2
 readyForKey	KEYWORD2
 registerKeyPress	KEYWORD2
 clearContext	KEYWORD2
+setCallbackVal	KEYWORD2
+getCallbackData	KEYWORD2
 setTitle	KEYWORD2
 getTitle	KEYWORD2
 setPrecision	KEYWORD2
@@ -46,6 +49,7 @@ getReadonly	KEYWORD2
 hide	KEYWORD2
 show	KEYWORD2
 getHidden	KEYWORD2
+getLinkedVariablePointer	KEYWORD2
 addMenuItem	KEYWORD2
 setParentMenuPage	KEYWORD2
 

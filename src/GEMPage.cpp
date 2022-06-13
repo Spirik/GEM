@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 

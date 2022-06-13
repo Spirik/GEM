@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -69,7 +69,7 @@ class GEMPage {
     GEMItem* _menuItem = nullptr;                               // First menu item of the page (the following ones are linked from within one another)
     GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)}; // Local instance of Back button (created when parent level menu page is specified through
                                                                 // setParentMenuPage(); always becomes the first menu item in a list)
-    void (*exitAction)();
+    void (*exitAction)() = nullptr;
 };
   
 #endif
