@@ -2,8 +2,6 @@
 ![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
 ===========
 
-> **⚠️ Warning:** Development version, can be unstable and/or non functional.
-
 GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
@@ -22,6 +20,8 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
 
 > Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library or by defining `GEM_DISABLE_FLOAT_EDIT` flag before build. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) section for details.
 
+> User-defined arguments can be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct (specified for menu items that represent editable variables and buttons) since version 1.4 of GEM.
+
 * [When to use](#when-to-use)
 * [Structure](#structure)
 * [Installation](#installation)
@@ -34,6 +34,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMPage](#gempage)
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
+  * [GEMCallbackData](#gemcallbackdata)
   * [AppContext](#appcontext)
 * [Floating-point variables](#floating-point-variables)
 * [Configuration](#configuration)
@@ -1202,7 +1203,7 @@ GEMItem menuItemVar(title, linkedVariable[, readonly]);
 ```
 or
 ```cpp
-GEMItem menuItemVar(title, linkedVariable[, saveCallback]);
+GEMItem menuItemVar(title, linkedVariable[, saveCallback[, callbackVal]]);
 ```
 
 * **title**  
@@ -1221,7 +1222,12 @@ GEMItem menuItemVar(title, linkedVariable[, saveCallback]);
 
 * **saveCallback** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to callback function executed when associated variable is successfully saved.
+  Pointer to callback function executed when associated variable is successfully saved. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
+
+* **callbackVal** [*optional*]  
+  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`  
+  *Default*: `0`  
+  Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
 > **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
 
@@ -1232,7 +1238,7 @@ GEMItem menuItemSelect(title, linkedVariable, select[, readonly]);
 ```
 or
 ```cpp
-GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback]);
+GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback[, callbackVal]]);
 ```
 
 * **title**  
@@ -1241,7 +1247,7 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback]);
 
 * **linkedVariable**  
   *Type*: `int`, `byte`, `float`, `double`, `char[n]`  
-  Reference to variable that menu item is associated with. Note that in case of `char[n]` variable, character array should be big enough to hold select option with the longest value to avoid overflows. It can be greater than `GEM_STR_LEN` limit (i.e. it is possible to have `n` > 17) set for non-select menu item variable.
+  Reference to variable that menu item is associated with. Note that in case of `char[n]` variable, character array should be big enough to hold select option with the longest value to avoid overflows. It can be greater than `GEM_STR_LEN` limit set for non-select menu item variable (i.e. it is possible to have `n` > 17).
 
 * **select**  
   *Type*: `GEMSelect`  
@@ -1255,7 +1261,12 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback]);
 
 * **saveCallback** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to callback function executed when associated variable is successfully saved.
+  Pointer to callback function executed when associated variable is successfully saved. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
+
+* **callbackVal** [*optional*]  
+  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`  
+  *Default*: `0`  
+  Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
 > **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
 
@@ -1284,6 +1295,10 @@ GEMItem menuItemLink(title, linkedPage[, readonly]);
 ```cpp
 GEMItem menuItemButton(title, buttonAction[, readonly]);
 ```
+or
+```cpp
+GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
+```
 
 * **title**  
   *Type*: `const char*`  
@@ -1291,13 +1306,20 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
 
 * **buttonAction**  
   *Type*: `pointer to function`  
-  Pointer to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+  Pointer to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
+
+* **callbackVal** [*optional*]  
+  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`  
+  *Default*: `0`  
+  Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
 * **readonly** [*optional*]  
   *Type*: `boolean`  
   *Values*: `GEM_READONLY` (alias for `true`), `false`  
   *Default*: `false`  
   Sets readonly mode for the button (user won't be able to call action associated with it).
+
+> **Note:** you cannot specify both readonly mode and callback with *uninitialized* `GEMCallbackData` argument in the same constructor. However, you can set readonly mode later using `GEMItem::setReadonly()` method.
 
 #### Constants
 
@@ -1317,6 +1339,14 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
   Alias for supported length of the string (character sequence) variable of type `char[GEM_STR_LEN]`. Note that this limits the length of the string that can be used with editable character menu item variable, but option select variable doesn't have this restriction. But you still have to make sure that in the latter case character array should be big enough to hold select option with the longest value to avoid overflows.
 
 #### Methods
+
+* **setCallbackVal(** _int_ | _byte_ | _float_ | _double_ | _boolean_ | _const char*_ | _void*_ callbackVal **)**  
+  *Returns*: nothing  
+  Set user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
+
+* *GEMCallbackData* **getCallbackData()**  
+  *Returns*: `GEMCallbackData`  
+  Get [`GEMCallbackData`](#gemcallbackdata) struct associated with menu item. It contains pointer to menu item and optionally user-defined value.
 
 * **setTitle(** _const char*_ title **)**  
   *Returns*: nothing  
@@ -1351,6 +1381,10 @@ GEMItem menuItemButton(title, buttonAction[, readonly]);
 * *boolean* **getHidden()**  
   *Returns*: `boolean`  
   Get hidden state of the menu item: `true` when menu item is hidden, `false` otherwise.
+
+* *void** **getLinkedVariablePointer()**  
+  *Returns*: `void*`  
+  Get pointer to a linked variable (relevant for menu items that represent variable). Note that user is reponsible for casting `void*` pointer to a correct pointer type.
 
 
 ----------
@@ -1471,6 +1505,92 @@ SelectOptionChar selectOption = {name, val_char};
 * **val_char**  
   *Type*: `const char*`  
   Value of the option that is assigned to linked variable upon option selection. Note that character array of associated with menu item variable (of type `char[n]`) should be big enough to hold select option with the longest value to avoid overflows.
+
+
+----------
+
+
+### GEMCallbackData
+
+Data structure that represents an argument that optionally can be passed to callback function associated with menu item. It contains pointer to menu item itself and a user-defined value, which can be one of the following types: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`. The value is stored as an anonymous union, so choose carefully which property to use to access it (as it is will access the same portion of memory).
+
+Declaration of `GEMCallbackData` type:
+
+```cpp
+struct GEMCallbackData {
+  GEMItem* pMenuItem;     // Pointer to current menu item
+  union {                 // User-defined value for callback argument (as one of the following types listed in a union)
+    byte valByte;
+    int valInt;
+    float valFloat;
+    double valDouble;
+    boolean valBoolean;
+    bool valBool;
+    const char* valChar;
+    void* valPointer;
+  };
+};
+```
+
+Object of type `GEMCallbackData` contains the following properties:
+
+* **pMenuItem**  
+  *Type*: `GEMItem*`  
+  Pointer to menu item with which object of type `GEMCallbackData` is associated.
+
+* **valByte** (part of a union)  
+  *Type*: `byte`  
+  User-defined value of type `byte` as a part of an anonymous union.
+
+* **valInt** (part of a union)  
+  *Type*: `int`  
+  User-defined value of type `int` as a part of an anonymous union.
+
+* **valFloat** (part of a union)  
+  *Type*: `float`  
+  User-defined value of type `float` as a part of an anonymous union.
+
+* **valDouble** (part of a union)  
+  *Type*: `double`  
+  User-defined value of type `double` as a part of an anonymous union.
+
+* **valBoolean** (part of a union)  
+  *Type*: `boolean`  
+  User-defined value of type `boolean` as a part of an anonymous union (the same as `valBool` property).
+
+* **valBool** (part of a union)  
+  *Type*: `bool`  
+  User-defined value of type `bool` as a part of an anonymous union (the same as `valBoolean` property).
+
+* **valChar** (part of a union)  
+  *Type*: `const char*`  
+  User-defined value of type `const char*` as a part of an anonymous union.
+
+* **valPointer** (part of a union)  
+  *Type*: `void*`  
+  User-defined value of type `void*` as a part of an anonymous union.
+
+Basic example of use:
+
+```cpp
+...
+
+void buttonAction(GEMCallbackData callbackData); // Forward declaration
+const char* buttonId = "button_first"; // User-defined string that will be passed as a part of callback argument
+GEMItem menuItemButton("Press me!", buttonAction, buttonId);
+
+...
+
+void buttonAction(GEMCallbackData callbackData) {
+  Serial.print("Pressed menu item title: ");
+  Serial.println(callbackData.pMenuItem->getTitle()); // Get title of the menu item via pointer to the menu item
+  Serial.print("Button ID: ");
+  Serial.println(callbackData.valChar); // Get user-defined variable as a part of callbackData argument
+}
+
+```
+
+For more details and examples of using user-defined callback arguments see corresponding sections of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 
 ----------

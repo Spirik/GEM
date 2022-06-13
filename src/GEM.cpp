@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -429,9 +429,9 @@ void GEM::menuItemSelect() {
     case GEM_ITEM_BUTTON:
       if (!menuItemTmp->readonly) {
         if (menuItemTmp->callbackWithArgs) {
-          menuItemTmp->buttonActionArg(menuItemTmp->callbackData);
+          menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
         } else {
-          menuItemTmp->buttonAction();
+          menuItemTmp->callbackAction();
         }
       }
       break;
@@ -496,8 +496,12 @@ void GEM::checkboxToggle() {
   int topOffset = getCurrentItemTopOffset(true, true);
   boolean checkboxValue = *(boolean*)menuItemTmp->linkedVariable;
   *(boolean*)menuItemTmp->linkedVariable = !checkboxValue;
-  if (menuItemTmp->saveAction != nullptr) {
-    menuItemTmp->saveAction();
+  if (menuItemTmp->callbackAction != nullptr) {
+    if (menuItemTmp->callbackWithArgs) {
+      menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
+    } else {
+      menuItemTmp->callbackAction();
+    }
     exitEditValue();
   } else {
     if (!checkboxValue) {
@@ -720,8 +724,12 @@ void GEM::saveEditValue() {
       break;
     #endif
   }
-  if (menuItemTmp->saveAction != nullptr) {
-    menuItemTmp->saveAction();
+  if (menuItemTmp->callbackAction != nullptr) {
+    if (menuItemTmp->callbackWithArgs) {
+      menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
+    } else {
+      menuItemTmp->callbackAction();
+    }
   }
   exitEditValue();
 }

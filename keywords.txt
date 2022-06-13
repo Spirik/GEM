@@ -49,6 +49,7 @@ getReadonly	KEYWORD2
 hide	KEYWORD2
 show	KEYWORD2
 getHidden	KEYWORD2
+getLinkedVariablePointer	KEYWORD2
 addMenuItem	KEYWORD2
 setParentMenuPage	KEYWORD2
 

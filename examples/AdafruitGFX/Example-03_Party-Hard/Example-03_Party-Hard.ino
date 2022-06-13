@@ -159,7 +159,7 @@ void validateInterval() {
     interval = 0;
   }
   // Print interval variable to Serial
-  Serial.print("Interval set: ");
+  Serial.print("Interval: ");
   Serial.println(interval);
 }
 
@@ -177,7 +177,7 @@ void applyTempo() {
     menuItemInt.setReadonly(false);
   }
   // Print tempo variable to Serial
-  Serial.print("Tempo option set: ");
+  Serial.print("Tempo option: ");
   Serial.println(tempo);
 }
 
@@ -224,7 +224,7 @@ void rockContextEnter() {
   if (interval == 0) {
     drawFrame(true);
   }
-  Serial.println("Partying hard is in progress!");
+  Serial.println("Partying hard!");
 }
 
 // Invoked every loop iteration
@@ -248,11 +248,11 @@ void rockContextLoop() {
       // Check pressed keys and navigate through frames accordingly
       switch (myKeyDetector.trigger) {
         case GEM_KEY_RIGHT:
-          Serial.println("Next frame");
+          Serial.println("Next");
           drawFrame(true);
           break;
         case GEM_KEY_LEFT:
-          Serial.println("Previous frame");
+          Serial.println("Previous");
           drawFrame(false);
           break;
       }

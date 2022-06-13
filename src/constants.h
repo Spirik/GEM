@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2021 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -33,7 +33,7 @@
 */
 
 // Macro constant (alias) for current version of GEM library, printed on _splash screen
-#define GEM_VER "1.3"
+#define GEM_VER "1.4"
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
