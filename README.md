@@ -1769,6 +1769,8 @@ ESP32 and ESP8266 based boards are not supported in AltSerialGraphicLCD version 
 
 When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp`, `GEM_u8g2.cpp` or `GEM_adafruit_gfx.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips). ESP32-based boards should be fine as well.
 
+> **Note:** there are reports of possible compatibility issues with some ESP32 based boards resulting in `flash read err, 1000` message after flashing compiled sketch (some users find it is possible to reflash the board afterwards to restore its functionality, some don't). Check this [thread](https://github.com/Spirik/GEM/issues/55) for more details.
+
 Examples
 -----------
 GEM library comes with several annotated examples that will help you get familiar with it. More detailed info on the examples (including schematic and breadboard view where necessary) available in [wiki](https://github.com/Spirik/GEM/wiki).
