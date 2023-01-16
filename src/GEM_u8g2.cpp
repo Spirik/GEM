@@ -571,7 +571,6 @@ void GEM_u8g2::enterEditValueMode() {
 
 void GEM_u8g2::checkboxToggle() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  int topOffset = getCurrentItemTopOffset(true, true);
   boolean checkboxValue = *(boolean*)menuItemTmp->linkedVariable;
   *(boolean*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
@@ -765,8 +764,6 @@ void GEM_u8g2::nextEditValueSelect() {
 }
 
 void GEM_u8g2::prevEditValueSelect() {
-  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
   }
@@ -775,7 +772,6 @@ void GEM_u8g2::prevEditValueSelect() {
 
 void GEM_u8g2::saveEditValue() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  void* temp;
   switch (menuItemTmp->linkedType) {
     case GEM_VAL_INTEGER:
       *(int*)menuItemTmp->linkedVariable = atoi(_valueString);

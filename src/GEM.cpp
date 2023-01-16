@@ -679,8 +679,6 @@ void GEM::nextEditValueSelect() {
 }
 
 void GEM::prevEditValueSelect() {
-  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
   }
@@ -698,7 +696,6 @@ void GEM::drawEditValueSelect() {
 
 void GEM::saveEditValue() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  void* temp;
   switch (menuItemTmp->linkedType) {
     case GEM_VAL_INTEGER:
       *(int*)menuItemTmp->linkedVariable = atoi(_valueString);
