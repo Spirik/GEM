@@ -39,7 +39,7 @@
 
 // AVR-based Arduinos have suppoort for dtostrf, some others may require manual inclusion (e.g. SAMD),
 // see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
-#if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_RP2040))
+#if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_NRF52840))
 #include <avr/dtostrf.h>
 #endif
 
