@@ -39,7 +39,7 @@
 
 // AVR-based Arduinos have suppoort for dtostrf, some others may require manual inclusion (e.g. SAMD),
 // see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
-#if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM))
+#if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_NRF52840))
 #include <avr/dtostrf.h>
 #endif
 
@@ -571,7 +571,6 @@ void GEM_u8g2::enterEditValueMode() {
 
 void GEM_u8g2::checkboxToggle() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  int topOffset = getCurrentItemTopOffset(true, true);
   boolean checkboxValue = *(boolean*)menuItemTmp->linkedVariable;
   *(boolean*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
@@ -765,8 +764,6 @@ void GEM_u8g2::nextEditValueSelect() {
 }
 
 void GEM_u8g2::prevEditValueSelect() {
-  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
   }
@@ -775,7 +772,6 @@ void GEM_u8g2::prevEditValueSelect() {
 
 void GEM_u8g2::saveEditValue() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  void* temp;
   switch (menuItemTmp->linkedType) {
     case GEM_VAL_INTEGER:
       *(int*)menuItemTmp->linkedVariable = atoi(_valueString);

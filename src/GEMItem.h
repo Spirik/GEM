@@ -299,11 +299,11 @@ class GEMItem {
     GEMPage* parentPage = nullptr;
     GEMPage* linkedPage = nullptr;
     GEMItem* menuItemNext = nullptr;
-    boolean callbackWithArgs = false;
     union {
       void (*callbackAction)() = nullptr;
       void (*callbackActionArg)(GEMCallbackData);
     };
+    boolean callbackWithArgs = false;
     GEMCallbackData callbackData;
     GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
 };

@@ -134,6 +134,9 @@ const char* GEMSelect::getOptionNameByIndex(int index) {
     case GEM_VAL_DOUBLE:
       name = (index > -1 && index < _length) ? optsDouble[index].name : "";
       break;
+    default:
+      name = "";
+      break;
   }
   return name;
 }
