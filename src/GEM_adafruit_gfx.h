@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -150,8 +150,13 @@ class GEM_adafruit_gfx {
     byte _menuPageScreenTopOffset;
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
-    FontSizeAgfx _menuItemFont[2] = {{6,12,10},{4,6,6}};
+    FontSizeAgfx _menuItemFont[2] = {{6,12,11},{4,6,6}};
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
+    #if GEM_ADAFRUIT_GFX_TEXT_SIZE < 1
+    byte _textSize = 1;
+    #else
+    byte _textSize = GEM_ADAFRUIT_GFX_TEXT_SIZE;
+    #endif
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;

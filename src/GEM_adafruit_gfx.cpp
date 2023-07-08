@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -64,6 +64,9 @@ static const uint8_t logo_bits [] PROGMEM = {
 */
 
 // Sprite of the default GEM _splash screen (GEM logo v2)
+
+#if GEM_ADAFRUIT_GFX_TEXT_SIZE < 2
+
 #define logo_width  20
 #define logo_height 8
 static const uint8_t logo_bits [] PROGMEM = {
@@ -71,7 +74,25 @@ static const uint8_t logo_bits [] PROGMEM = {
 	0x02, 0x20, 0xf9, 0xf2, 0x20, 0x00, 0x00, 0x00
 };
 
+#else
+
+#define logo_width  40
+#define logo_height 16
+static const uint8_t logo_bits [] PROGMEM = {
+  0xff, 0x03, 0xff, 0x0c, 0x0c, 0xff, 0x03, 0xff, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x0c, 0x0c, 0x00, 
+  0x00, 0x00, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x0c, 0xcc, 0x00, 0x00, 0x00, 0x0c, 0xcc, 0x03, 0xc3, 
+  0xfc, 0x0c, 0xcc, 0x03, 0xc3, 0xfc, 0x0c, 0xcc, 0x00, 0x00, 0x00, 0x0c, 0x0c, 0x00, 0x00, 0x00, 
+  0x0c, 0x0c, 0x00, 0x00, 0x00, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x0c, 0x0c, 0xff, 0xc3, 0xff, 0x0c, 
+  0x0c, 0xff, 0xc3, 0xff, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+#endif
+
 // Sprites of the UI elements used to draw menu
+
+#if GEM_ADAFRUIT_GFX_TEXT_SIZE < 2
+
+#define sprite_height  8
 
 #define arrowRight_width  6
 #define arrowRight_height 8
@@ -109,6 +130,54 @@ static const uint8_t selectArrows_bits [] PROGMEM = {
   0x00, 0x20, 0x70, 0x00, 0x70, 0x20, 0x00, 0x00
 };
 
+#else
+
+#define sprite_height  16
+
+#define arrowRight_width  12
+#define arrowRight_height 16
+static const uint8_t arrowRight_bits [] PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x0e, 0x00, 0x0f, 0x00, 0x0f, 0x80, 0x0f, 0xc0, 0x0f, 0xc0, 
+  0x0f, 0x80, 0x0f, 0x00, 0x0e, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+#define arrowLeft_width  12
+#define arrowLeft_height 16
+static const uint8_t arrowLeft_bits [] PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x1c, 0x00, 0x3c, 0x00, 0x7c, 0x00, 0xfc, 0x00, 0xfc, 0x00, 
+  0x7c, 0x00, 0x3c, 0x00, 0x1c, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+#define arrowBtn_width  12
+#define arrowBtn_height 16
+static const uint8_t arrowBtn_bits [] PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0xf0, 0x00, 0xf8, 0x00, 0xdc, 0x00, 0xce, 0x00, 0xc7, 0x00, 0xc7, 0x00, 
+  0xce, 0x00, 0xdc, 0x00, 0xf8, 0x00, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+#define checkboxUnchecked_width  14
+#define checkboxUnchecked_height 16
+static const uint8_t checkboxUnchecked_bits [] PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0xff, 0xf0, 0xff, 0xf0, 0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 
+  0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xff, 0xf0, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00,
+};
+
+#define checkboxChecked_width  14
+#define checkboxChecked_height 16
+static const uint8_t checkboxChecked_bits [] PROGMEM = {
+  0x00, 0x0c, 0x00, 0x1c, 0xff, 0x38, 0xfe, 0x70, 0xc0, 0xf0, 0xc1, 0xf0, 0xf3, 0xb0, 0xff, 0x30, 
+  0xde, 0x30, 0xcc, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xff, 0xf0, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00,
+};
+
+#define selectArrows_width  12
+#define selectArrows_height 16
+static const uint8_t selectArrows_bits [] PROGMEM = {
+  0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x1e, 0x00, 0x3f, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 
+  0x3f, 0x00, 0x3f, 0x00, 0x1e, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+#endif
+
 GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
   : _agfx(agfx_)
   , _menuPointerType(menuPointerType_)
@@ -117,8 +186,8 @@ GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, b
   , _menuPageScreenTopOffset(menuPageScreenTopOffset_)
   , _menuValuesLeftOffset(menuValuesLeftOffset_)
 {
-  _menuItemFontSize = _menuItemHeight >= 8 ? 0 : 1;
-  _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height) / 2;
+  _menuItemFontSize = _menuItemHeight >= 8 * _textSize ? 0 : 1;
+  _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height * _textSize) / 2;
   _splash = {logo_width, logo_height, logo_bits};
   clearContext();
   _editValueMode = false;
@@ -150,13 +219,13 @@ void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
 }
 
 void GEM_adafruit_gfx::init() {
-  _agfx.setTextSize(1);
+  _agfx.setTextSize(_textSize);
   _agfx.setTextWrap(false);
   _agfx.setTextColor(_menuForegroundColor);
   _agfx.fillScreen(_menuBackgroundColor);
   
-  _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
-  _menuItemValueLength = (_agfx.width() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
+  _menuItemTitleLength = (_menuValuesLeftOffset - 5 * _textSize) / (_menuItemFont[_menuItemFontSize].width * _textSize);
+  _menuItemValueLength = (_agfx.width() - _menuValuesLeftOffset - 6 * _textSize) / (_menuItemFont[_menuItemFontSize].width * _textSize);
   if (_menuItemsPerScreen == GEM_ITEMS_COUNT_AUTO) {
     _menuItemsPerScreen = (_agfx.height() - _menuPageScreenTopOffset) / _menuItemHeight;
   }
@@ -168,10 +237,10 @@ void GEM_adafruit_gfx::init() {
     if (_enableVersion) {
       delay(_splashDelay / 2);
       _agfx.setFont(_fontFamilies.small);
-      byte x = _agfx.width() - strlen(GEM_VER)*4;
+      byte x = _agfx.width() - strlen(GEM_VER) * 4 * _textSize;
       byte y = _agfx.height() - 1;
       if (_splash.image != logo_bits) {
-        _agfx.setCursor(x - 12, y);
+        _agfx.setCursor(x - 12 * _textSize, y);
         _agfx.print("GEM");
       } else {
         _agfx.setCursor(x, y);
@@ -188,7 +257,7 @@ void GEM_adafruit_gfx::init() {
 }
 
 void GEM_adafruit_gfx::reInit() {
-  _agfx.setTextSize(1);
+  _agfx.setTextSize(_textSize);
   _agfx.setTextWrap(false);
   _agfx.setTextColor(_menuForegroundColor);
   _agfx.fillScreen(_menuBackgroundColor);
@@ -221,7 +290,7 @@ void GEM_adafruit_gfx::drawTitleBar() {
   _agfx.setFont(_fontFamilies.small);
   _agfx.setTextWrap(true);
   _agfx.setTextColor(_menuForegroundColor);
-  _agfx.setCursor(5, _menuItemFont[1].baselineOffset + 1);
+  _agfx.setCursor(5 * _textSize, _menuItemFont[1].baselineOffset * _textSize + 1);
   _agfx.print(_menuPageCurrent->title);
   _agfx.setTextWrap(false);
   _agfx.setFont(_menuItemFontSize ? _fontFamilies.small : _fontFamilies.big);
@@ -248,7 +317,7 @@ void GEM_adafruit_gfx::printMenuItemFull(const char* str, int offset) {
 }
 
 byte GEM_adafruit_gfx::getMenuItemInsetOffset(boolean forSprite) {
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 2) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  return _menuItemInsetOffset + (forSprite ? (_menuItemFont[_menuItemFontSize].height * _textSize - sprite_height) / 2 : (_menuItemFontSize ? -1 * _textSize : -2 * _textSize)); // With additional offset for sprites and text for better visual alignment
 }
 
 byte GEM_adafruit_gfx::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
@@ -259,7 +328,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
   _agfx.setTextColor(color);
   switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
-        _agfx.setCursor(5, yText);
+        _agfx.setCursor(5 * _textSize, yText);
         if (menuItemTmp->readonly) {
           printMenuItemTitle(menuItemTmp->title, -1);
           _agfx.print("^");
@@ -291,7 +360,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
             {
               GEMSelect* select = menuItemTmp->select;
               printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-              _agfx.drawBitmap(_agfx.width() - 7, yDraw, selectArrows_bits, selectArrows_width, selectArrows_height, color);
+              _agfx.drawBitmap(_agfx.width() - 7 * _textSize, yDraw, selectArrows_bits, selectArrows_width, selectArrows_height, color);
             }
             break;
           #ifdef GEM_SUPPORT_FLOAT_EDIT
@@ -309,28 +378,28 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
         }
         break;
       case GEM_ITEM_LINK:
-        _agfx.setCursor(5, yText);
+        _agfx.setCursor(5 * _textSize, yText);
         if (menuItemTmp->readonly) {
           printMenuItemFull(menuItemTmp->title, -1);
           _agfx.print("^");
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        _agfx.drawBitmap(_agfx.width() - 8, yDraw, arrowRight_bits, arrowRight_width, arrowRight_height, color);
+        _agfx.drawBitmap(_agfx.width() - 8 * _textSize, yDraw, arrowRight_bits, arrowRight_width, arrowRight_height, color);
         break;
       case GEM_ITEM_BACK:
-        _agfx.setCursor(11, yText);
-        _agfx.drawBitmap(5, yDraw, arrowLeft_bits, arrowLeft_width, arrowLeft_height, color);
+        _agfx.setCursor((5 + _menuItemFont[_menuItemFontSize].width) * _textSize, yText);
+        _agfx.drawBitmap(5 * _textSize, yDraw, arrowLeft_bits, arrowLeft_width, arrowLeft_height, color);
         break;
       case GEM_ITEM_BUTTON:
-        _agfx.setCursor(11, yText);
+        _agfx.setCursor((5 + _menuItemFont[_menuItemFontSize].width) * _textSize, yText);
         if (menuItemTmp->readonly) {
           printMenuItemFull(menuItemTmp->title, -1);
           _agfx.print("^");
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        _agfx.drawBitmap(5, yDraw, arrowBtn_bits, arrowBtn_width, arrowBtn_height, color);
+        _agfx.drawBitmap(5 * _textSize, yDraw, arrowBtn_bits, arrowBtn_width, arrowBtn_height, color);
         break;
     }
   _agfx.setTextColor(_menuForegroundColor);
@@ -342,7 +411,7 @@ void GEM_adafruit_gfx::printMenuItems() {
   byte y = _menuPageScreenTopOffset;
   byte i = 0;
   while (menuItemTmp != nullptr && i < _menuItemsPerScreen) {
-    byte yText = y + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
+    byte yText = y + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset * _textSize;
     byte yDraw = y + getMenuItemInsetOffset(true);
 
     printMenuItem(menuItemTmp, yText, yDraw, _menuForegroundColor);
@@ -359,23 +428,27 @@ void GEM_adafruit_gfx::drawMenuPointer(boolean clear) {
     GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
     int pointerPosition = getCurrentItemTopOffset(false);
     if (_menuPointerType == GEM_POINTER_DASH) {
-      _agfx.fillRect(0, _menuPageScreenTopOffset, 2, _agfx.height() - _menuPageScreenTopOffset, _menuBackgroundColor);
+      _agfx.fillRect(0, _menuPageScreenTopOffset, 2 * _textSize, _agfx.height() - _menuPageScreenTopOffset, _menuBackgroundColor);
       if (menuItemTmp->readonly) {
         for (byte i = 0; i < (_menuItemHeight - 1) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuForegroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 + 1, _menuForegroundColor);
+          if (_textSize > 1) {
+            _agfx.drawPixel(2, pointerPosition + i * 2, _menuForegroundColor);
+            _agfx.drawPixel(3, pointerPosition + i * 2 + 1, _menuForegroundColor);
+          }
         }
       } else {
-        _agfx.fillRect(0, pointerPosition, 2, _menuItemHeight - 1, _menuForegroundColor);
+        _agfx.fillRect(0, pointerPosition, 2 * _textSize, _menuItemHeight - 1, _menuForegroundColor);
       }
       if (clear) {
-        byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
+        byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset * _textSize;
         byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
-        _agfx.fillRect(5, pointerPosition - 1, _agfx.width() - 2, _menuItemHeight + 1, _menuBackgroundColor);
+        _agfx.fillRect(5 * _textSize, pointerPosition - 1, _agfx.width() - 2, _menuItemHeight + 1, _menuBackgroundColor);
         printMenuItem(menuItemTmp, yText, yDraw, _menuForegroundColor);
       }
     } else {
-      byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
+      byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset * _textSize;
       byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
       byte screensCount = (_menuPageCurrent->itemsCount % _menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / _menuItemsPerScreen : _menuPageCurrent->itemsCount / _menuItemsPerScreen + 1;
       _agfx.fillRect(0, pointerPosition - 1, _agfx.width() + (screensCount > 1 ? -2 : 0), _menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
@@ -384,6 +457,10 @@ void GEM_adafruit_gfx::drawMenuPointer(boolean clear) {
         for (byte i = 0; i < (_menuItemHeight + 2) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuBackgroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 - 1, _menuBackgroundColor);
+          if (_textSize > 1) {
+            _agfx.drawPixel(2, pointerPosition + i * 2, _menuBackgroundColor);
+            _agfx.drawPixel(3, pointerPosition + i * 2 - 1, _menuBackgroundColor);
+          }
         }
       }
     }
@@ -600,12 +677,12 @@ void GEM_adafruit_gfx::prevEditValueCursorPosition() {
 
 void GEM_adafruit_gfx::drawEditValueCursor(boolean clear) {
   int pointerPosition = getCurrentItemTopOffset(false);
-  byte cursorLeftOffset = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width;
+  byte cursorLeftOffset = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width * _textSize;
   if (_editValueType == GEM_VAL_SELECT) {
     _agfx.fillRect(cursorLeftOffset - 1, pointerPosition - 1, _agfx.width() - cursorLeftOffset - 1, _menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
   } else {
-    _agfx.fillRect(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width + 1, _menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
-    byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
+    _agfx.fillRect(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width * _textSize + 1, _menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
+    byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset * _textSize;
     _agfx.setCursor(_menuValuesLeftOffset, yText);
   }
 }
@@ -701,12 +778,12 @@ void GEM_adafruit_gfx::drawEditValueDigit(byte code, boolean clear) {
   uint16_t foreColor = (clear) ? _menuForegroundColor : _menuBackgroundColor;
   uint16_t backColor = (clear) ? _menuBackgroundColor : _menuForegroundColor;
   int pointerPosition = getCurrentItemTopOffset(false);
-  byte xText = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width;
-  byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
+  byte xText = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width * _textSize;
+  byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset * _textSize;
   char chrNew = (char)code;
   if (chrNew != '\0') {
     _valueString[_editValueVirtualCursorPosition] = chrNew;
-    _agfx.drawChar(xText, yText, code, foreColor, backColor, 1);
+    _agfx.drawChar(xText, yText, code, foreColor, backColor, _textSize);
   }
 }
 
@@ -733,11 +810,11 @@ void GEM_adafruit_gfx::drawEditValueSelect() {
   _agfx.setTextColor(_menuBackgroundColor);
   
   int pointerPosition = getCurrentItemTopOffset(false);
-  byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset;
+  byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[_menuItemFontSize].baselineOffset * _textSize;
   _agfx.setCursor(_menuValuesLeftOffset, yText);
   
   printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
-  _agfx.drawBitmap(_agfx.width() - 7, getCurrentItemTopOffset(true, true), selectArrows_bits, selectArrows_width, selectArrows_height, _menuBackgroundColor);
+  _agfx.drawBitmap(_agfx.width() - 7 * _textSize, getCurrentItemTopOffset(true, true), selectArrows_bits, selectArrows_width, selectArrows_height, _menuBackgroundColor);
   _agfx.setTextColor(_menuForegroundColor);
 }
 

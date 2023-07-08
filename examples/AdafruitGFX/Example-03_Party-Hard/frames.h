@@ -285,6 +285,7 @@ static const uint8_t partyFrame4_bits [] PROGMEM = {
   0x00, 0x00, 0x00, 0x04, 0x08, 0x40, 0x7f, 0xff, 0xec, 0x00, 0x78, 0x00, 0xf0, 0x00, 0x00, 0x00
 };
 
+/*
 #define partyFrame5_width  128
 #define partyFrame5_height 64
 static const uint8_t partyFrame5_bits [] PROGMEM = {
@@ -353,12 +354,14 @@ static const uint8_t partyFrame5_bits [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x00, 0x0c, 0x81, 0x00, 0x00, 0x01, 0xc3, 0x00, 0x00, 0x00, 
   0x00, 0x00, 0x00, 0x00, 0x00, 0x3e, 0x00, 0x06, 0x83, 0x00, 0x00, 0x00, 0x75, 0x00, 0x00, 0x00
 };
+*/
 
 // Splash is the custom type used internally in GEM library for convenient way of storing bitmap graphics of Splash screen
 const Splash partyFrame1 = {partyFrame1_width, partyFrame1_height, partyFrame1_bits};
 const Splash partyFrame2 = {partyFrame2_width, partyFrame2_height, partyFrame2_bits};
 const Splash partyFrame3 = {partyFrame3_width, partyFrame3_height, partyFrame3_bits};
 const Splash partyFrame4 = {partyFrame4_width, partyFrame4_height, partyFrame4_bits};
-const Splash partyFrame5 = {partyFrame5_width, partyFrame5_height, partyFrame5_bits};
+// const Splash partyFrame5 = {partyFrame5_width, partyFrame5_height, partyFrame5_bits};
 
-const Splash frames[] = {partyFrame1, partyFrame2, partyFrame3, partyFrame4, partyFrame5};
+// const Splash frames[] = {partyFrame1, partyFrame2, partyFrame3, partyFrame4, partyFrame5};
+const Splash frames[] = {partyFrame1, partyFrame2, partyFrame3, partyFrame4};
