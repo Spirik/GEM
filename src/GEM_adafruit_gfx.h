@@ -124,6 +124,7 @@ class GEM_adafruit_gfx {
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
     void setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
+    void setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the set value
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -152,11 +153,7 @@ class GEM_adafruit_gfx {
     byte _menuItemFontSize;
     FontSizeAgfx _menuItemFont[2] = {{6,12,11},{4,6,6}};
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
-    #if GEM_ADAFRUIT_GFX_TEXT_SIZE < 1
     byte _textSize = 1;
-    #else
-    byte _textSize = GEM_ADAFRUIT_GFX_TEXT_SIZE;
-    #endif
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
@@ -170,6 +167,7 @@ class GEM_adafruit_gfx {
 
     GEMPage* _menuPageCurrent = nullptr;
     void drawTitleBar();
+    void drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color);
     void printMenuItemString(const char* str, byte num, byte startPos = 0);
     void printMenuItemTitle(const char* str, int offset = 0);
     void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);

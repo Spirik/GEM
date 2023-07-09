@@ -65,8 +65,6 @@ static const uint8_t logo_bits [] PROGMEM = {
 
 // Sprite of the default GEM _splash screen (GEM logo v2)
 
-#if GEM_ADAFRUIT_GFX_TEXT_SIZE < 2
-
 #define logo_width  20
 #define logo_height 8
 static const uint8_t logo_bits [] PROGMEM = {
@@ -74,11 +72,9 @@ static const uint8_t logo_bits [] PROGMEM = {
 	0x02, 0x20, 0xf9, 0xf2, 0x20, 0x00, 0x00, 0x00
 };
 
-#else
-
-#define logo_width  40
-#define logo_height 16
-static const uint8_t logo_bits [] PROGMEM = {
+#define logo_width_scaled  40
+#define logo_height_scaled 16
+static const uint8_t logo_bits_scaled [] PROGMEM = {
   0xff, 0x03, 0xff, 0x0c, 0x0c, 0xff, 0x03, 0xff, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x0c, 0x0c, 0x00, 
   0x00, 0x00, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x0c, 0xcc, 0x00, 0x00, 0x00, 0x0c, 0xcc, 0x03, 0xc3, 
   0xfc, 0x0c, 0xcc, 0x03, 0xc3, 0xfc, 0x0c, 0xcc, 0x00, 0x00, 0x00, 0x0c, 0x0c, 0x00, 0x00, 0x00, 
@@ -86,11 +82,12 @@ static const uint8_t logo_bits [] PROGMEM = {
   0x0c, 0xff, 0xc3, 0xff, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-#endif
+const Splash logo[] = {
+  {logo_width, logo_height, logo_bits},
+  {logo_width_scaled, logo_height_scaled, logo_bits_scaled}
+};
 
 // Sprites of the UI elements used to draw menu
-
-#if GEM_ADAFRUIT_GFX_TEXT_SIZE < 2
 
 #define sprite_height  8
 
@@ -130,53 +127,79 @@ static const uint8_t selectArrows_bits [] PROGMEM = {
   0x00, 0x20, 0x70, 0x00, 0x70, 0x20, 0x00, 0x00
 };
 
-#else
+#define sprite_height_scaled  16
 
-#define sprite_height  16
-
-#define arrowRight_width  12
-#define arrowRight_height 16
-static const uint8_t arrowRight_bits [] PROGMEM = {
+#define arrowRight_width_scaled  12
+#define arrowRight_height_scaled 16
+static const uint8_t arrowRight_bits_scaled [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x0e, 0x00, 0x0f, 0x00, 0x0f, 0x80, 0x0f, 0xc0, 0x0f, 0xc0, 
   0x0f, 0x80, 0x0f, 0x00, 0x0e, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-#define arrowLeft_width  12
-#define arrowLeft_height 16
-static const uint8_t arrowLeft_bits [] PROGMEM = {
+#define arrowLeft_width_scaled  12
+#define arrowLeft_height_scaled 16
+static const uint8_t arrowLeft_bits_scaled [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x1c, 0x00, 0x3c, 0x00, 0x7c, 0x00, 0xfc, 0x00, 0xfc, 0x00, 
   0x7c, 0x00, 0x3c, 0x00, 0x1c, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-#define arrowBtn_width  12
-#define arrowBtn_height 16
-static const uint8_t arrowBtn_bits [] PROGMEM = {
+#define arrowBtn_width_scaled  12
+#define arrowBtn_height_scaled 16
+static const uint8_t arrowBtn_bits_scaled [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0xf0, 0x00, 0xf8, 0x00, 0xdc, 0x00, 0xce, 0x00, 0xc7, 0x00, 0xc7, 0x00, 
   0xce, 0x00, 0xdc, 0x00, 0xf8, 0x00, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-#define checkboxUnchecked_width  14
-#define checkboxUnchecked_height 16
-static const uint8_t checkboxUnchecked_bits [] PROGMEM = {
+#define checkboxUnchecked_width_scaled  14
+#define checkboxUnchecked_height_scaled 16
+static const uint8_t checkboxUnchecked_bits_scaled [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0xff, 0xf0, 0xff, 0xf0, 0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 
   0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xff, 0xf0, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00,
 };
 
-#define checkboxChecked_width  14
-#define checkboxChecked_height 16
-static const uint8_t checkboxChecked_bits [] PROGMEM = {
+#define checkboxChecked_width_scaled  14
+#define checkboxChecked_height_scaled 16
+static const uint8_t checkboxChecked_bits_scaled [] PROGMEM = {
   0x00, 0x0c, 0x00, 0x1c, 0xff, 0x38, 0xfe, 0x70, 0xc0, 0xf0, 0xc1, 0xf0, 0xf3, 0xb0, 0xff, 0x30, 
   0xde, 0x30, 0xcc, 0x30, 0xc0, 0x30, 0xc0, 0x30, 0xff, 0xf0, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00,
 };
 
-#define selectArrows_width  12
-#define selectArrows_height 16
-static const uint8_t selectArrows_bits [] PROGMEM = {
+#define selectArrows_width_scaled  12
+#define selectArrows_height_scaled 16
+static const uint8_t selectArrows_bits_scaled [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x1e, 0x00, 0x3f, 0x00, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 
   0x3f, 0x00, 0x3f, 0x00, 0x1e, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-#endif
+const Splash arrowRight[] = {
+  {arrowRight_width, arrowRight_height, arrowRight_bits},
+  {arrowRight_width_scaled, arrowRight_height_scaled, arrowRight_bits_scaled}
+};
+
+const Splash arrowLeft[] = {
+  {arrowLeft_width, arrowLeft_height, arrowLeft_bits},
+  {arrowLeft_width_scaled, arrowLeft_height_scaled, arrowLeft_bits_scaled}
+};
+
+const Splash arrowBtn[] = {
+  {arrowBtn_width, arrowBtn_height, arrowBtn_bits},
+  {arrowBtn_width_scaled, arrowBtn_height_scaled, arrowBtn_bits_scaled}
+};
+
+const Splash checkboxUnchecked[] = {
+  {checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits},
+  {checkboxUnchecked_width_scaled, checkboxUnchecked_height_scaled, checkboxUnchecked_bits_scaled}
+};
+
+const Splash checkboxChecked[] = {
+  {checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits},
+  {checkboxChecked_width_scaled, checkboxChecked_height_scaled, checkboxChecked_bits_scaled}
+};
+
+const Splash selectArrows[] = {
+  {selectArrows_width, selectArrows_height, selectArrows_bits},
+  {selectArrows_width_scaled, selectArrows_height_scaled, selectArrows_bits_scaled}
+};
 
 GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
   : _agfx(agfx_)
@@ -188,7 +211,7 @@ GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, b
 {
   _menuItemFontSize = _menuItemHeight >= 8 * _textSize ? 0 : 1;
   _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height * _textSize) / 2;
-  _splash = {logo_width, logo_height, logo_bits};
+  _splash = logo[_textSize > 1 ? 1 : 0];
   clearContext();
   _editValueMode = false;
   _editValueCursorPosition = 0;
@@ -218,6 +241,15 @@ void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
   _menuBackgroundColor = color;
 }
 
+void GEM_adafruit_gfx::setTextSize(uint8_t size) {
+  _textSize = size > 0 ? size : 1;
+  _menuItemFontSize = _menuItemHeight >= 8 * _textSize ? 0 : 1;
+  _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height * _textSize) / 2;
+  if (_splash.image == logo[0].image || _splash.image == logo[1].image) {
+    _splash = logo[_textSize > 1 ? 1 : 0];
+  }
+}
+
 void GEM_adafruit_gfx::init() {
   _agfx.setTextSize(_textSize);
   _agfx.setTextWrap(false);
@@ -239,7 +271,7 @@ void GEM_adafruit_gfx::init() {
       _agfx.setFont(_fontFamilies.small);
       byte x = _agfx.width() - strlen(GEM_VER) * 4 * _textSize;
       byte y = _agfx.height() - 1;
-      if (_splash.image != logo_bits) {
+      if (_splash.image != logo[0].image && _splash.image != logo[1].image) {
         _agfx.setCursor(x - 12 * _textSize, y);
         _agfx.print("GEM");
       } else {
@@ -296,6 +328,11 @@ void GEM_adafruit_gfx::drawTitleBar() {
   _agfx.setFont(_menuItemFontSize ? _fontFamilies.small : _fontFamilies.big);
 }
 
+void GEM_adafruit_gfx::drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color) {
+  byte variant = _textSize > 1 ? 1 : 0;
+  _agfx.drawBitmap(x, y, sprite[variant].image, sprite[variant].width, sprite[variant].height, color);
+}
+
 void GEM_adafruit_gfx::printMenuItemString(const char* str, byte num, byte startPos) {
   byte i = startPos;
   while (i < num + startPos && str[i] != '\0') {
@@ -317,7 +354,8 @@ void GEM_adafruit_gfx::printMenuItemFull(const char* str, int offset) {
 }
 
 byte GEM_adafruit_gfx::getMenuItemInsetOffset(boolean forSprite) {
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFont[_menuItemFontSize].height * _textSize - sprite_height) / 2 : (_menuItemFontSize ? -1 * _textSize : -2 * _textSize)); // With additional offset for sprites and text for better visual alignment
+  byte spriteHeight = _textSize > 1 ? sprite_height_scaled : sprite_height;
+  return _menuItemInsetOffset + (forSprite ? (_menuItemFont[_menuItemFontSize].height * _textSize - spriteHeight) / 2 : (_menuItemFontSize ? -1 * _textSize : -2 * _textSize)); // With additional offset for sprites and text for better visual alignment
 }
 
 byte GEM_adafruit_gfx::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
@@ -351,16 +389,16 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
             break;
           case GEM_VAL_BOOLEAN:
             if (*(boolean*)menuItemTmp->linkedVariable) {
-              _agfx.drawBitmap(_menuValuesLeftOffset, yDraw, checkboxChecked_bits, checkboxChecked_width, checkboxChecked_height, color);
+              drawSprite(_menuValuesLeftOffset, yDraw, checkboxChecked, color);
             } else {
-              _agfx.drawBitmap(_menuValuesLeftOffset, yDraw, checkboxUnchecked_bits, checkboxUnchecked_width, checkboxUnchecked_height, color);
+              drawSprite(_menuValuesLeftOffset, yDraw, checkboxUnchecked, color);
             }
             break;
           case GEM_VAL_SELECT:
             {
               GEMSelect* select = menuItemTmp->select;
               printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-              _agfx.drawBitmap(_agfx.width() - 7 * _textSize, yDraw, selectArrows_bits, selectArrows_width, selectArrows_height, color);
+              drawSprite(_agfx.width() - 7 * _textSize, yDraw, selectArrows, color);
             }
             break;
           #ifdef GEM_SUPPORT_FLOAT_EDIT
@@ -385,11 +423,11 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        _agfx.drawBitmap(_agfx.width() - 8 * _textSize, yDraw, arrowRight_bits, arrowRight_width, arrowRight_height, color);
+        drawSprite(_agfx.width() - 8 * _textSize, yDraw, arrowRight, color);
         break;
       case GEM_ITEM_BACK:
         _agfx.setCursor((5 + _menuItemFont[_menuItemFontSize].width) * _textSize, yText);
-        _agfx.drawBitmap(5 * _textSize, yDraw, arrowLeft_bits, arrowLeft_width, arrowLeft_height, color);
+        drawSprite(5 * _textSize, yDraw, arrowLeft, color);
         break;
       case GEM_ITEM_BUTTON:
         _agfx.setCursor((5 + _menuItemFont[_menuItemFontSize].width) * _textSize, yText);
@@ -399,7 +437,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        _agfx.drawBitmap(5 * _textSize, yDraw, arrowBtn_bits, arrowBtn_width, arrowBtn_height, color);
+        drawSprite(5 * _textSize, yDraw, arrowBtn, color);
         break;
     }
   _agfx.setTextColor(_menuForegroundColor);
@@ -613,12 +651,13 @@ void GEM_adafruit_gfx::checkboxToggle() {
   } else {
     uint16_t foreColor = (_menuPointerType == GEM_POINTER_DASH) ? _menuForegroundColor : _menuBackgroundColor;
     uint16_t backColor = (_menuPointerType == GEM_POINTER_DASH) ? _menuBackgroundColor : _menuForegroundColor;
+    byte variant = _textSize > 1 ? 1 : 0;
     if (!checkboxValue) {
-      _agfx.fillRect(_menuValuesLeftOffset, topOffset, checkboxChecked_width, checkboxChecked_height, backColor);
-      _agfx.drawBitmap(_menuValuesLeftOffset, topOffset, checkboxChecked_bits, checkboxChecked_width, checkboxChecked_height, foreColor);
+      _agfx.fillRect(_menuValuesLeftOffset, topOffset, checkboxChecked[variant].width, checkboxChecked[variant].height, backColor);
+      drawSprite(_menuValuesLeftOffset, topOffset, checkboxChecked, foreColor);
     } else {
-      _agfx.fillRect(_menuValuesLeftOffset, topOffset, checkboxUnchecked_width, checkboxUnchecked_height, backColor);
-      _agfx.drawBitmap(_menuValuesLeftOffset, topOffset, checkboxUnchecked_bits, checkboxUnchecked_width, checkboxUnchecked_height, foreColor);
+      _agfx.fillRect(_menuValuesLeftOffset, topOffset, checkboxUnchecked[variant].width, checkboxUnchecked[variant].height, backColor);
+      drawSprite(_menuValuesLeftOffset, topOffset, checkboxUnchecked, foreColor);
     }
     _editValueMode = false;
   }
@@ -814,7 +853,7 @@ void GEM_adafruit_gfx::drawEditValueSelect() {
   _agfx.setCursor(_menuValuesLeftOffset, yText);
   
   printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
-  _agfx.drawBitmap(_agfx.width() - 7 * _textSize, getCurrentItemTopOffset(true, true), selectArrows_bits, selectArrows_width, selectArrows_height, _menuBackgroundColor);
+  drawSprite(_agfx.width() - 7 * _textSize, getCurrentItemTopOffset(true, true), selectArrows, _menuBackgroundColor);
   _agfx.setTextColor(_menuForegroundColor);
 }
 

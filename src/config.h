@@ -21,9 +21,3 @@
 #ifndef GEM_DISABLE_FLOAT_EDIT
 #include "config/support-float-edit.h"  // Support for editable float and double variables (option selects support them regardless of this setting)
 #endif
-
-// Macro constant (alias) for default magnification factor used to draw text in Adafruit GFX version of GEM library.
-// Can be adjusted either by defining GEM_ADAFRUIT_GFX_TEXT_SIZE (via compiler flag or define) or manual edition here.
-#ifndef GEM_ADAFRUIT_GFX_TEXT_SIZE
-#define GEM_ADAFRUIT_GFX_TEXT_SIZE 1    // Default value is 1
-#endif
