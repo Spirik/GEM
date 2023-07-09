@@ -122,9 +122,9 @@ class GEM_adafruit_gfx {
                                                                     // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    void setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
     void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
     void setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
-    void setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the set value
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current

@@ -233,14 +233,6 @@ void GEM_adafruit_gfx::hideVersion(boolean flag) {
   _enableVersion = !flag;
 }
 
-void GEM_adafruit_gfx::setForegroundColor(uint16_t color) {
-  _menuForegroundColor = color;
-}
-
-void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
-  _menuBackgroundColor = color;
-}
-
 void GEM_adafruit_gfx::setTextSize(uint8_t size) {
   _textSize = size > 0 ? size : 1;
   _menuItemFontSize = _menuItemHeight >= 8 * _textSize ? 0 : 1;
@@ -248,6 +240,14 @@ void GEM_adafruit_gfx::setTextSize(uint8_t size) {
   if (_splash.image == logo[0].image || _splash.image == logo[1].image) {
     _splash = logo[_textSize > 1 ? 1 : 0];
   }
+}
+
+void GEM_adafruit_gfx::setForegroundColor(uint16_t color) {
+  _menuForegroundColor = color;
+}
+
+void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
+  _menuBackgroundColor = color;
 }
 
 void GEM_adafruit_gfx::init() {
