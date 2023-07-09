@@ -64,6 +64,7 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 
 - Download ZIP-archive directly from [Releases](https://github.com/Spirik/GEM/releases) section (or Master branch) and extract it into GEM folder inside your Library folder.
 - Using Library Manager (since Arduino IDE 1.6.2): navigate to `Sketch > Include Library > Manage Libraries` inside your Arduino IDE and search for GEM library, then click `Install`. (Alternatively you can add previously downloaded ZIP through `Sketch > Include Library > Add .ZIP Library` menu).
+- Using Library Manager in Arduino IDE 2: see [documentation](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-installing-a-library) for details.
 
 Whichever option you choose you may need to reload IDE afterwards.
 
@@ -1096,7 +1097,7 @@ For more details on customization see corresponding section of the [wiki](https:
   > Keep this in mind if you are planning to use the same object in your own routines.
   
   > The following `Adafruit_GFX` object settings will be applied during `init()`: 
-  > * `tft.setTextSize(1)`;
+  > * `tft.setTextSize(_textSize)` (sets text magnification size to default value 1 or value set through `setTextSize()` previously);
   > * `tft.setTextWrap(false)`;
   > * `tft.setTextColor(_menuForegroundColor)` (sets text color to default value 0xFFFF or value set through `setForegroundColor()`).
   > 
@@ -1105,6 +1106,11 @@ For more details on customization see corresponding section of the [wiki](https:
 * **reInit()**  
   *Returns*: nothing  
   Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD, U8g2 or Adafruit GFX graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#appcontext) for more details.
+
+* **setTextSize(** _uint8_t_ size **)**  `Adafruit GFX version only`  
+  *Accepts*: `uint8_t`  
+  *Returns*: nothing  
+  Set text 'magnification' size (as per Adafruit GFX docs) to supplied value. See Adafruit GFX [documentation](http://adafruit.github.io/Adafruit-GFX-Library/html/class_adafruit___g_f_x.html#a39eb4a8a2c9fa4ab7d58ceffd19535d5) for details on internaly called method of the same name. Sprites (i.e. various menu icons) will be scaled maximum up to two times regardless of the value. If not called explicitly, magnification size will be set to 1. Should be called before `init()`.
 
 * **setForegroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
   *Accepts*: `uint16_t`  

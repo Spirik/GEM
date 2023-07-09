@@ -71,7 +71,7 @@ int tempoInterval[] = {400, 250, 120, 100, 0, 200};
 
 // Supplementary variables used for animation control
 unsigned long previousMillis = 0;
-byte framesCount = 5;
+byte framesCount = 4;
 byte currentFrame = framesCount;
 
 // Create menu item objects of class GEMItem, linked to interval and strobe variables
@@ -177,7 +177,7 @@ void applyTempo() {
     menuItemInt.setReadonly(false);
   }
   // Print tempo variable to Serial
-  Serial.print("Tempo option: ");
+  Serial.print("Tempo: ");
   Serial.println(tempo);
 }
 

@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -122,6 +122,7 @@ class GEM_adafruit_gfx {
                                                                     // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    void setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
     void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
     void setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
@@ -150,8 +151,9 @@ class GEM_adafruit_gfx {
     byte _menuPageScreenTopOffset;
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
-    FontSizeAgfx _menuItemFont[2] = {{6,12,10},{4,6,6}};
+    FontSizeAgfx _menuItemFont[2] = {{6,12,11},{4,6,6}};
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
+    byte _textSize = 1;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
@@ -165,6 +167,7 @@ class GEM_adafruit_gfx {
 
     GEMPage* _menuPageCurrent = nullptr;
     void drawTitleBar();
+    void drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color);
     void printMenuItemString(const char* str, byte num, byte startPos = 0);
     void printMenuItemTitle(const char* str, int offset = 0);
     void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
