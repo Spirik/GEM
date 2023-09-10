@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -132,6 +132,10 @@ void GEM::setSplashDelay(uint16_t value) {
 
 void GEM::hideVersion(boolean flag) {
   _enableVersion = !flag;
+}
+
+void GEM::invertKeysDuringEdit(boolean invert) {
+  _invertKeysDuringEdit = invert;
 }
 
 void GEM::init() {
@@ -803,6 +807,8 @@ void GEM::dispatchKeyPress() {
         case GEM_KEY_UP:
           if (_editValueType == GEM_VAL_SELECT) {
             prevEditValueSelect();
+          } else if (_invertKeysDuringEdit) {
+            prevEditValueDigit();
           } else {
             nextEditValueDigit();
           }
@@ -815,6 +821,8 @@ void GEM::dispatchKeyPress() {
         case GEM_KEY_DOWN:
           if (_editValueType == GEM_VAL_SELECT) {
             nextEditValueSelect();
+          } else if (_invertKeysDuringEdit) {
+            nextEditValueDigit();
           } else {
             prevEditValueDigit();
           }

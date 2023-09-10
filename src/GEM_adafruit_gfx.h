@@ -125,6 +125,7 @@ class GEM_adafruit_gfx {
     void setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
     void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
     void setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
+    void invertKeysDuringEdit(boolean invert = true);    // Turn inverted order of characters during edit mode on or off
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -154,6 +155,7 @@ class GEM_adafruit_gfx {
     FontSizeAgfx _menuItemFont[2] = {{6,12,11},{4,6,6}};
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     byte _textSize = 1;
+    boolean _invertKeysDuringEdit = false;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;

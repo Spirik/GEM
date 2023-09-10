@@ -250,6 +250,10 @@ void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
   _menuBackgroundColor = color;
 }
 
+void GEM_adafruit_gfx::invertKeysDuringEdit(boolean invert) {
+  _invertKeysDuringEdit = invert;
+}
+
 void GEM_adafruit_gfx::init() {
   _agfx.setTextSize(_textSize);
   _agfx.setTextWrap(false);
@@ -971,6 +975,8 @@ void GEM_adafruit_gfx::dispatchKeyPress() {
         case GEM_KEY_UP:
           if (_editValueType == GEM_VAL_SELECT) {
             prevEditValueSelect();
+          } else if (_invertKeysDuringEdit) {
+            prevEditValueDigit();
           } else {
             nextEditValueDigit();
           }
@@ -983,6 +989,8 @@ void GEM_adafruit_gfx::dispatchKeyPress() {
         case GEM_KEY_DOWN:
           if (_editValueType == GEM_VAL_SELECT) {
             nextEditValueSelect();
+          } else if (_invertKeysDuringEdit) {
+            nextEditValueDigit();
           } else {
             prevEditValueDigit();
           }

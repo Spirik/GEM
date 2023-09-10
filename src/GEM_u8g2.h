@@ -120,6 +120,7 @@ class GEM_u8g2 {
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
     void enableCyrillic(boolean flag = true);            // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
+    void invertKeysDuringEdit(boolean invert = true);    // Turn inverted order of characters during edit mode on or off
     void init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -148,7 +149,8 @@ class GEM_u8g2 {
     byte _menuItemFontSize;
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
     FontFamiliesU8g2 _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
-    bool _cyrillicEnabled = false;
+    boolean _cyrillicEnabled = false;
+    boolean _invertKeysDuringEdit = false;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
