@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -108,6 +108,7 @@ class GEM {
                                                          // (although this does not matter).
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    void invertKeysDuringEdit(boolean invert = true);    // Turn inverted order of characters during edit mode on or off
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -135,6 +136,7 @@ class GEM {
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
+    boolean _invertKeysDuringEdit = false;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;

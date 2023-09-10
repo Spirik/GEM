@@ -161,6 +161,10 @@ void GEM_u8g2::enableCyrillic(boolean flag) {
   }
 }
 
+void GEM_u8g2::invertKeysDuringEdit(boolean invert) {
+  _invertKeysDuringEdit = invert;
+}
+
 void GEM_u8g2::init() {
   _u8g2.clear();
   _u8g2.setDrawColor(1);
@@ -879,6 +883,8 @@ void GEM_u8g2::dispatchKeyPress() {
         case GEM_KEY_UP:
           if (_editValueType == GEM_VAL_SELECT) {
             prevEditValueSelect();
+          } else if (_invertKeysDuringEdit) {
+            prevEditValueDigit();
           } else {
             nextEditValueDigit();
           }
@@ -891,6 +897,8 @@ void GEM_u8g2::dispatchKeyPress() {
         case GEM_KEY_DOWN:
           if (_editValueType == GEM_VAL_SELECT) {
             nextEditValueSelect();
+          } else if (_invertKeysDuringEdit) {
+            nextEditValueDigit();
           } else {
             prevEditValueDigit();
           }
