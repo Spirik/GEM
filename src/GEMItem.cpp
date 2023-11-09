@@ -93,7 +93,7 @@ GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, 
   , select(&select_)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -183,7 +183,7 @@ GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSelect& select_, v
   , select(&select_)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -273,7 +273,7 @@ GEMItem::GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, 
   , select(&select_)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -363,7 +363,7 @@ GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_,
   , select(&select_)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -453,7 +453,7 @@ GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_
   , select(&select_)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -641,7 +641,7 @@ GEMItem::GEMItem(const char* title_, byte& linkedVariable_, void (*callbackActio
   , type(GEM_ITEM_VAL)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, byte& linkedVariable_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -723,7 +723,7 @@ GEMItem::GEMItem(const char* title_, int& linkedVariable_, void (*callbackAction
   , type(GEM_ITEM_VAL)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, int& linkedVariable_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -805,7 +805,7 @@ GEMItem::GEMItem(const char* title_, char* linkedVariable_, void (*callbackActio
   , type(GEM_ITEM_VAL)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, char* linkedVariable_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -887,7 +887,7 @@ GEMItem::GEMItem(const char* title_, boolean& linkedVariable_, void (*callbackAc
   , type(GEM_ITEM_VAL)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, boolean& linkedVariable_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -969,7 +969,7 @@ GEMItem::GEMItem(const char* title_, float& linkedVariable_, void (*callbackActi
   , type(GEM_ITEM_VAL)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, float& linkedVariable_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -1051,7 +1051,7 @@ GEMItem::GEMItem(const char* title_, double& linkedVariable_, void (*callbackAct
   , type(GEM_ITEM_VAL)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, double& linkedVariable_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
@@ -1204,7 +1204,7 @@ GEMItem::GEMItem(const char* title_, void (*callbackAction_)(GEMCallbackData))
   , type(GEM_ITEM_BUTTON)
   , callbackActionArg(callbackAction_)
   , callbackWithArgs(true)
-  , callbackData{ .pMenuItem = this }
+  , callbackData{ .pMenuItem = this, { 0 } }
 { }
 
 GEMItem::GEMItem(const char* title_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_, boolean readonly_)
