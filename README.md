@@ -1205,7 +1205,7 @@ GEMPage menuPage(title[, exitAction]);
 
 Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `boolean`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
 
-> **Note:** support for editable variables of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO). See [Floating-point variables](#floating-point-variables) for more details.
+> **Note:** support for editable variables of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
 
 #### Variable
 
@@ -1694,7 +1694,7 @@ For more details see supplied example on context usage and read corresponding se
 
 Floating-point variables
 -----------
-The [`float`](https://www.arduino.cc/reference/en/language/variables/data-types/float/) data type has only 6-7 decimal digits of precision ("[mantissa](https://en.wikipedia.org/wiki/Scientific_notation)"). For AVR based Arduino boards (like UNO) [`double`](https://www.arduino.cc/reference/en/language/variables/data-types/double/) data type has basically the same precision, being only 32 bit wide (the same as `float`). On some other boards (like SAMD boards, e.g. with M0 chips) double is actually a 64 bit number, so it has more precision (up to 15 digits).
+The [`float`](https://www.arduino.cc/reference/en/language/variables/data-types/float/) data type has only 6-7 decimal digits of precision ("[mantissa](https://en.wikipedia.org/wiki/Scientific_notation)"). For AVR based Arduino boards (like UNO R3) [`double`](https://www.arduino.cc/reference/en/language/variables/data-types/double/) data type has basically the same precision, being only 32 bit wide (the same as `float`). On some other boards (like SAMD boards, e.g. with M0 chips) double is actually a 64 bit number, so it has more precision (up to 15 digits).
 
 Internally in GEM, [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) and [`atof()`](http://www.cplusplus.com/reference/cstdlib/atof/) are used to convert floating-point number to and from a string. Support for `dtostrf()` comes with `stdlib.h` for AVR, and hence available out of the box for AVR-based boards. While it is possible to use [`sprintf()`](http://www.cplusplus.com/reference/cstdio/sprintf/) for some other boards (like SAMD), `dtostrf()` is used for them instead as well, for consistency through explicit inclusion of `avr/dtostrf.h`. See [this thread](https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647) for some more details on `dtostrf()` support across different boards.
 
@@ -1702,7 +1702,7 @@ Default precision (the number of digits **after** the decimal sign, in terms of 
 
 Note that maximum length of the number should not exceed `GEM_STR_LEN` (i.e. 17) - otherwise overflows and undetermined behavior may occur (that includes the value of precision specified through `GEMItem::setPrecision()` method or default one, which will increase length of the number with trailing zeros if necessary). This is result of using `char[GEM_STR_LEN]` buffer during `dtostrf()` conversion. It is not possible to enter number with the length exceeding this limit during edit of the variable, however, additional caution should be taken to verify that initial value of the variable (or externally changed value) in combination with specified precision does not exceed this limit.
 
-It is possible to exclude support for editable `float` and `double` variables to save some space on your chip (up to 10% of program storage space on UNO). For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
+It is possible to exclude support for editable `float` and `double` variables to save some space on your chip (up to 10% of program storage space on UNO R3). For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
 
 ```cpp
 #include "config/support-float-edit.h"
