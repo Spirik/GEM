@@ -1,6 +1,6 @@
 /*
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
@@ -51,7 +51,7 @@
 #define GEM_KEY_DOWN 3    // Down key is pressed (navigate down through the menu items list, select previous value of the digit/char of editable variable, or next option in select)
 #define GEM_KEY_LEFT 4    // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
-#define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button)
+#define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
 
 // Declaration of FontSize type
 struct FontSize {
@@ -68,8 +68,8 @@ struct AppContext {
   void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context, optional),
                     // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again,
                     // if no user-defined function specified, default action will take place that consists of call to reInit(), drawMenu() and clearContext() methods
-  boolean allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
-                             // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
+  bool allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
+                          // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
 };
 
 // Forward declaration of necessary classes
@@ -107,8 +107,8 @@ class GEM {
                                                          // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
                                                          // (although this does not matter).
     void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
-    void hideVersion(boolean flag = true);               // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
-    void invertKeysDuringEdit(boolean invert = true);    // Turn inverted order of characters during edit mode on or off
+    void hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    void invertKeysDuringEdit(bool invert = true);    // Turn inverted order of characters during edit mode on or off
     void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
@@ -124,7 +124,7 @@ class GEM {
 
     /* KEY DETECTION */
 
-    boolean readyForKey();                               // Check that menu is waiting for the key press
+    bool readyForKey();                                  // Check that menu is waiting for the key press
     void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
                                                          // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
@@ -136,13 +136,13 @@ class GEM {
     byte _menuValuesLeftOffset;
     byte _menuItemFontSize;
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
-    boolean _invertKeysDuringEdit = false;
+    bool _invertKeysDuringEdit = false;
     byte _menuItemInsetOffset;
     byte _menuItemTitleLength;
     byte _menuItemValueLength;
     const uint8_t *_splash;
     uint16_t _splashDelay = 1000;
-    boolean _enableVersion = true;
+    bool _enableVersion = true;
 
     /* DRAW OPERATIONS */
 
@@ -152,8 +152,8 @@ class GEM {
     void printMenuItemTitle(const char* str, int offset = 0);
     void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     void printMenuItemFull(const char* str, int offset = 0);
-    byte getMenuItemInsetOffset(boolean forSprite = false);
-    byte getCurrentItemTopOffset(boolean withInsetOffset = true, boolean forSprite = false);
+    byte getMenuItemInsetOffset(bool forSprite = false);
+    byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
     void printMenuItems();
     void drawMenuPointer();
     void drawScrollbar();
@@ -166,7 +166,7 @@ class GEM {
 
     /* VALUE EDIT */
 
-    boolean _editValueMode;
+    bool _editValueMode;
     byte _editValueType;
     byte _editValueLength;
     byte _editValueCursorPosition;

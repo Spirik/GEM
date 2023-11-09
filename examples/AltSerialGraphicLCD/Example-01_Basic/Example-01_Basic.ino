@@ -1,8 +1,8 @@
 /*
   Basic menu example using GEM library.
 
-  Simple one page menu with one editable menu item associated with int variable, one with boolean variable,
-  and a button, pressing of which will result in int variable value printed to Serial monitor if boolean variable is set to true.
+  Simple one page menu with one editable menu item associated with int variable, one with bool variable,
+  and a button, pressing of which will result in int variable value printed to Serial monitor if bool variable is set to true.
 
   AltSerialGraphicLCD library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
@@ -44,7 +44,7 @@ GLCD glcd(serialLCD);
 
 // Create variables that will be editable through the menu and assign them initial values
 int number = -512;
-boolean enablePrint = false;
+bool enablePrint = false;
 
 // Create two menu item objects of class GEMItem, linked to number and enablePrint variables 
 GEMItem menuItemInt("Number:", number);

@@ -65,7 +65,7 @@ char label[GEM_STR_LEN] = "Blink!"; // Maximum length of the string should not e
 unsigned long previousMillis = 0;
 
 // Variable to hold current label state (visible or hidden)
-boolean labelOn = false;
+bool labelOn = false;
 
 // Variables to hold currently set foreground and background colors
 int foreColor = ST77XX_WHITE;

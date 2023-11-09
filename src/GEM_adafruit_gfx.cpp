@@ -1,6 +1,6 @@
 /*
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
@@ -229,7 +229,7 @@ void GEM_adafruit_gfx::setSplashDelay(uint16_t value) {
   _splashDelay = value;
 }
 
-void GEM_adafruit_gfx::hideVersion(boolean flag) {
+void GEM_adafruit_gfx::hideVersion(bool flag) {
   _enableVersion = !flag;
 }
 
@@ -250,7 +250,7 @@ void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
   _menuBackgroundColor = color;
 }
 
-void GEM_adafruit_gfx::invertKeysDuringEdit(boolean invert) {
+void GEM_adafruit_gfx::invertKeysDuringEdit(bool invert) {
   _invertKeysDuringEdit = invert;
 }
 
@@ -357,12 +357,12 @@ void GEM_adafruit_gfx::printMenuItemFull(const char* str, int offset) {
   printMenuItemString(str, _menuItemTitleLength + _menuItemValueLength + offset);
 }
 
-byte GEM_adafruit_gfx::getMenuItemInsetOffset(boolean forSprite) {
+byte GEM_adafruit_gfx::getMenuItemInsetOffset(bool forSprite) {
   byte spriteHeight = _textSize > 1 ? sprite_height_scaled : sprite_height;
   return _menuItemInsetOffset + (forSprite ? (_menuItemFont[_menuItemFontSize].height * _textSize - spriteHeight) / 2 : (_menuItemFontSize ? -1 * _textSize : -2 * _textSize)); // With additional offset for sprites and text for better visual alignment
 }
 
-byte GEM_adafruit_gfx::getCurrentItemTopOffset(boolean withInsetOffset, boolean forSprite) {
+byte GEM_adafruit_gfx::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {
   return (_menuPageCurrent->currentItemNum % _menuItemsPerScreen) * _menuItemHeight + _menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
 }
 
@@ -391,8 +391,8 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
           case GEM_VAL_CHAR:
             printMenuItemValue((char*)menuItemTmp->linkedVariable);
             break;
-          case GEM_VAL_BOOLEAN:
-            if (*(boolean*)menuItemTmp->linkedVariable) {
+          case GEM_VAL_BOOL:
+            if (*(bool*)menuItemTmp->linkedVariable) {
               drawSprite(_menuValuesLeftOffset, yDraw, checkboxChecked, color);
             } else {
               drawSprite(_menuValuesLeftOffset, yDraw, checkboxUnchecked, color);
@@ -465,7 +465,7 @@ void GEM_adafruit_gfx::printMenuItems() {
   memset(_valueString, '\0', GEM_STR_LEN - 1);
 }
 
-void GEM_adafruit_gfx::drawMenuPointer(boolean clear) {
+void GEM_adafruit_gfx::drawMenuPointer(bool clear) {
   if (_menuPageCurrent->itemsCount > 0) {
     GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
     int pointerPosition = getCurrentItemTopOffset(false);
@@ -530,7 +530,7 @@ void GEM_adafruit_gfx::nextMenuItem() {
   } else {
     _menuPageCurrent->currentItemNum++;
   }
-  boolean redrawMenu = (_menuPageCurrent->itemsCount > _menuItemsPerScreen && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
+  bool redrawMenu = (_menuPageCurrent->itemsCount > _menuItemsPerScreen && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
   if (redrawMenu) {
     drawMenu();
   } else {
@@ -542,7 +542,7 @@ void GEM_adafruit_gfx::prevMenuItem() {
   if (_menuPointerType != GEM_POINTER_DASH) {
     drawMenuPointer(true);
   }
-  boolean redrawMenu = (_menuPageCurrent->itemsCount > _menuItemsPerScreen && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
+  bool redrawMenu = (_menuPageCurrent->itemsCount > _menuItemsPerScreen && _menuPageCurrent->currentItemNum % _menuItemsPerScreen == 0);
   if (_menuPageCurrent->currentItemNum == 0) {
     _menuPageCurrent->currentItemNum = _menuPageCurrent->itemsCount-1;
   } else {
@@ -594,7 +594,7 @@ void GEM_adafruit_gfx::enterEditValueMode() {
   
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   _editValueType = menuItemTmp->linkedType;
-  if ((_menuPointerType != GEM_POINTER_DASH) && (_editValueType != GEM_VAL_BOOLEAN)) {
+  if ((_menuPointerType != GEM_POINTER_DASH) && (_editValueType != GEM_VAL_BOOL)) {
     drawMenuPointer(true);
   }
   switch (_editValueType) {
@@ -613,7 +613,7 @@ void GEM_adafruit_gfx::enterEditValueMode() {
       _editValueLength = GEM_STR_LEN - 1;
       initEditValueCursor();
       break;
-    case GEM_VAL_BOOLEAN:
+    case GEM_VAL_BOOL:
       checkboxToggle();
       break;
     case GEM_VAL_SELECT:
@@ -643,8 +643,8 @@ void GEM_adafruit_gfx::enterEditValueMode() {
 void GEM_adafruit_gfx::checkboxToggle() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   int topOffset = getCurrentItemTopOffset(true, true);
-  boolean checkboxValue = *(boolean*)menuItemTmp->linkedVariable;
-  *(boolean*)menuItemTmp->linkedVariable = !checkboxValue;
+  bool checkboxValue = *(bool*)menuItemTmp->linkedVariable;
+  *(bool*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
@@ -718,7 +718,7 @@ void GEM_adafruit_gfx::prevEditValueCursorPosition() {
   drawEditValueDigit(chr);
 }
 
-void GEM_adafruit_gfx::drawEditValueCursor(boolean clear) {
+void GEM_adafruit_gfx::drawEditValueCursor(bool clear) {
   int pointerPosition = getCurrentItemTopOffset(false);
   byte cursorLeftOffset = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width * _textSize;
   if (_editValueType == GEM_VAL_SELECT) {
@@ -816,7 +816,7 @@ void GEM_adafruit_gfx::prevEditValueDigit() {
   drawEditValueDigit(code);
 }
 
-void GEM_adafruit_gfx::drawEditValueDigit(byte code, boolean clear) {
+void GEM_adafruit_gfx::drawEditValueDigit(byte code, bool clear) {
   drawEditValueCursor(clear);
   uint16_t foreColor = (clear) ? _menuForegroundColor : _menuBackgroundColor;
   uint16_t backColor = (clear) ? _menuBackgroundColor : _menuForegroundColor;
@@ -904,7 +904,7 @@ void GEM_adafruit_gfx::cancelEditValue() {
   exitEditValue(false);
 }
 
-void GEM_adafruit_gfx::exitEditValue(boolean redrawMenu) {
+void GEM_adafruit_gfx::exitEditValue(bool redrawMenu) {
   memset(_valueString, '\0', GEM_STR_LEN - 1);
   _valueSelectNum = -1;
   _editValueMode = false;
@@ -938,7 +938,7 @@ char* GEM_adafruit_gfx::trimString(char* str) {
 
 //====================== KEY DETECTION
 
-boolean GEM_adafruit_gfx::readyForKey() {
+bool GEM_adafruit_gfx::readyForKey() {
   if ( (context.loop == nullptr) ||
       ((context.loop != nullptr) && (context.allowExit)) ) {
     return true;

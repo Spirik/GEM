@@ -2,7 +2,7 @@
   GEMPage - menu page (or level) for GEM library. Consists of a list of menu items.
 
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
@@ -61,7 +61,7 @@ class GEMPage {
     byte currentItemNum = 0;                          // Currently selected (focused) menu item of the page
     byte itemsCount = 0;                              // Items count excluding hidden ones
     byte itemsCountTotal = 0;                         // Items count incuding hidden ones
-    GEMItem* getMenuItem(byte index, boolean total = false);
+    GEMItem* getMenuItem(byte index, bool total = false);
     GEMItem* getCurrentMenuItem();
     int getMenuItemNum(GEMItem& menuItem);            // Find index of the supplied menu item
     void hideMenuItem(GEMItem& menuItem);
