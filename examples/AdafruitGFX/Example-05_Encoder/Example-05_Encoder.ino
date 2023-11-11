@@ -1,8 +1,8 @@
 /*
   Basic menu example using GEM library. Using rotary encoder as an input source.
 
-  Simple two page menu with one editable menu item associated with int variable, one with boolean variable,
-  and a button, pressing of which will result in int variable value printed to Serial monitor if boolean variable is set to true.
+  Simple two page menu with one editable menu item associated with int variable, one with bool variable,
+  and a button, pressing of which will result in int variable value printed to Serial monitor if bool variable is set to true.
 
   Second menu page with option select is added to better demonstrate operation of the menu with rotary encoder.
 
@@ -76,10 +76,10 @@ Adafruit_SH1106G display = Adafruit_SH1106G(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, 
 
 // Create variables that will be editable through the menu and assign them initial values
 int number = -512;
-boolean enablePrint = false;
+bool enablePrint = false;
 
 // Create variable that will be editable through option select and create associated option select.
-// This variable will be passed to menu.invertKeysDuringEdit(), and naturally can be presented as a boolean,
+// This variable will be passed to menu.invertKeysDuringEdit(), and naturally can be presented as a bool,
 // but is declared as a byte type to be used in an option select rather than checkbox (for demonstration purposes)
 byte invert = 1;
 SelectOptionByte selectInvertOptions[] = {{"Invert", 1}, {"Normal", 0}};

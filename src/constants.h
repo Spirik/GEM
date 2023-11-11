@@ -1,6 +1,6 @@
 /*
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
-  editable menu items, such as variables (supports int, byte, float, double, boolean, char[17] data types)
+  editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
   Supports buttons that can invoke user-defined actions and create action-specific
@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2022 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -53,7 +53,8 @@
 #define GEM_VAL_INTEGER 0  // Associated variable is of type int
 #define GEM_VAL_BYTE 1     // Associated variable is of type byte
 #define GEM_VAL_CHAR 2     // Associated variable is of type char[GEM_STR_LEN]
-#define GEM_VAL_BOOLEAN 3  // Associated variable is of type boolean
+#define GEM_VAL_BOOL 3     // Associated variable is of type bool
+#define GEM_VAL_BOOLEAN GEM_VAL_BOOL
 #define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
                            // (note that char[] array should be big enough to hold select option with the longest value)
 #define GEM_VAL_FLOAT 5    // Associated variable is of type float

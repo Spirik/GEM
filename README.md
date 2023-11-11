@@ -2,7 +2,7 @@
 ![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
 ===========
 
-GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `boolean`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
+GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `bool`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
   
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
@@ -113,7 +113,7 @@ Assume you have a simple setup as follows:
 
 ![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_bb_edited_1776_o.png)
 
-Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `bool` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `bool` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
@@ -175,7 +175,7 @@ Create variables that you would like to be editable through the menu. Assign the
 
 ```cpp
 int number = -512;
-boolean enablePrint = false;
+bool enablePrint = false;
 ```
 
 Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" respectively - these names will be printed on screen:
@@ -406,7 +406,7 @@ Assume you have a simple setup as follows:
 
 ![Basic example breadboard](https://github.com/Spirik/GEM/wiki/images/ex_GEM_01_basic_u8g2_breadboard_bb_edited_1974_o.png)
 
-Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). We will use U8g2 library to detect single button presses.
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `bool` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `bool` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). We will use U8g2 library to detect single button presses.
 
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
@@ -430,7 +430,7 @@ Create variables that you would like to be editable through the menu. Assign the
 
 ```cpp
 int number = -512;
-boolean enablePrint = false;
+bool enablePrint = false;
 ```
 
 Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" respectively - these names will be printed on screen:
@@ -633,7 +633,7 @@ Assume you have a simple setup as follows:
 
 ![Basic example breadboard](https://raw.githubusercontent.com/wiki/Spirik/GEM/images/ex_GEM_01_basic_agfx_breadboard_bb_edited_1590_o.png)
 
-Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `boolean` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `boolean` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
+Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `bool` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `bool` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
@@ -688,7 +688,7 @@ Create variables that you would like to be editable through the menu. Assign the
 
 ```cpp
 int number = -512;
-boolean enablePrint = false;
+bool enablePrint = false;
 ```
 
 Create two menu item objects of class `GEMItem`, linked to `number` and `enablePrint` variables. Let's name them simply "Number" and "Enable print" respectively - these names will be printed on screen:
@@ -1038,7 +1038,7 @@ For more details on customization see corresponding section of the [wiki](https:
     *Type*: macro `#define GEM_KEY_OK U8X8_MSG_GPIO_MENU_SELECT`  
     *Value*: `U8X8_MSG_GPIO_MENU_SELECT`
 
-  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle boolean menu item, enter edit mode of the associated non-boolean variable, exit edit mode with saving the variable, execute code associated with button).
+  Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle `bool` menu item, enter edit mode of the associated non-`bool` variable, exit edit mode with saving the variable, execute code associated with button).
 
 #### Methods
 
@@ -1069,18 +1069,18 @@ For more details on customization see corresponding section of the [wiki](https:
   Set splash screen delay (in ms). By default splash screen will be visible for 1000ms. Maximum supported value is 65535ms. Setting to 0 will disable splash screen. Should be called before `init()`.
   > **Note:** internally splash screen delay is implemented via `delay()` function. This is the only place in library where `delay()` is utilized (aside of example sketches).
 
-* **hideVersion(** _boolean_ flag = true **)**  
-  *Accepts*: `boolean`  
+* **hideVersion(** _bool_ flag = true **)**  
+  *Accepts*: `bool`  
   *Returns*: nothing  
   Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `init()`.
 
-* **enableCyrillic(** _boolean_ flag = true **)**  `U8g2 version only`  
-  *Accepts*: `boolean`  
+* **enableCyrillic(** _bool_ flag = true **)**  `U8g2 version only`  
+  *Accepts*: `bool`  
   *Returns*: nothing  
   Turn Cyrillic typeset on (`enableCyrillic()`) or off (`enableCyrillic(false)`). [`u8g2_font_6x12_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_t_cyrillic.png) and [`u8g2_font_4x6_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_4x6_t_cyrillic.png) fonts from [U8g2](https://github.com/olikraus/u8g2/wiki/fntlistall) will be used when Cyrillic typeset is enabled, and default fonts [`u8g2_font_6x12_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_tr.png) and [`u8g2_font_tom_thumb_4x6_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_tom_thumb_4x6_tr.png) will be used otherwise. You may use Cyrillic in menu title, menu item labels (`GEMItem`, including buttons and menu page links), and select options (`SelectOptionInt`, `SelectOptionByte`, `SelectOptionChar` data structures). Editable strings with Cyrillic characters are **not supported** (edit mode of such strings may lead to unpredictable results due to incompatibility with 2-byte characters). Increases required program storage space, use cautiously. By default Cyrillic typeset is off. Should be called before `GEM_u8g2::init()`.
 
-* **invertKeysDuringEdit(** _boolean_ invert = true **)**  
-  *Accepts*: `boolean`  
+* **invertKeysDuringEdit(** _bool_ invert = true **)**  
+  *Accepts*: `bool`  
   *Returns*: nothing  
   Turn inverted order of characters during edit mode on (`invertKeysDuringEdit()`) or off (`invertKeysDuringEdit(false)`). By default when in edit mode of a number or a `char[17]` variable, digits (and other characters) increment when `GEM_KEY_UP` key is pressed and decrement when `GEM_KEY_DOWN` key is pressed. Inverting this order may lead to more natural expected behavior when editing `char[17]` or number variables with certain input devices (e.g. rotary encoder, in which case rotating knob clock-wise is generally associated with `GEM_KEY_DOWN` action during navigation through menu items, but in edit mode it seems more natural to increment a digit rather than to decrement it when performing the same clock-wise rotation).
 
@@ -1136,8 +1136,8 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: nothing  
   Draw menu on screen, with menu page set earlier in `setMenuPageCurrent()`.
 
-* *boolean* **readyForKey()**  
-  *Returns*: `boolean`  
+* *bool* **readyForKey()**  
+  *Returns*: `bool`  
   Check that menu is waiting for the key press.
 
 * **registerKeyPress(** _byte_ keyCode **)**  
@@ -1203,9 +1203,9 @@ GEMPage menuPage(title[, exitAction]);
 
 ### GEMItem
 
-Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `boolean`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
+Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
 
-> **Note:** support for editable variables of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO). See [Floating-point variables](#floating-point-variables) for more details.
+> **Note:** support for editable variables of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
 
 #### Variable
 
@@ -1222,11 +1222,11 @@ GEMItem menuItemVar(title, linkedVariable[, saveCallback[, callbackVal]]);
   Title of the menu item displayed on the screen.
 
 * **linkedVariable**  
-  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact)  
+  *Type*: `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact)  
   Reference to variable that menu item is associated with.
 
 * **readonly** [*optional*]  
-  *Type*: `boolean`  
+  *Type*: `bool`  
   *Values*: `GEM_READONLY` (alias for `true`), `false`  
   *Default*: `false`  
   Sets readonly mode for variable that menu item is associated with.
@@ -1236,7 +1236,7 @@ GEMItem menuItemVar(title, linkedVariable[, saveCallback[, callbackVal]]);
   Pointer to callback function executed when associated variable is successfully saved. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
 
 * **callbackVal** [*optional*]  
-  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`  
+  *Type*: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`  
   *Default*: `0`  
   Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
@@ -1265,7 +1265,7 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback[, callbackVa
   Reference to [`GEMSelect`](#gemselect) option select object that represents a list of available values.
 
 * **readonly** [*optional*]  
-  *Type*: `boolean`  
+  *Type*: `bool`  
   *Values*: `GEM_READONLY` (alias for `true`), `false`  
   *Default*: `false`  
   Sets readonly mode for variable that menu item is associated with.
@@ -1275,7 +1275,7 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback[, callbackVa
   Pointer to callback function executed when associated variable is successfully saved. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
 
 * **callbackVal** [*optional*]  
-  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`  
+  *Type*: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`  
   *Default*: `0`  
   Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
@@ -1296,7 +1296,7 @@ GEMItem menuItemLink(title, linkedPage[, readonly]);
   Menu page `GEMPage` that menu item is associated with.
 
 * **readonly** [*optional*]  
-  *Type*: `boolean`  
+  *Type*: `bool`  
   *Values*: `GEM_READONLY` (alias for `true`), `false`  
   *Default*: `false`  
   Sets readonly mode for the link (user won't be able to navigate to linked page).
@@ -1320,12 +1320,12 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   Pointer to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
 
 * **callbackVal** [*optional*]  
-  *Type*: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`  
+  *Type*: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`  
   *Default*: `0`  
   Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
 * **readonly** [*optional*]  
-  *Type*: `boolean`  
+  *Type*: `bool`  
   *Values*: `GEM_READONLY` (alias for `true`), `false`  
   *Default*: `false`  
   Sets readonly mode for the button (user won't be able to call action associated with it).
@@ -1351,7 +1351,7 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 
 #### Methods
 
-* **setCallbackVal(** _int_ | _byte_ | _float_ | _double_ | _boolean_ | _const char*_ | _void*_ callbackVal **)**  
+* **setCallbackVal(** _int_ | _byte_ | _float_ | _double_ | _bool_ | _const char*_ | _void*_ callbackVal **)**  
   *Returns*: nothing  
   Set user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
@@ -1371,17 +1371,17 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: nothing  
   Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
 
-* **setReadonly(** _boolean_ mode = true **)**  
-  *Accepts*: `boolean`  
+* **setReadonly(** _bool_ mode = true **)**  
+  *Accepts*: `bool`  
   *Returns*: nothing  
-  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`, `GEM_VAL_CHAR`, `GEM_VAL_BOOLEAN` variable menu items and `GEM_VAL_SELECT` option select), or menu button `GEM_ITEM_BUTTON` and menu link `GEM_ITEM_LINK`, pressing of which won't result in any action, associated with them.
+  Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `int`, `byte`, `float`, `double`, `char[17]`, `bool` variable menu items and option select), or menu button and menu link, pressing of which won't result in any action, associated with them.
 
-* *boolean* **getReadonly()**  
-  *Returns*: `boolean`  
+* *bool* **getReadonly()**  
+  *Returns*: `bool`  
   Get readonly state of the variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
 
-* **hide(** _boolean_ hide = true **)**  
-  *Accepts*: `boolean`  
+* **hide(** _bool_ hide = true **)**  
+  *Accepts*: `bool`  
   *Returns*: nothing  
   Hide (`hide(true)`, or `hide(GEM_HIDDEN)`, or `hide()`) or show (`hide(false)`) menu item. Hidden menu items won't be printed to the screen the next time menu is drawn.
 
@@ -1389,8 +1389,8 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: nothing  
   Show previously hidden menu item.
 
-* *boolean* **getHidden()**  
-  *Returns*: `boolean`  
+* *bool* **getHidden()**  
+  *Returns*: `bool`  
   Get hidden state of the menu item: `true` when menu item is hidden, `false` otherwise.
 
 * *void** **getLinkedVariablePointer()**  
@@ -1523,7 +1523,7 @@ SelectOptionChar selectOption = {name, val_char};
 
 ### GEMCallbackData
 
-Data structure that represents an argument that optionally can be passed to callback function associated with menu item. It contains pointer to menu item itself and a user-defined value, which can be one of the following types: `int`, `byte`, `float`, `double`, `boolean`, `const char*`, `void*`. The value is stored as an anonymous union, so choose carefully which property to use to access it (as it is will access the same portion of memory).
+Data structure that represents an argument that optionally can be passed to callback function associated with menu item. It contains pointer to menu item itself and a user-defined value, which can be one of the following types: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`. The value is stored as an anonymous union, so choose carefully which property to use to access it (as it is will access the same portion of memory).
 
 Declaration of `GEMCallbackData` type:
 
@@ -1535,7 +1535,7 @@ struct GEMCallbackData {
     int valInt;
     float valFloat;
     double valDouble;
-    boolean valBoolean;
+    bool valBoolean;
     bool valBool;
     const char* valChar;
     void* valPointer;
@@ -1566,8 +1566,8 @@ Object of type `GEMCallbackData` contains the following properties:
   User-defined value of type `double` as a part of an anonymous union.
 
 * **valBoolean** (part of a union)  
-  *Type*: `boolean`  
-  User-defined value of type `boolean` as a part of an anonymous union (the same as `valBool` property).
+  *Type*: `bool`  
+  User-defined value of type `bool` as a part of an anonymous union (the same as `valBool` property).
 
 * **valBool** (part of a union)  
   *Type*: `bool`  
@@ -1632,7 +1632,7 @@ AppContext myContext = {loop, enter, exit, allowExit};
   Pointer to `exit()` function of current context. Called automatically when user exits currently running context if `context.allowExit` (see below) is set to `true`. Should be invoked manually otherwise. Usually contains instructions to do some cleanup after context's `loop()` and to draw menu on screen again (by calling `drawMenu()` method of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object). If no user-defined function specified, default action will be invoked that consists of call to three methods of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object: `reInit()`, `drawMenu()`, and `clearContext()`.
 
 * **allowExit**
-  *Type*: `boolean`  
+  *Type*: `bool`  
   *Default*: `true`  
   Setting to `false` will require manually exit the context's `loop()` from within the loop itself: all necessary key detection should be done in context's `loop()` accordingly, and `context.exit()` should be called explicitly; otherwise exit is handled automatically by pressing `GEM_KEY_CANCEL` key.
 
@@ -1694,7 +1694,7 @@ For more details see supplied example on context usage and read corresponding se
 
 Floating-point variables
 -----------
-The [`float`](https://www.arduino.cc/reference/en/language/variables/data-types/float/) data type has only 6-7 decimal digits of precision ("[mantissa](https://en.wikipedia.org/wiki/Scientific_notation)"). For AVR based Arduino boards (like UNO) [`double`](https://www.arduino.cc/reference/en/language/variables/data-types/double/) data type has basically the same precision, being only 32 bit wide (the same as `float`). On some other boards (like SAMD boards, e.g. with M0 chips) double is actually a 64 bit number, so it has more precision (up to 15 digits).
+The [`float`](https://www.arduino.cc/reference/en/language/variables/data-types/float/) data type has only 6-7 decimal digits of precision ("[mantissa](https://en.wikipedia.org/wiki/Scientific_notation)"). For AVR based Arduino boards (like UNO R3) [`double`](https://www.arduino.cc/reference/en/language/variables/data-types/double/) data type has basically the same precision, being only 32 bit wide (the same as `float`). On some other boards (like SAMD boards, e.g. with M0 chips) double is actually a 64 bit number, so it has more precision (up to 15 digits).
 
 Internally in GEM, [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) and [`atof()`](http://www.cplusplus.com/reference/cstdlib/atof/) are used to convert floating-point number to and from a string. Support for `dtostrf()` comes with `stdlib.h` for AVR, and hence available out of the box for AVR-based boards. While it is possible to use [`sprintf()`](http://www.cplusplus.com/reference/cstdio/sprintf/) for some other boards (like SAMD), `dtostrf()` is used for them instead as well, for consistency through explicit inclusion of `avr/dtostrf.h`. See [this thread](https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647) for some more details on `dtostrf()` support across different boards.
 
@@ -1702,7 +1702,7 @@ Default precision (the number of digits **after** the decimal sign, in terms of 
 
 Note that maximum length of the number should not exceed `GEM_STR_LEN` (i.e. 17) - otherwise overflows and undetermined behavior may occur (that includes the value of precision specified through `GEMItem::setPrecision()` method or default one, which will increase length of the number with trailing zeros if necessary). This is result of using `char[GEM_STR_LEN]` buffer during `dtostrf()` conversion. It is not possible to enter number with the length exceeding this limit during edit of the variable, however, additional caution should be taken to verify that initial value of the variable (or externally changed value) in combination with specified precision does not exceed this limit.
 
-It is possible to exclude support for editable `float` and `double` variables to save some space on your chip (up to 10% of program storage space on UNO). For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
+It is possible to exclude support for editable `float` and `double` variables to save some space on your chip (up to 10% of program storage space on UNO R3). For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
 
 ```cpp
 #include "config/support-float-edit.h"

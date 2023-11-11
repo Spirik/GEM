@@ -3,7 +3,7 @@
   editable menu items with validation callbacks, setting readonly mode, creation of context with context.allowExit set to false
   in order to use push-buttons to control scene within context's loop routine.
 
-  Simple one page menu with one editable menu item associated with int variable, one with boolean variable, one option select,
+  Simple one page menu with one editable menu item associated with int variable, one with bool variable, one option select,
   and a button, pressing of which will launch an animation sequence drawn to the screen. Delay between frames
   is determined by value of int variable, setting of which to 0 will enable manual control of the frames through
   navigation push-buttons.
@@ -52,7 +52,7 @@ GLCD glcd(serialLCD);
 
 // Create variables that will be editable through the menu and assign them initial values
 int interval = 200;
-boolean strobe = false;
+bool strobe = false;
 
 // Create variable that will be editable through option select and create associated option select
 byte tempo = 0;
@@ -183,7 +183,7 @@ void drawSprite(const uint8_t PROGMEM *_splash, byte _mode) {
 }
 
 // Draw frame based on direction of animation
-void drawFrame(boolean forward) {
+void drawFrame(bool forward) {
   if (forward) {
     // Next frame
     currentFrame = (currentFrame == framesCount ? 1 : currentFrame+1);

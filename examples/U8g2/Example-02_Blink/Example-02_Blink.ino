@@ -35,7 +35,7 @@ char label[GEM_STR_LEN] = "Blink!"; // Maximum length of the string should not e
 unsigned long previousMillis = 0;
 
 // Variable to hold current label state (visible or hidden)
-boolean labelOn = false;
+bool labelOn = false;
 
 // Create two menu item objects of class GEMItem, linked to interval and label variables
 // with validateInterval() callback function attached to interval menu item,
