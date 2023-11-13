@@ -138,19 +138,22 @@ GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_,
 
 //====================== INIT OPERATIONS
 
-void GEM_u8g2::setSplash(byte width, byte height, const unsigned char *image) {
+GEM_u8g2& GEM_u8g2::setSplash(byte width, byte height, const unsigned char *image) {
   _splash = {width, height, image};
+  return *this;
 }
 
-void GEM_u8g2::setSplashDelay(uint16_t value) {
+GEM_u8g2&  GEM_u8g2::setSplashDelay(uint16_t value) {
   _splashDelay = value;
+  return *this;
 }
 
-void GEM_u8g2::hideVersion(bool flag) {
+GEM_u8g2& GEM_u8g2::hideVersion(bool flag) {
   _enableVersion = !flag;
+  return *this;
 }
 
-void GEM_u8g2::enableCyrillic(bool flag) {
+GEM_u8g2& GEM_u8g2::enableCyrillic(bool flag) {
   _cyrillicEnabled = flag;
   if (_cyrillicEnabled) {
     _fontFamilies = {(uint8_t *)GEM_FONT_BIG_CYR, (uint8_t *)GEM_FONT_SMALL_CYR};
@@ -159,13 +162,15 @@ void GEM_u8g2::enableCyrillic(bool flag) {
     _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
     _u8g2.disableUTF8Print();
   }
+  return *this;
 }
 
-void GEM_u8g2::invertKeysDuringEdit(bool invert) {
+GEM_u8g2& GEM_u8g2::invertKeysDuringEdit(bool invert) {
   _invertKeysDuringEdit = invert;
+  return *this;
 }
 
-void GEM_u8g2::init() {
+GEM_u8g2& GEM_u8g2::init() {
   _u8g2.clear();
   _u8g2.setDrawColor(1);
   _u8g2.setFontPosTop();
@@ -207,9 +212,11 @@ void GEM_u8g2::init() {
     _u8g2.clear();
 
   }
+
+  return *this;
 }
 
-void GEM_u8g2::reInit() {
+GEM_u8g2& GEM_u8g2::reInit() {
   _u8g2.initDisplay();
   _u8g2.setPowerSave(0);
   _u8g2.clear();
@@ -220,24 +227,27 @@ void GEM_u8g2::reInit() {
   } else {
     _u8g2.disableUTF8Print();
   }
+  return *this;
 }
 
-void GEM_u8g2::setMenuPageCurrent(GEMPage& menuPageCurrent) {
+GEM_u8g2& GEM_u8g2::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
+  return *this;
 }
 
 //====================== CONTEXT OPERATIONS
 
-void GEM_u8g2::clearContext() {
+GEM_u8g2& GEM_u8g2::clearContext() {
   context.loop = nullptr;
   context.enter = nullptr;
   context.exit = nullptr;
   context.allowExit = true;
+  return *this;
 }
 
 //====================== DRAW OPERATIONS
 
-void GEM_u8g2::drawMenu() {
+GEM_u8g2& GEM_u8g2::drawMenu() {
   // _u8g2.clear(); // Not clearing for better performance
   _u8g2.firstPage();
   do {
@@ -246,6 +256,7 @@ void GEM_u8g2::drawMenu() {
     drawMenuPointer();
     drawScrollbar();
   } while (_u8g2.nextPage());
+  return *this;
 }
 
 void GEM_u8g2::drawTitleBar() {
@@ -857,9 +868,10 @@ bool GEM_u8g2::readyForKey() {
 
 }
 
-void GEM_u8g2::registerKeyPress(byte keyCode) {
+GEM_u8g2& GEM_u8g2::registerKeyPress(byte keyCode) {
   _currentKey = keyCode;
   dispatchKeyPress();
+  return *this;
 }
 
 void GEM_u8g2::dispatchKeyPress() {

@@ -42,7 +42,7 @@ GEMPage::GEMPage(const char* title_, void (*exitAction_)())
   , exitAction(exitAction_)
 { }
 
-void GEMPage::addMenuItem(GEMItem& menuItem) {
+GEMPage& GEMPage::addMenuItem(GEMItem& menuItem) {
   // Prevent adding menu item that was already added to another (or the same) page
   if (menuItem.parentPage == nullptr) {
     if (itemsCountTotal == 0) {
@@ -59,9 +59,10 @@ void GEMPage::addMenuItem(GEMItem& menuItem) {
     itemsCountTotal++;
     currentItemNum = (_menuItemBack.linkedPage != nullptr) ? 1 : 0;
   }
+  return *this;
 }
 
-void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
+GEMPage& GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
   _menuItemBack.type = GEM_ITEM_BACK;
   _menuItemBack.linkedPage = &parentMenuPage;
   // Back button menu item should be always inserted at first position in list
@@ -73,10 +74,12 @@ void GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
   itemsCount++;
   itemsCountTotal++;
   currentItemNum = (itemsCount > 1) ? 1 : 0;
+  return *this;
 }
 
-void GEMPage::setTitle(const char* title_) {
+GEMPage& GEMPage::setTitle(const char* title_) {
   title = title_;
+  return *this;
 }
 
 const char* GEMPage::getTitle() {

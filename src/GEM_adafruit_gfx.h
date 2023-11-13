@@ -117,33 +117,33 @@ class GEM_adafruit_gfx {
 
     /* INIT OPERATIONS */
 
-    void setSplash(byte width, byte height, const uint8_t *image);  // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
-                                                                    // The following is the format of the bitmap as described in Adafruit GFX library documentation.
-                                                                    // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
-    void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
-    void hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
-    void setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
-    void setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
-    void setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
-    void invertKeysDuringEdit(bool invert = true);       // Turn inverted order of characters during edit mode on or off
-    void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
-    void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
-    void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
+    GEM_adafruit_gfx& setSplash(byte width, byte height, const uint8_t *image); // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
+                                                                                // The following is the format of the bitmap as described in Adafruit GFX library documentation.
+                                                                                // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
+    GEM_adafruit_gfx& setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
+    GEM_adafruit_gfx& hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    GEM_adafruit_gfx& setTextSize(uint8_t size);                      // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
+    GEM_adafruit_gfx& setForegroundColor(uint16_t color);             // Set foreground color of the menu (default is 0xFF)
+    GEM_adafruit_gfx& setBackgroundColor(uint16_t color);             // Set background color of the menu (default is 0x00)
+    GEM_adafruit_gfx& invertKeysDuringEdit(bool invert = true);       // Turn inverted order of characters during edit mode on or off
+    GEM_adafruit_gfx& init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
+    GEM_adafruit_gfx& reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
+    GEM_adafruit_gfx& setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
 
     /* CONTEXT OPERATIONS */
 
-    AppContext context;                                  // Currently set context
-    void clearContext();                                 // Clear context
+    AppContext context;                                               // Currently set context
+    GEM_adafruit_gfx& clearContext();                                 // Clear context
 
     /* DRAW OPERATIONS */
 
-    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    GEM_adafruit_gfx& drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
 
     /* KEY DETECTION */
 
-    bool readyForKey();                                  // Check that menu is waiting for the key press
-    void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
-                                                         // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
+    bool readyForKey();                                               // Check that menu is waiting for the key press
+    GEM_adafruit_gfx& registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
+                                                                      // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
     Adafruit_GFX& _agfx;
     byte _menuPointerType;

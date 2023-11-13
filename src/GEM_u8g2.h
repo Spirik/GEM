@@ -116,29 +116,29 @@ class GEM_u8g2 {
 
     /* INIT OPERATIONS */
 
-    void setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
-    void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
-    void hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
-    void enableCyrillic(bool flag = true);               // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
-    void invertKeysDuringEdit(bool invert = true);       // Turn inverted order of characters during edit mode on or off
-    void init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
-    void reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
-    void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
+    GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    GEM_u8g2& setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
+    GEM_u8g2& hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
+    GEM_u8g2& enableCyrillic(bool flag = true);               // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
+    GEM_u8g2& invertKeysDuringEdit(bool invert = true);       // Turn inverted order of characters during edit mode on or off
+    GEM_u8g2& init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
+    GEM_u8g2& reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
+    GEM_u8g2& setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
 
     /* CONTEXT OPERATIONS */
 
-    AppContext context;                                  // Currently set context
-    void clearContext();                                 // Clear context
+    AppContext context;                                       // Currently set context
+    GEM_u8g2& clearContext();                                 // Clear context
 
     /* DRAW OPERATIONS */
 
-    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
+    GEM_u8g2& drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
 
     /* KEY DETECTION */
 
-    bool readyForKey();                                  // Check that menu is waiting for the key press
-    void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
-                                                         // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
+    bool readyForKey();                                       // Check that menu is waiting for the key press
+    GEM_u8g2& registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
+                                                              // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
     U8G2& _u8g2;
     byte _menuPointerType;

@@ -1272,32 +1272,39 @@ GEMItem::GEMItem(const char* title_, void (*callbackAction_)(GEMCallbackData), v
 
 //---
 
-void GEMItem::setCallbackVal(byte callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(byte callbackVal_) {
   callbackData.valByte = callbackVal_;
+  return *this;
 }
 
-void GEMItem::setCallbackVal(int callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(int callbackVal_) {
   callbackData.valInt = callbackVal_;
+  return *this;
 }
 
-void GEMItem::setCallbackVal(float callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(float callbackVal_) {
   callbackData.valFloat = callbackVal_;
+  return *this;
 }
 
-void GEMItem::setCallbackVal(double callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(double callbackVal_) {
   callbackData.valDouble = callbackVal_;
+  return *this;
 }
 
-void GEMItem::setCallbackVal(bool callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(bool callbackVal_) {
   callbackData.valBool = callbackVal_;
+  return *this;
 }
 
-void GEMItem::setCallbackVal(const char* callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(const char* callbackVal_) {
   callbackData.valChar = callbackVal_;
+  return *this;
 }
 
-void GEMItem::setCallbackVal(void* callbackVal_) {
+GEMItem& GEMItem::setCallbackVal(void* callbackVal_) {
   callbackData.valPointer = callbackVal_;
+  return *this;
 }
 
 GEMCallbackData GEMItem::getCallbackData() {
@@ -1306,27 +1313,30 @@ GEMCallbackData GEMItem::getCallbackData() {
 
 //---
 
-void GEMItem::setTitle(const char* title_) {
+GEMItem& GEMItem::setTitle(const char* title_) {
   title = title_;
+  return *this;
 }
 
 const char* GEMItem::getTitle() {
   return title;
 }
 
-void GEMItem::setPrecision(byte prec) {
+GEMItem& GEMItem::setPrecision(byte prec) {
   precision = prec;
+  return *this;
 }
 
-void GEMItem::setReadonly(bool mode) {
+GEMItem& GEMItem::setReadonly(bool mode) {
   readonly = mode;
+  return *this;
 }
 
 bool GEMItem::getReadonly() {
   return readonly;
 }
 
-void GEMItem::hide(bool hide) {
+GEMItem& GEMItem::hide(bool hide) {
   if (hide) {
     if (!hidden) {
       if (parentPage != nullptr) {
@@ -1338,9 +1348,10 @@ void GEMItem::hide(bool hide) {
   } else {
     show();
   }
+  return *this;
 }
 
-void GEMItem::show() {
+GEMItem& GEMItem::show() {
   if (hidden) {
     if (parentPage != nullptr) {
       parentPage->showMenuItem(*this);
@@ -1348,6 +1359,7 @@ void GEMItem::show() {
       hidden = false;
     }
   }
+  return *this;
 }
 
 bool GEMItem::getHidden() {

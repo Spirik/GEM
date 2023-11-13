@@ -266,27 +266,27 @@ class GEMItem {
     GEMItem(const char* title_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_, bool readonly_ = false);
     GEMItem(const char* title_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_, bool readonly_ = false);
 
-    void setCallbackVal(byte callbackVal_); // Set value of an argument that will be passed to callback within GEMCallbackData (either byte, int, bool, float, double, char or void pointer)
-    void setCallbackVal(int callbackVal_);
-    void setCallbackVal(float callbackVal_);
-    void setCallbackVal(double callbackVal_);
-    void setCallbackVal(bool callbackVal_);
-    void setCallbackVal(const char* callbackVal_);
-    void setCallbackVal(void* callbackVal_);
-    GEMCallbackData getCallbackData();      // Get GEMCallbackData struct associated with menu item
-    void setTitle(const char* title_);      // Set title of the menu item
-    const char* getTitle();                 // Get title of the menu item
-    void setPrecision(byte prec);           // Explicitly set precision for float or double variables as required by dtostrf() conversion,
-                                            // i.e. the number of digits after the decimal sign
-    void setReadonly(bool mode = true);     // Explicitly set or unset readonly mode for variable that menu item is associated with
-                                            // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_FLOAT, GEM_VAL_DOUBLE, GEM_VAL_CHAR,
-                                            // GEM_VAL_BOOL variable menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON
-                                            // and menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
-    bool getReadonly();                     // Get readonly state of the variable that menu item is associated with (as well as menu link or button)
-    void hide(bool hide = true);            // Explicitly hide or show menu item
-    void show();                            // Explicitly show menu item
-    bool getHidden();                       // Get hidden state of the menu item
-    void* getLinkedVariablePointer();       // Get pointer to a linked variable (relevant for menu items that represent variable)
+    GEMItem& setCallbackVal(byte callbackVal_); // Set value of an argument that will be passed to callback within GEMCallbackData (either byte, int, bool, float, double, char or void pointer)
+    GEMItem& setCallbackVal(int callbackVal_);
+    GEMItem& setCallbackVal(float callbackVal_);
+    GEMItem& setCallbackVal(double callbackVal_);
+    GEMItem& setCallbackVal(bool callbackVal_);
+    GEMItem& setCallbackVal(const char* callbackVal_);
+    GEMItem& setCallbackVal(void* callbackVal_);
+    GEMCallbackData getCallbackData();          // Get GEMCallbackData struct associated with menu item
+    GEMItem& setTitle(const char* title_);      // Set title of the menu item
+    const char* getTitle();                     // Get title of the menu item
+    GEMItem& setPrecision(byte prec);           // Explicitly set precision for float or double variables as required by dtostrf() conversion,
+                                                // i.e. the number of digits after the decimal sign
+    GEMItem& setReadonly(bool mode = true);     // Explicitly set or unset readonly mode for variable that menu item is associated with
+                                                // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_FLOAT, GEM_VAL_DOUBLE, GEM_VAL_CHAR,
+                                                // GEM_VAL_BOOL variable menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON
+                                                // and menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
+    bool getReadonly();                         // Get readonly state of the variable that menu item is associated with (as well as menu link or button)
+    GEMItem& hide(bool hide = true);            // Explicitly hide or show menu item
+    GEMItem& show();                            // Explicitly show menu item
+    bool getHidden();                           // Get hidden state of the menu item
+    void* getLinkedVariablePointer();           // Get pointer to a linked variable (relevant for menu items that represent variable)
   private:
     const char* title;
     void* linkedVariable = nullptr;

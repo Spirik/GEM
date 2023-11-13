@@ -221,40 +221,47 @@ GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, b
 
 //====================== INIT OPERATIONS
 
-void GEM_adafruit_gfx::setSplash(byte width, byte height, const uint8_t *image) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::setSplash(byte width, byte height, const uint8_t *image) {
   _splash = {width, height, image};
+  return *this;
 }
 
-void GEM_adafruit_gfx::setSplashDelay(uint16_t value) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::setSplashDelay(uint16_t value) {
   _splashDelay = value;
+  return *this;
 }
 
-void GEM_adafruit_gfx::hideVersion(bool flag) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::hideVersion(bool flag) {
   _enableVersion = !flag;
+  return *this;
 }
 
-void GEM_adafruit_gfx::setTextSize(uint8_t size) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::setTextSize(uint8_t size) {
   _textSize = size > 0 ? size : 1;
   _menuItemFontSize = _menuItemHeight >= 8 * _textSize ? 0 : 1;
   _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height * _textSize) / 2;
   if (_splash.image == logo[0].image || _splash.image == logo[1].image) {
     _splash = logo[_textSize > 1 ? 1 : 0];
   }
+  return *this;
 }
 
-void GEM_adafruit_gfx::setForegroundColor(uint16_t color) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::setForegroundColor(uint16_t color) {
   _menuForegroundColor = color;
+  return *this;
 }
 
-void GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::setBackgroundColor(uint16_t color) {
   _menuBackgroundColor = color;
+  return *this;
 }
 
-void GEM_adafruit_gfx::invertKeysDuringEdit(bool invert) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::invertKeysDuringEdit(bool invert) {
   _invertKeysDuringEdit = invert;
+  return *this;
 }
 
-void GEM_adafruit_gfx::init() {
+GEM_adafruit_gfx& GEM_adafruit_gfx::init() {
   _agfx.setTextSize(_textSize);
   _agfx.setTextWrap(false);
   _agfx.setTextColor(_menuForegroundColor);
@@ -290,36 +297,42 @@ void GEM_adafruit_gfx::init() {
     _agfx.fillScreen(_menuBackgroundColor);
 
   }
+
+  return *this;
 }
 
-void GEM_adafruit_gfx::reInit() {
+GEM_adafruit_gfx& GEM_adafruit_gfx::reInit() {
   _agfx.setTextSize(_textSize);
   _agfx.setTextWrap(false);
   _agfx.setTextColor(_menuForegroundColor);
   _agfx.fillScreen(_menuBackgroundColor);
+  return *this;
 }
 
-void GEM_adafruit_gfx::setMenuPageCurrent(GEMPage& menuPageCurrent) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
+  return *this;
 }
 
 //====================== CONTEXT OPERATIONS
 
-void GEM_adafruit_gfx::clearContext() {
+GEM_adafruit_gfx& GEM_adafruit_gfx::clearContext() {
   context.loop = nullptr;
   context.enter = nullptr;
   context.exit = nullptr;
   context.allowExit = true;
+  return *this;
 }
 
 //====================== DRAW OPERATIONS
 
-void GEM_adafruit_gfx::drawMenu() {
+GEM_adafruit_gfx& GEM_adafruit_gfx::drawMenu() {
   _agfx.fillScreen(_menuBackgroundColor);
   drawTitleBar();
   printMenuItems();
   drawMenuPointer();
   drawScrollbar();
+  return *this;
 }
 
 void GEM_adafruit_gfx::drawTitleBar() {
@@ -949,9 +962,10 @@ bool GEM_adafruit_gfx::readyForKey() {
 
 }
 
-void GEM_adafruit_gfx::registerKeyPress(byte keyCode) {
+GEM_adafruit_gfx& GEM_adafruit_gfx::registerKeyPress(byte keyCode) {
   _currentKey = keyCode;
   dispatchKeyPress();
+  return *this;
 }
 
 void GEM_adafruit_gfx::dispatchKeyPress() {
