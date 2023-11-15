@@ -1166,6 +1166,10 @@ Menu page holds menu items `GEMItem` and represents menu level. Menu can have mu
 ```cpp
 GEMPage menuPage(title[, exitAction]);
 ```
+or
+```cpp
+GEMPage menuPage(title[, parentMenuPage]);
+```
 
 * **title**  
   *Type*: `const char*`  
@@ -1175,7 +1179,11 @@ GEMPage menuPage(title[, exitAction]);
 
 * **exitAction** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Current menu item will be set to the first item of the menu page upon calling this function, this change will be reflected with the subsequent explicit redraw of the menu (e.g. by calling `drawMenu()` method of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object).
+
+* **parentMenuPage** [*optional*]  
+  *Type*: `GEMPage`  
+  Parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Alternatively can be set by calling `setParentMenuPage()` method (see below).
 
 #### Methods
 
@@ -1187,7 +1195,7 @@ GEMPage menuPage(title[, exitAction]);
 * **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
   *Accepts*: `GEMPage`  
   *Returns*: nothing  
-  Specify parent level menu page (to know where to go back to when pressing Back button, that will be added automatically). Accepts `GEMPage` object.
+  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object.
 
 * **setTitle(** _const char*_ title **)**  
   *Returns*: nothing  
