@@ -50,10 +50,13 @@ class GEMPage {
     /* 
       @param 'title_' - title of the menu page displayed at top of the screen
       @param 'exitAction_' - pointer to callback function executed when GEM_KEY_CANCEL is pressed while being on top level menu page
+      @param 'parentMenuPage_' - reference to parent level menu page (to know where to go back to when Back button is pressed)
     */
-    GEMPage(const char* title_ = "", void (*exitAction_)() = nullptr);
+    GEMPage(const char* title_);
+    GEMPage(const char* title_, void (*exitAction_)());
+    GEMPage(const char* title_, GEMPage& parentMenuPage_);
     GEMPage& addMenuItem(GEMItem& menuItem);              // Add menu item to menu page
-    GEMPage& setParentMenuPage(GEMPage& parentMenuPage);  // Specify parent level menu page (to know where to go back to when pressing Back button)
+    GEMPage& setParentMenuPage(GEMPage& parentMenuPage);  // Specify parent level menu page (to know where to go back to when Back button is pressed)
     GEMPage& setTitle(const char* title_);                // Set title of the menu page
     const char* getTitle();                               // Get title of the menu page
   private:

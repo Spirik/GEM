@@ -37,10 +37,20 @@
 #include <Arduino.h>
 #include "GEMPage.h"
 
+GEMPage::GEMPage(const char* title_)
+  : title(title_)
+{ }
+
 GEMPage::GEMPage(const char* title_, void (*exitAction_)())
   : title(title_)
   , exitAction(exitAction_)
 { }
+
+GEMPage::GEMPage(const char* title_, GEMPage& parentMenuPage_)
+  : title(title_)
+{
+  setParentMenuPage(parentMenuPage_);
+}
 
 GEMPage& GEMPage::addMenuItem(GEMItem& menuItem) {
   // Prevent adding menu item that was already added to another (or the same) page
