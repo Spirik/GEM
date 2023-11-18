@@ -122,23 +122,27 @@ GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menu
 
 //====================== INIT OPERATIONS
 
-void GEM::setSplash(const uint8_t *sprite) {
+GEM& GEM::setSplash(const uint8_t *sprite) {
   _splash = sprite;
+  return *this;
 }
 
-void GEM::setSplashDelay(uint16_t value) {
+GEM& GEM::setSplashDelay(uint16_t value) {
   _splashDelay = value;
+  return *this;
 }
 
-void GEM::hideVersion(bool flag) {
+GEM& GEM::hideVersion(bool flag) {
   _enableVersion = !flag;
+  return *this;
 }
 
-void GEM::invertKeysDuringEdit(bool invert) {
+GEM& GEM::invertKeysDuringEdit(bool invert) {
   _invertKeysDuringEdit = invert;
+  return *this;
 }
 
-void GEM::init() {
+GEM& GEM::init() {
   _glcd.loadSprite_P(GEM_SPR_ARROW_RIGHT, arrowRight);
   _glcd.loadSprite_P(GEM_SPR_ARROW_LEFT, arrowLeft);
   _glcd.loadSprite_P(GEM_SPR_ARROW_BTN, arrowBtn);
@@ -179,37 +183,43 @@ void GEM::init() {
     }
 
   }
+
+  return *this;
 }
 
-void GEM::reInit() {
+GEM& GEM::reInit() {
   _glcd.drawMode(GLCD_MODE_NORMAL);
   _glcd.fontMode(GLCD_MODE_NORMAL);
   _glcd.set(GLCD_ID_CRLF, 0);
   _glcd.set(GLCD_ID_SCROLL, 0);
   _glcd.clearScreen();
+  return *this;
 }
 
-void GEM::setMenuPageCurrent(GEMPage& menuPageCurrent) {
+GEM& GEM::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   _menuPageCurrent = &menuPageCurrent;
+  return *this;
 }
 
 //====================== CONTEXT OPERATIONS
 
-void GEM::clearContext() {
+GEM& GEM::clearContext() {
   context.loop = nullptr;
   context.enter = nullptr;
   context.exit = nullptr;
   context.allowExit = true;
+  return *this;
 }
 
 //====================== DRAW OPERATIONS
 
-void GEM::drawMenu() {
+GEM& GEM::drawMenu() {
   _glcd.clearScreen();
   drawTitleBar();
   printMenuItems();
   drawMenuPointer();
   drawScrollbar();
+  return *this;
 }
 
 void GEM::drawTitleBar() {
@@ -781,9 +791,10 @@ bool GEM::readyForKey() {
 
 }
 
-void GEM::registerKeyPress(byte keyCode) {
+GEM& GEM::registerKeyPress(byte keyCode) {
   _currentKey = keyCode;
   dispatchKeyPress();
+  return *this;
 }
 
 void GEM::dispatchKeyPress() {

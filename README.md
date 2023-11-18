@@ -1042,50 +1042,50 @@ For more details on customization see corresponding section of the [wiki](https:
 
 #### Methods
 
-* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
+* *GEM&* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
   *Accepts*: `_const uint8_t PROGMEM_ *`  
-  *Returns*: nothing  
+  *Returns*: `GEM&`  
   Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before `GEM::init()`. The following is the format of the sprite as described in AltSerialGraphicLCD library documentation:
   > The sprite commences with two bytes which are the width and height of the image in pixels. The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB) is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel. A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed by the next row of 8 vertical pixels and so on. Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero (although this does not matter).
 
   For more details on splash customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
-* **setSplash(** _byte_ width, _byte_ height, _const unsigned char U8X8_PROGMEM_ *image **)**  `U8g2 version`  
+* *GEM_u8g2&* **setSplash(** _byte_ width, _byte_ height, _const unsigned char U8X8_PROGMEM_ *image **)**  `U8g2 version`  
   *Accepts*: `byte`, `byte`, `_const unsigned char U8X8_PROGMEM_ *`  
-  *Returns*: nothing  
+  *Returns*: `GEM_u8g2&`  
   Set custom [XBM](https://en.wikipedia.org/wiki/X_BitMap) image displayed as the splash screen when GEM is being initialized. Should be called before `GEM_u8g2::init()`. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
-* **setSplash(** _byte_ width, _byte_ height, _const uint8_t PROGMEM_ *image **)**  `Adafruit GFX version`  
+* *GEM_adafruit_gfx&* **setSplash(** _byte_ width, _byte_ height, _const uint8_t PROGMEM_ *image **)**  `Adafruit GFX version`  
   *Accepts*: `byte`, `byte`, `_const uint8_t PROGMEM_ *`  
-  *Returns*: nothing  
+  *Returns*: `GEM_adafruit_gfx&`  
   Set custom bitmap image displayed as the splash screen when GEM is being initialized. The following is the format of the bitmap as described in Adafruit GFX library documentation:
   > A contiguous block of bits, where each `1` bit sets the corresponding pixel to 'color', while each `0` bit is skipped.
 
   Bitmap must be presented as a byte array and located in program memory using the PROGMEM directive, width and height of the bitmap must be supplied as a first and second argument to the function respectively. Should be called before `GEM_adafruit_gfx::init()`. See [Bitmaps](https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives#bitmaps-2002806-39) section of Adafruit GFX documentation for more details and [image2cpp](http://javl.github.io/image2cpp/) webtool for online bitmap conversion. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
-* **setSplashDelay(** _uint16_t_ value **)**  
+* *GEM&* **setSplashDelay(** _uint16_t_ value **)**  
   *Accepts*: `uint16_t`  
-  *Returns*: nothing  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set splash screen delay (in ms). By default splash screen will be visible for 1000ms. Maximum supported value is 65535ms. Setting to 0 will disable splash screen. Should be called before `init()`.
   > **Note:** internally splash screen delay is implemented via `delay()` function. This is the only place in library where `delay()` is utilized (aside of example sketches).
 
-* **hideVersion(** _bool_ flag = true **)**  
+* *GEM&* **hideVersion(** _bool_ flag = true **)**  
   *Accepts*: `bool`  
-  *Returns*: nothing  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `init()`.
 
-* **enableCyrillic(** _bool_ flag = true **)**  `U8g2 version only`  
+* *GEM_u8g2&* **enableCyrillic(** _bool_ flag = true **)**  `U8g2 version only`  
   *Accepts*: `bool`  
-  *Returns*: nothing  
+  *Returns*: `GEM_u8g2&`  
   Turn Cyrillic typeset on (`enableCyrillic()`) or off (`enableCyrillic(false)`). [`u8g2_font_6x12_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_t_cyrillic.png) and [`u8g2_font_4x6_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_4x6_t_cyrillic.png) fonts from [U8g2](https://github.com/olikraus/u8g2/wiki/fntlistall) will be used when Cyrillic typeset is enabled, and default fonts [`u8g2_font_6x12_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_tr.png) and [`u8g2_font_tom_thumb_4x6_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_tom_thumb_4x6_tr.png) will be used otherwise. You may use Cyrillic in menu title, menu item labels (`GEMItem`, including buttons and menu page links), and select options (`SelectOptionInt`, `SelectOptionByte`, `SelectOptionChar` data structures). Editable strings with Cyrillic characters are **not supported** (edit mode of such strings may lead to unpredictable results due to incompatibility with 2-byte characters). Increases required program storage space, use cautiously. By default Cyrillic typeset is off. Should be called before `GEM_u8g2::init()`.
 
-* **invertKeysDuringEdit(** _bool_ invert = true **)**  
+* *GEM&* **invertKeysDuringEdit(** _bool_ invert = true **)**  
   *Accepts*: `bool`  
-  *Returns*: nothing  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Turn inverted order of characters during edit mode on (`invertKeysDuringEdit()`) or off (`invertKeysDuringEdit(false)`). By default when in edit mode of a number or a `char[17]` variable, digits (and other characters) increment when `GEM_KEY_UP` key is pressed and decrement when `GEM_KEY_DOWN` key is pressed. Inverting this order may lead to more natural expected behavior when editing `char[17]` or number variables with certain input devices (e.g. rotary encoder, in which case rotating knob clock-wise is generally associated with `GEM_KEY_DOWN` action during navigation through menu items, but in edit mode it seems more natural to increment a digit rather than to decrement it when performing the same clock-wise rotation).
 
-* **init()**  
-  *Returns*: nothing  
+* *GEM&* **init()**  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Init the menu: load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack (for AltSerialGraphicLCD version), display GEM splash screen, etc.
   > The following `GLCD` object settings will be applied during `init()`: 
   > * `glcd.drawMode(GLCD_MODE_NORMAL)`;
@@ -1108,46 +1108,48 @@ For more details on customization see corresponding section of the [wiki](https:
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
 
-* **reInit()**  
-  *Returns*: nothing  
+* *GEM&* **reInit()**  
+  **Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD, U8g2 or Adafruit GFX graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#appcontext) for more details.
 
-* **setTextSize(** _uint8_t_ size **)**  `Adafruit GFX version only`  
+* *GEM_adafruit_gfx&* **setTextSize(** _uint8_t_ size **)**  `Adafruit GFX version only`  
   *Accepts*: `uint8_t`  
-  *Returns*: nothing  
+  *Returns*: `GEM_adafruit_gfx&`  
   Set text 'magnification' size (as per Adafruit GFX docs) to supplied value. See Adafruit GFX [documentation](http://adafruit.github.io/Adafruit-GFX-Library/html/class_adafruit___g_f_x.html#a39eb4a8a2c9fa4ab7d58ceffd19535d5) for details on internaly called method of the same name. Sprites (i.e. various menu icons) will be scaled maximum up to two times regardless of the value. If not called explicitly, magnification size will be set to 1. Should be called before `init()`.
 
-* **setForegroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
+* *GEM_adafruit_gfx&* **setForegroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
   *Accepts*: `uint16_t`  
-  *Returns*: nothing  
+  *Returns*: `GEM_adafruit_gfx&`  
   Set foreground color to supplied value. Accepts 16-bit RGB color representation. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/coordinate-system-and-units) for detailed description of a format. Will take effect next time menu is drawn. If not called explicitly, foreground color will be set to 0xFFFF. For more details on color customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
-* **setBackgroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
+* *GEM_adafruit_gfx&* **setBackgroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
   *Accepts*: `uint16_t`  
-  *Returns*: nothing  
+  *Returns*: `GEM_adafruit_gfx&`  
   Set background color to supplied value. Accepts 16-bit RGB color representation. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/coordinate-system-and-units) for detailed description of a format. Will take effect next time menu is drawn. If not called explicitly, background color will be set to 0x0000. For more details on color customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
-* **setMenuPageCurrent(** _GEMPage&_ menuPageCurrent **)**  
+* *GEM&* **setMenuPageCurrent(** _GEMPage&_ menuPageCurrent **)**  
   *Accepts*: `GEMPage`  
-  *Returns*: nothing  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set supplied menu page as current. Accepts `GEMPage` object.
 
-* **drawMenu()**  
-  *Returns*: nothing  
+* *GEM&* **drawMenu()**  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Draw menu on screen, with menu page set earlier in `setMenuPageCurrent()`.
 
 * *bool* **readyForKey()**  
   *Returns*: `bool`  
   Check that menu is waiting for the key press.
 
-* **registerKeyPress(** _byte_ keyCode **)**  
+* *GEM&* **registerKeyPress(** _byte_ keyCode **)**  
   *Accepts*: `byte` (*Values*: `GEM_KEY_NONE`, `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, `GEM_KEY_OK`)  
-  *Returns*: nothing  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Register the key press and trigger corresponding action (navigation through the menu, editing values, pressing menu buttons).
 
-* **clearContext()**  
-  *Returns*: nothing  
+* *GEM&* **clearContext()**  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Clear context. Assigns `nullptr` values to function pointers of the `context` property and sets `allowExit` flag of the `context` to `true`.
+
+> **Note:** calls to methods that return a reference to the owning `GEM`, or `GEM_u8g2`, or `GEM_adafruit_gfx` object can be chained, e.g. `menu.hideVersion().invertKeysDuringEdit().init();` (since GEM ver. 1.4.6).
 
 #### Properties
 
@@ -1166,6 +1168,10 @@ Menu page holds menu items `GEMItem` and represents menu level. Menu can have mu
 ```cpp
 GEMPage menuPage(title[, exitAction]);
 ```
+or
+```cpp
+GEMPage menuPage(title[, parentMenuPage]);
+```
 
 * **title**  
   *Type*: `const char*`  
@@ -1175,27 +1181,33 @@ GEMPage menuPage(title[, exitAction]);
 
 * **exitAction** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function.
+  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Current menu item will be set to the first item of the menu page upon calling this function, this change will be reflected with the subsequent explicit redraw of the menu (e.g. by calling `drawMenu()` method of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object).
+
+* **parentMenuPage** [*optional*]  
+  *Type*: `GEMPage`  
+  Parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Alternatively can be set by calling `GEMPage::setParentMenuPage()` method (see below).
 
 #### Methods
 
-* **addMenuItem(** _GEMItem&_ menuItem **)**  
+* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem **)**  
   *Accepts*: `GEMItem`  
-  *Returns*: nothing  
+  *Returns*: `GEMPage&`  
   Add menu item to menu page. Accepts `GEMItem` object.
 
-* **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
+* *GEMPage&* **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
   *Accepts*: `GEMPage`  
-  *Returns*: nothing  
-  Specify parent level menu page (to know where to go back to when pressing Back button, that will be added automatically). Accepts `GEMPage` object.
+  *Returns*: `GEMPage&`  
+  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object.
 
-* **setTitle(** _const char*_ title **)**  
-  *Returns*: nothing  
+* *GEMPage&* **setTitle(** _const char*_ title **)**  
+  *Returns*: `GEMPage&`  
   Set title of the menu page. Can be used to update menu page title dynamically.
 
 * *const char** **getTitle()**  
   *Returns*: `const char*`  
   Get title of the menu page.
+
+> **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
 
 ----------
@@ -1351,42 +1363,43 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 
 #### Methods
 
-* **setCallbackVal(** _int_ | _byte_ | _float_ | _double_ | _bool_ | _const char*_ | _void*_ callbackVal **)**  
-  *Returns*: nothing  
+* *GEMItem&* **setCallbackVal(** _int_ | _byte_ | _float_ | _double_ | _bool_ | _const char*_ | _void*_ callbackVal **)**  
+  *Returns*: `GEMItem&`  
   Set user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
 * *GEMCallbackData* **getCallbackData()**  
   *Returns*: `GEMCallbackData`  
   Get [`GEMCallbackData`](#gemcallbackdata) struct associated with menu item. It contains pointer to menu item and optionally user-defined value.
 
-* **setTitle(** _const char*_ title **)**  
-  *Returns*: nothing  
+* *GEMItem&* **setTitle(** _const char*_ title **)**  
+  *Returns*: `GEMItem&`  
   Set title of the menu item. Can be used to update menu item title dynamically.
 
 * *const char** **getTitle()**  
   *Returns*: `const char*`  
   Get title of the menu item.
 
-* **setPrecision()**  
-  *Returns*: nothing  
+* *GEMItem&* **setPrecision(** _byte_ prec **)**  
+  *Accepts*: `byte`  
+  *Returns*: `GEMItem&`  
   Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
 
-* **setReadonly(** _bool_ mode = true **)**  
+* *GEMItem&* **setReadonly(** _bool_ mode = true **)**  
   *Accepts*: `bool`  
-  *Returns*: nothing  
+  *Returns*: `GEMItem&`  
   Explicitly set (`setReadonly(true)`, or `setReadonly(GEM_READONLY)`, or `setReadonly()`) or unset (`setReadonly(false)`) readonly mode for variable that menu item is associated with (relevant for `int`, `byte`, `float`, `double`, `char[17]`, `bool` variable menu items and option select), or menu button and menu link, pressing of which won't result in any action, associated with them.
 
 * *bool* **getReadonly()**  
   *Returns*: `bool`  
   Get readonly state of the variable that menu item is associated with (as well as menu link or button): `true` for readonly state, `false` otherwise.
 
-* **hide(** _bool_ hide = true **)**  
+* *GEMItem&* **hide(** _bool_ hide = true **)**  
   *Accepts*: `bool`  
-  *Returns*: nothing  
+  *Returns*: `GEMItem&`  
   Hide (`hide(true)`, or `hide(GEM_HIDDEN)`, or `hide()`) or show (`hide(false)`) menu item. Hidden menu items won't be printed to the screen the next time menu is drawn.
 
-* **show()**  
-  *Returns*: nothing  
+* *GEMItem&* **show()**  
+  *Returns*: `GEMItem&`  
   Show previously hidden menu item.
 
 * *bool* **getHidden()**  
@@ -1396,6 +1409,8 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 * *void** **getLinkedVariablePointer()**  
   *Returns*: `void*`  
   Get pointer to a linked variable (relevant for menu items that represent variable). Note that user is reponsible for casting `void*` pointer to a correct pointer type.
+
+> **Note:** calls to methods that return a reference to the owning `GEMItem` object can be chained, e.g. `menuItemInterval.setReadonly().show();` (since GEM ver. 1.4.6).
 
 
 ----------

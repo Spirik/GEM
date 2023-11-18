@@ -97,35 +97,35 @@ class GEM {
 
     /* INIT OPERATIONS */
 
-    void setSplash(const uint8_t *sprite);               // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
-                                                         // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
-                                                         // The sprite commences with two bytes which are the width and height of the image in pixels.
-                                                         // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
-                                                         // is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel.
-                                                         // A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed
-                                                         // by the next row of 8 vertical pixels and so on.
-                                                         // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
-                                                         // (although this does not matter).
-    void setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
-    void hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
-    void invertKeysDuringEdit(bool invert = true);    // Turn inverted order of characters during edit mode on or off
-    void init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
-    void reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
-    void setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
+    GEM& setSplash(const uint8_t *sprite);              // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+                                                        // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
+                                                        // The sprite commences with two bytes which are the width and height of the image in pixels.
+                                                        // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
+                                                        // is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel.
+                                                        // A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed
+                                                        // by the next row of 8 vertical pixels and so on.
+                                                        // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
+                                                        // (although this does not matter).
+    GEM& setSplashDelay(uint16_t value);                // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
+    GEM& hideVersion(bool flag = true);                 // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    GEM& invertKeysDuringEdit(bool invert = true);      // Turn inverted order of characters during edit mode on or off
+    GEM& init();                                        // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
+    GEM& reInit();                                      // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
+    GEM& setMenuPageCurrent(GEMPage& menuPageCurrent);  // Set supplied menu page as current
 
     /* CONTEXT OPERATIONS */
 
     AppContext context;                                  // Currently set context
-    void clearContext();                                 // Clear context
+    GEM& clearContext();                                 // Clear context
 
     /* DRAW OPERATIONS */
 
-    void drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    GEM& drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
 
     /* KEY DETECTION */
 
     bool readyForKey();                                  // Check that menu is waiting for the key press
-    void registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
+    GEM& registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
                                                          // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
     GLCD& _glcd;
