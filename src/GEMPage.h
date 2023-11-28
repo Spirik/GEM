@@ -61,14 +61,15 @@ class GEMPage {
     const char* getTitle();                               // Get title of the menu page
   private:
     const char* title;
-    byte currentItemNum = 0;                          // Currently selected (focused) menu item of the page
-    byte itemsCount = 0;                              // Items count excluding hidden ones
-    byte itemsCountTotal = 0;                         // Items count incuding hidden ones
+    byte currentItemNum = 0;                              // Currently selected (focused) menu item of the page
+    byte itemsCount = 0;                                  // Items count excluding hidden ones
+    byte itemsCountTotal = 0;                             // Items count incuding hidden ones
     GEMItem* getMenuItem(byte index, bool total = false);
     GEMItem* getCurrentMenuItem();
-    int getMenuItemNum(GEMItem& menuItem);            // Find index of the supplied menu item
+    int getMenuItemNum(GEMItem& menuItem, bool total = false);  // Find index of the supplied menu item
     void hideMenuItem(GEMItem& menuItem);
     void showMenuItem(GEMItem& menuItem);
+    void removeMenuItem(GEMItem& menuItem);                     // Remove menu item from menu page
     GEMItem* _menuItem = nullptr;                               // First menu item of the page (the following ones are linked from within one another)
     GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)}; // Local instance of Back button (created when parent level menu page is specified through
                                                                 // setParentMenuPage(); always becomes the first menu item in a list)

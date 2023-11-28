@@ -1406,6 +1406,10 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: `bool`  
   Get hidden state of the menu item: `true` when menu item is hidden, `false` otherwise.
 
+* *GEMItem&* **remove()**    
+  *Returns*: `GEMItem&`  
+  Remove menu item from parent menu page. Unlike `hide()`, completely detaches menu item from menu page. Removed menu item then can be added to the same or a different menu page (via `GEMPage::addMenuItem()`) or even safely destroyed. Effectively the opposite of `GEMPage::addMenuItem()` method.
+
 * *void** **getLinkedVariablePointer()**  
   *Returns*: `void*`  
   Get pointer to a linked variable (relevant for menu items that represent variable). Note that user is reponsible for casting `void*` pointer to a correct pointer type.

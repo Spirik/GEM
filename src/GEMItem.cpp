@@ -1366,13 +1366,20 @@ bool GEMItem::getHidden() {
   return hidden;
 }
 
+GEMItem& GEMItem::remove() {
+  if (parentPage != nullptr) {
+    parentPage->removeMenuItem(*this);
+  }
+  return *this;
+}
+
 void* GEMItem::getLinkedVariablePointer() {
   return linkedVariable;
 }
 
-GEMItem* GEMItem::getMenuItemNext() {
+GEMItem* GEMItem::getMenuItemNext(bool total) {
   GEMItem* menuItemTmp = menuItemNext;
-  while (menuItemTmp != nullptr && menuItemTmp->hidden) {
+  while (!total && menuItemTmp != nullptr && menuItemTmp->hidden) {
     menuItemTmp = menuItemTmp->menuItemNext;
   }
   return menuItemTmp;

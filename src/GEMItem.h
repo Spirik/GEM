@@ -286,6 +286,7 @@ class GEMItem {
     GEMItem& hide(bool hide = true);            // Explicitly hide or show menu item
     GEMItem& show();                            // Explicitly show menu item
     bool getHidden();                           // Get hidden state of the menu item
+    GEMItem& remove();                          // Remove menu item from parent menu page
     void* getLinkedVariablePointer();           // Get pointer to a linked variable (relevant for menu items that represent variable)
   private:
     const char* title;
@@ -305,7 +306,7 @@ class GEMItem {
     };
     bool callbackWithArgs = false;
     GEMCallbackData callbackData;
-    GEMItem* getMenuItemNext();             // Get next menu item, excluding hidden ones
+    GEMItem* getMenuItemNext(bool total = false); // Get next menu item (including hidden ones if total set to true)
 };
   
 #endif

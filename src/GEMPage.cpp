@@ -63,11 +63,11 @@ GEMPage& GEMPage::addMenuItem(GEMItem& menuItem) {
       getMenuItem(itemsCountTotal-1, true)->menuItemNext = &menuItem;
     }
     menuItem.parentPage = this;
+    itemsCountTotal++;
     if (!menuItem.hidden) {
       itemsCount++;
+      currentItemNum = (_menuItemBack.linkedPage != nullptr) ? 1 : 0;
     }
-    itemsCountTotal++;
-    currentItemNum = (_menuItemBack.linkedPage != nullptr) ? 1 : 0;
   }
   return *this;
 }
@@ -99,7 +99,7 @@ const char* GEMPage::getTitle() {
 GEMItem* GEMPage::getMenuItem(byte index, bool total) {
   GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
   for (byte i=0; i<index; i++) {
-    menuItemTmp = (total) ? menuItemTmp->menuItemNext : menuItemTmp->getMenuItemNext();
+    menuItemTmp = menuItemTmp->getMenuItemNext(total);
   }
   return menuItemTmp;
 }
@@ -108,13 +108,13 @@ GEMItem* GEMPage::getCurrentMenuItem() {
   return getMenuItem(currentItemNum);
 }
 
-int GEMPage::getMenuItemNum(GEMItem& menuItem) {
-  GEMItem* menuItemTmp = (_menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
-  for (byte i=0; i<itemsCount; i++) {
+int GEMPage::getMenuItemNum(GEMItem& menuItem, bool total) {
+  GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
+  for (byte i=0; i<(total ? itemsCountTotal : itemsCount); i++) {
     if (menuItemTmp == &menuItem) {
       return i;
     }
-    menuItemTmp = menuItemTmp->getMenuItemNext();
+    menuItemTmp = menuItemTmp->getMenuItemNext(total);
   }
   return -1;
 }
@@ -145,4 +145,28 @@ void GEMPage::showMenuItem(GEMItem& menuItem) {
   if (_menuItemBack.linkedPage != nullptr && itemsCount > 1) {
     currentItemNum = 1;
   }
+}
+
+void GEMPage::removeMenuItem(GEMItem& menuItem) {
+  int menuItemNum = getMenuItemNum(menuItem);
+  int menuItemNumTotal = getMenuItemNum(menuItem, true);
+  itemsCountTotal--;
+  if (!menuItem.hidden) {
+    itemsCount--;
+    if (menuItemNum <= currentItemNum) {
+      if (currentItemNum > 0) {
+        currentItemNum--;
+      }
+    }
+  }
+  if (_menuItemBack.linkedPage != nullptr && itemsCount == 1) {
+    currentItemNum = 0;
+  }
+  if (menuItemNumTotal > 0) {
+    getMenuItem(menuItemNumTotal-1, true)->menuItemNext = menuItem.menuItemNext;
+  } else {
+    _menuItem = menuItem.menuItemNext;
+  }
+  menuItem.parentPage = nullptr;
+  menuItem.menuItemNext = nullptr;
 }
