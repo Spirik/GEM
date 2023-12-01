@@ -1187,17 +1187,34 @@ GEMPage menuPage(title[, parentMenuPage]);
   *Type*: `GEMPage`  
   Parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Alternatively can be set by calling `GEMPage::setParentMenuPage()` method (see below).
 
+#### Constants
+
+* **GEM_LAST_POS**  
+  *Type*: macro `#define GEM_LAST_POS 255`  
+  *Value*: `255`  
+  Alias for the last possible position that menu item can be added at. Submitted as a default value of **pos** option to `GEMPage::addMenuItem()` method.
+
+* **GEM_ITEMS_TOTAL**  
+  *Type*: macro `#define GEM_ITEMS_TOTAL true`  
+  *Value*: `true`  
+  Alias for modifier of `GEMPage::addMenuItem()` method for the case when all menu items should be considered. Submitted as a default value of **total** option to `GEMPage::addMenuItem()` method.
+
+* **GEM_ITEMS_VISIBLE**  
+  *Type*: macro `#define GEM_ITEMS_VISIBLE false`  
+  *Value*: `false`  
+  Alias for modifier of `GEMPage::addMenuItem()` method for the case when only visible menu items should be considered. Submitted as a possible value of **total** option to `GEMPage::addMenuItem()` method.
+
 #### Methods
 
-* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem **)**  
-  *Accepts*: `GEMItem`  
+* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem, [_byte_ pos = 255[, _bool_ total = true]] **)**  
+  *Accepts*: `GEMItem`[, `byte`[, `bool`]]  
   *Returns*: `GEMPage&`  
-  Add menu item to menu page. Accepts `GEMItem` object.
+  Add menu item to menu page. Accepts `GEMItem` object. Optionally menu item can be added at a specified position **pos** (zero-based number from 0 to 255, as a second argument) out of total (flag **total** set to `true`, or `GEM_ITEMS_TOTAL`, as a third argument) or only visible (flag **total** set to `false`, or `GEM_ITEMS_VISIBLE`, as a third argument) number of items. Note that if **pos** is set to 0 and menu page has parent menu page, menu item will be added at position 1 instead (i.e. as a second menu item, after built-in Back button). By default (if optional arguments are not provided) each menu item is added at the end of the list of menu items of the page (including hidden ones).
 
 * *GEMPage&* **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
   *Accepts*: `GEMPage`  
   *Returns*: `GEMPage&`  
-  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object.
+  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object. If called additional time, previously added parent menu page will be overriden with the new one.
 
 * *GEMPage&* **setTitle(** _const char*_ title **)**  
   *Returns*: `GEMPage&`  

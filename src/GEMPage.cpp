@@ -52,15 +52,26 @@ GEMPage::GEMPage(const char* title_, GEMPage& parentMenuPage_)
   setParentMenuPage(parentMenuPage_);
 }
 
-GEMPage& GEMPage::addMenuItem(GEMItem& menuItem) {
+GEMPage& GEMPage::addMenuItem(GEMItem& menuItem, byte pos, bool total) {
   // Prevent adding menu item that was already added to another (or the same) page
   if (menuItem.parentPage == nullptr) {
-    if (itemsCountTotal == 0) {
-      // If menu page is empty, link supplied menu item from within page directly (this will be the first menu item in a page)
-      _menuItem = &menuItem;
+    byte itemsMax = total ? itemsCountTotal : itemsCount;
+    if (pos >= itemsMax) {
+      // Cap maximum pos at number of items
+      pos = itemsMax;
+    } else if (_menuItemBack.linkedPage != nullptr && pos == 0) {
+      // Prevent adding supplied menu item in place of Back button
+      pos = 1;
+    }
+    if (pos > 0) {
+      // If custom position is defined (and is within range), link supplied menu item from within preceding menu item
+      GEMItem* menuItemTmp = getMenuItem(pos-1, total);
+      menuItem.menuItemNext = menuItemTmp->menuItemNext;
+      menuItemTmp->menuItemNext = &menuItem;
     } else {
-      // If menu page is not empty, link supplied menu item from within the last menu item of the page
-      getMenuItem(itemsCountTotal-1, true)->menuItemNext = &menuItem;
+      // Link supplied menu item as a first menu item on a page
+      menuItem.menuItemNext = _menuItem;
+      _menuItem = &menuItem;
     }
     menuItem.parentPage = this;
     itemsCountTotal++;
@@ -73,17 +84,19 @@ GEMPage& GEMPage::addMenuItem(GEMItem& menuItem) {
 }
 
 GEMPage& GEMPage::setParentMenuPage(GEMPage& parentMenuPage) {
-  _menuItemBack.type = GEM_ITEM_BACK;
-  _menuItemBack.linkedPage = &parentMenuPage;
-  // Back button menu item should be always inserted at first position in list
-  GEMItem* menuItemTmp = _menuItem;
-  _menuItem = &_menuItemBack;
-  if (menuItemTmp != nullptr) {
-    _menuItemBack.menuItemNext = menuItemTmp;
+  if (_menuItemBack.linkedPage == nullptr) {
+    _menuItemBack.type = GEM_ITEM_BACK;
+    // Back button menu item should be always inserted at first position in list
+    GEMItem* menuItemTmp = _menuItem;
+    _menuItem = &_menuItemBack;
+    if (menuItemTmp != nullptr) {
+      _menuItemBack.menuItemNext = menuItemTmp;
+    }
+    itemsCount++;
+    itemsCountTotal++;
+    currentItemNum = (itemsCount > 1) ? 1 : 0;
   }
-  itemsCount++;
-  itemsCountTotal++;
-  currentItemNum = (itemsCount > 1) ? 1 : 0;
+  _menuItemBack.linkedPage = &parentMenuPage;
   return *this;
 }
 
@@ -100,6 +113,9 @@ GEMItem* GEMPage::getMenuItem(byte index, bool total) {
   GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
   for (byte i=0; i<index; i++) {
     menuItemTmp = menuItemTmp->getMenuItemNext(total);
+    if (menuItemTmp == nullptr) {
+      return nullptr;
+    }
   }
   return menuItemTmp;
 }

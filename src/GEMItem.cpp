@@ -1379,7 +1379,7 @@ void* GEMItem::getLinkedVariablePointer() {
 
 GEMItem* GEMItem::getMenuItemNext(bool total) {
   GEMItem* menuItemTmp = menuItemNext;
-  while (!total && menuItemTmp != nullptr && menuItemTmp->hidden) {
+  while (menuItemTmp != nullptr && !total && menuItemTmp->hidden) {
     menuItemTmp = menuItemTmp->menuItemNext;
   }
   return menuItemTmp;
