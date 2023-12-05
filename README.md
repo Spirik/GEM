@@ -886,7 +886,7 @@ Reference
 
 ### GEM, GEM_u8g2, GEM_adafruit_gfx
 
-Primary class of library. Responsible for appearance of the menu, communication with LCD screen (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
+Primary class of the library. Responsible for appearance of the menu, communication with display (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
 
 AltSerialGraphicLCD version:
 
@@ -952,7 +952,21 @@ GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeigh
 
 ![GEM customization](https://github.com/Spirik/GEM/wiki/images/customization.gif)
 
-> **Note:** carefully choose values of `menuItemsPerScreen`, `menuItemHeight`, `menuPageScreenTopOffset`, `menuValuesLeftOffset` in accordance to the actual size of your LCD screen. Default values of these options are suitable for 128x64 screens. But that is not the only possible option: the other combination of values you set may also be suitable - just calculate them correctly and see what works best for you.
+Calls to `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` constructors `GEM(glcd)`, `GEM_u8g2(u8g2)`, `GEM_adafruit_gfx(tft)` without specifying additional custom parameters are equivalent to the following calls:
+
+```cpp
+GEM menu(glcd, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
+```
+
+```cpp
+GEM_u8g2 menu(u8g2, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
+```
+
+```cpp
+GEM_adafruit_gfx menu(tft, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
+```
+
+> **Note:** carefully choose values of `menuItemsPerScreen`, `menuItemHeight`, `menuPageScreenTopOffset`, `menuValuesLeftOffset` in accordance to the actual size of your display. Default values of these options are suitable for 128x64 screens. But that is not the only possible option: the other combination of values you set may also be suitable - just calculate them correctly and see what works best for you.
 
 > **Note:** long title of the menu page `GEMPage` won't overflow to the new line in U8g2 version and will be truncated at the edge of the screen.
 
@@ -1187,17 +1201,34 @@ GEMPage menuPage(title[, parentMenuPage]);
   *Type*: `GEMPage`  
   Parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Alternatively can be set by calling `GEMPage::setParentMenuPage()` method (see below).
 
+#### Constants
+
+* **GEM_LAST_POS**  
+  *Type*: macro `#define GEM_LAST_POS 255`  
+  *Value*: `255`  
+  Alias for the last possible position that menu item can be added at. Submitted as a default value of **pos** option to `GEMPage::addMenuItem()` method.
+
+* **GEM_ITEMS_TOTAL**  
+  *Type*: macro `#define GEM_ITEMS_TOTAL true`  
+  *Value*: `true`  
+  Alias for modifier of `GEMPage::addMenuItem()` method for the case when all menu items should be considered. Submitted as a default value of **total** option to `GEMPage::addMenuItem()` method.
+
+* **GEM_ITEMS_VISIBLE**  
+  *Type*: macro `#define GEM_ITEMS_VISIBLE false`  
+  *Value*: `false`  
+  Alias for modifier of `GEMPage::addMenuItem()` method for the case when only visible menu items should be considered. Submitted as a possible value of **total** option to `GEMPage::addMenuItem()` method.
+
 #### Methods
 
-* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem **)**  
-  *Accepts*: `GEMItem`  
+* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem, [_byte_ pos = 255[, _bool_ total = true]] **)**  
+  *Accepts*: `GEMItem`[, `byte`[, `bool`]]  
   *Returns*: `GEMPage&`  
-  Add menu item to menu page. Accepts `GEMItem` object.
+  Add menu item to menu page. Accepts `GEMItem` object. Optionally menu item can be added at a specified position **pos** (zero-based number from 0 to 255, as a second argument) out of total (flag **total** set to `true`, or `GEM_ITEMS_TOTAL`, as a third argument) or only visible (flag **total** set to `false`, or `GEM_ITEMS_VISIBLE`, as a third argument) number of items. Note that if **pos** is set to 0 and menu page has parent menu page, menu item will be added at position 1 instead (i.e. as a second menu item, after built-in Back button). By default (if optional arguments are not provided) each menu item is added at the end of the list of menu items of the page (including hidden ones).
 
 * *GEMPage&* **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
   *Accepts*: `GEMPage`  
   *Returns*: `GEMPage&`  
-  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object.
+  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object. If called additional time, previously added parent menu page will be overriden with the new one.
 
 * *GEMPage&* **setTitle(** _const char*_ title **)**  
   *Returns*: `GEMPage&`  
@@ -1405,6 +1436,10 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 * *bool* **getHidden()**  
   *Returns*: `bool`  
   Get hidden state of the menu item: `true` when menu item is hidden, `false` otherwise.
+
+* *GEMItem&* **remove()**    
+  *Returns*: `GEMItem&`  
+  Remove menu item from parent menu page. Unlike `hide()`, completely detaches menu item from menu page. Removed menu item then can be added to the same or a different menu page (via `GEMPage::addMenuItem()`) or even safely destroyed. Effectively the opposite of `GEMPage::addMenuItem()` method.
 
 * *void** **getLinkedVariablePointer()**  
   *Returns*: `void*`  

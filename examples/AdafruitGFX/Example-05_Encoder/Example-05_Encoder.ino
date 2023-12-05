@@ -108,7 +108,9 @@ GEMPage menuPageSettings("Settings"); // Settings submenu
 GEMItem menuItemMainSettings("Settings", menuPageSettings);
 
 // Create menu object of class GEM_adafruit_gfx. Supply its constructor with reference to display object we created earlier
-GEM_adafruit_gfx menu(display);
+GEM_adafruit_gfx menu(display, GEM_POINTER_ROW, GEM_ITEMS_COUNT_AUTO);
+// Which is equivalent to the following call (you can adjust parameters to better fit your screen if necessary):
+// GEM_adafruit_gfx menu(display, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ GEM_ITEMS_COUNT_AUTO, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
 
 void setup() {
   // Pin modes

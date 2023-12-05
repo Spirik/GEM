@@ -59,7 +59,9 @@ GEMItem menuItemButton("Вывести на печать", printData);
 GEMPage menuPageMain("Главное меню");
 
 // Create menu object of class GEM_u8g2. Supply its constructor with reference to u8g2 object we created earlier
-GEM_u8g2 menu(u8g2);
+GEM_u8g2 menu(u8g2, GEM_POINTER_ROW, GEM_ITEMS_COUNT_AUTO);
+// Which is equivalent to the following call (you can adjust parameters to better fit your screen if necessary):
+// GEM_u8g2 menu(u8g2, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ GEM_ITEMS_COUNT_AUTO, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
 
 void setup() {
   // Serial communication setup
