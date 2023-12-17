@@ -120,20 +120,59 @@ static const unsigned char selectArrows_bits [] U8X8_PROGMEM = {
 
 GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
   : _u8g2(u8g2_)
-  , _menuPointerType(menuPointerType_)
-  , _menuItemsPerScreen(menuItemsPerScreen_)
-  , _menuItemHeight(menuItemHeight_)
-  , _menuPageScreenTopOffset(menuPageScreenTopOffset_)
-  , _menuValuesLeftOffset(menuValuesLeftOffset_)
 {
-  _menuItemFontSize = _menuItemHeight >= 8 ? 0 : 1;
-  _menuItemInsetOffset = (_menuItemHeight - _menuItemFont[_menuItemFontSize].height) / 2;
+  _appearance.menuPointerType = menuPointerType_;
+  _appearance.menuItemsPerScreen = menuItemsPerScreen_;
+  _appearance.menuItemHeight = menuItemHeight_;
+  _appearance.menuPageScreenTopOffset = menuPageScreenTopOffset_;
+  _appearance.menuValuesLeftOffset = menuValuesLeftOffset_;
+  _appearanceCurrent = &_appearance;
   _splash = {logo_width, logo_height, logo_bits};
   clearContext();
   _editValueMode = false;
   _editValueCursorPosition = 0;
   memset(_valueString, '\0', GEM_STR_LEN - 1);
   _valueSelectNum = -1;
+}
+
+GEM_u8g2::GEM_u8g2(U8G2& u8g2_, GEMAppearance appearance_)
+  : _u8g2(u8g2_)
+  , _appearance(appearance_)
+{
+  _appearanceCurrent = &_appearance;
+  _splash = {logo_width, logo_height, logo_bits};
+  clearContext();
+  _editValueMode = false;
+  _editValueCursorPosition = 0;
+  memset(_valueString, '\0', GEM_STR_LEN - 1);
+  _valueSelectNum = -1;
+}
+
+//====================== APPEARANCE OPERATIONS
+
+GEM_u8g2& GEM_u8g2::setAppearance(GEMAppearance appearance) {
+  _appearance = appearance;
+  return *this;
+}
+
+GEMAppearance* GEM_u8g2::getCurrentAppearance() {
+  return (_menuPageCurrent != nullptr && _menuPageCurrent->_appearance != nullptr) ? _menuPageCurrent->_appearance : &_appearance;
+}
+
+byte GEM_u8g2::getMenuItemsPerScreen() {
+  return getCurrentAppearance()->menuItemsPerScreen == GEM_ITEMS_COUNT_AUTO ? (_u8g2.getDisplayHeight() - getCurrentAppearance()->menuPageScreenTopOffset) / getCurrentAppearance()->menuItemHeight : getCurrentAppearance()->menuItemsPerScreen;
+}
+
+byte GEM_u8g2::getMenuItemFontSize() {
+  return getCurrentAppearance()->menuItemHeight >= 8 ? 0 : 1;
+}
+
+byte GEM_u8g2::getMenuItemTitleLength() {
+  return (getCurrentAppearance()->menuValuesLeftOffset - 5) / _menuItemFont[getMenuItemFontSize()].width;
+}
+
+byte GEM_u8g2::getMenuItemValueLength() {
+  return (_u8g2.getDisplayWidth() - getCurrentAppearance()->menuValuesLeftOffset - 6) / _menuItemFont[getMenuItemFontSize()].width;
 }
 
 //====================== INIT OPERATIONS
@@ -174,12 +213,6 @@ GEM_u8g2& GEM_u8g2::init() {
   _u8g2.clear();
   _u8g2.setDrawColor(1);
   _u8g2.setFontPosTop();
-  
-  _menuItemTitleLength = (_menuValuesLeftOffset - 5) / _menuItemFont[_menuItemFontSize].width;
-  _menuItemValueLength = (_u8g2.getDisplayWidth() - _menuValuesLeftOffset - 6) / _menuItemFont[_menuItemFontSize].width;
-  if (_menuItemsPerScreen == GEM_ITEMS_COUNT_AUTO) {
-    _menuItemsPerScreen = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset) / _menuItemHeight;
-  }
 
   if (_splashDelay > 0) {
 
@@ -263,7 +296,7 @@ void GEM_u8g2::drawTitleBar() {
  _u8g2.setFont(_fontFamilies.small);
  _u8g2.setCursor(5, 0);
  _u8g2.print(_menuPageCurrent->title);
- _u8g2.setFont(_menuItemFontSize ? _fontFamilies.small : _fontFamilies.big);
+ _u8g2.setFont(getMenuItemFontSize() ? _fontFamilies.small : _fontFamilies.big);
 }
 
 void GEM_u8g2::printMenuItemString(const char* str, byte num, byte startPos) {
@@ -301,116 +334,122 @@ void GEM_u8g2::printMenuItemString(const char* str, byte num, byte startPos) {
 }
 
 void GEM_u8g2::printMenuItemTitle(const char* str, int offset) {
-  printMenuItemString(str, _menuItemTitleLength + offset);
+  printMenuItemString(str, getMenuItemTitleLength() + offset);
 }
 
 void GEM_u8g2::printMenuItemValue(const char* str, int offset, byte startPos) {
-  printMenuItemString(str, _menuItemValueLength + offset, startPos);
+  printMenuItemString(str, getMenuItemValueLength() + offset, startPos);
 }
 
 void GEM_u8g2::printMenuItemFull(const char* str, int offset) {
-  printMenuItemString(str, _menuItemTitleLength + _menuItemValueLength + offset);
+  printMenuItemString(str, getMenuItemTitleLength() + getMenuItemValueLength() + offset);
 }
 
 byte GEM_u8g2::getMenuItemInsetOffset(bool forSprite) {
-  return _menuItemInsetOffset + (forSprite ? (_menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  byte menuItemFontSize = getMenuItemFontSize();
+  byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height) / 2;
+  return menuItemInsetOffset + (forSprite ? (menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
 }
 
 byte GEM_u8g2::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {
-  return (_menuPageCurrent->currentItemNum % _menuItemsPerScreen) * _menuItemHeight + _menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
+  return (_menuPageCurrent->currentItemNum % getMenuItemsPerScreen()) * getCurrentAppearance()->menuItemHeight + getCurrentAppearance()->menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
 }
 
 void GEM_u8g2::printMenuItems() {
-  byte currentPageScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-  GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * _menuItemsPerScreen);
-  byte y = _menuPageScreenTopOffset;
+  byte menuItemsPerScreen = getMenuItemsPerScreen();
+  byte currentPageScreenNum = _menuPageCurrent->currentItemNum / menuItemsPerScreen;
+  GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * menuItemsPerScreen);
+  byte y = getCurrentAppearance()->menuPageScreenTopOffset;
   byte i = 0;
   char valueStringTmp[GEM_STR_LEN];
-  while (menuItemTmp != nullptr && i < _menuItemsPerScreen) {
+  while (menuItemTmp != nullptr && i < menuItemsPerScreen) {
     byte yText = y + getMenuItemInsetOffset();
     byte yDraw = y + getMenuItemInsetOffset(true);
     switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
-        _u8g2.setCursor(5, yText);
-        if (menuItemTmp->readonly) {
-          printMenuItemTitle(menuItemTmp->title, -1);
-          _u8g2.print("^");
-        } else {
-          printMenuItemTitle(menuItemTmp->title);
-        }
-        
-        _u8g2.setCursor(_menuValuesLeftOffset, yText);
-        switch (menuItemTmp->linkedType) {
-          case GEM_VAL_INTEGER:
-            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
-              drawEditValueCursor();
-            } else {
-              itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-              printMenuItemValue(valueStringTmp);
-            }
-            break;
-          case GEM_VAL_BYTE:
-            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
-              drawEditValueCursor();
-            } else {
-              itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-              printMenuItemValue(valueStringTmp);
-            }
-            break;
-          case GEM_VAL_CHAR:
-            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
-              drawEditValueCursor();
-            } else {
-              printMenuItemValue((char*)menuItemTmp->linkedVariable);
-            }
-            break;
-          case GEM_VAL_BOOL:
-            if (*(bool*)menuItemTmp->linkedVariable) {
-              _u8g2.drawXBMP(_menuValuesLeftOffset, yDraw, checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits);
-            } else {
-              _u8g2.drawXBMP(_menuValuesLeftOffset, yDraw, checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits);
-            }
-            break;
-          case GEM_VAL_SELECT:
-            {
-              GEMSelect* select = menuItemTmp->select;
+        {
+          _u8g2.setCursor(5, yText);
+          if (menuItemTmp->readonly) {
+            printMenuItemTitle(menuItemTmp->title, -1);
+            _u8g2.print("^");
+          } else {
+            printMenuItemTitle(menuItemTmp->title);
+          }
+
+          byte menuValuesLeftOffset = getCurrentAppearance()->menuValuesLeftOffset;
+          _u8g2.setCursor(menuValuesLeftOffset, yText);
+          switch (menuItemTmp->linkedType) {
+            case GEM_VAL_INTEGER:
               if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-                printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
-                _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+                printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
                 drawEditValueCursor();
               } else {
-                printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-                _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+                itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+                printMenuItemValue(valueStringTmp);
               }
-            }
-            break;
-          #ifdef GEM_SUPPORT_FLOAT_EDIT
-          case GEM_VAL_FLOAT:
-            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
-              drawEditValueCursor();
-            } else {
-              // sprintf(valueStringTmp,"%.6f", *(float*)menuItemTmp->linkedVariable); // May work for non-AVR boards
-              dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-              printMenuItemValue(valueStringTmp);
-            }
-            break;
-          case GEM_VAL_DOUBLE:
-            if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-              printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
-              drawEditValueCursor();
-            } else {
-              // sprintf(valueStringTmp,"%.6f", *(double*)menuItemTmp->linkedVariable); // May work for non-AVR boards
-              dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-              printMenuItemValue(valueStringTmp);
-            }
-            break;
-          #endif
+              break;
+            case GEM_VAL_BYTE:
+              if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+                printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+                drawEditValueCursor();
+              } else {
+                itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+                printMenuItemValue(valueStringTmp);
+              }
+              break;
+            case GEM_VAL_CHAR:
+              if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+                printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+                drawEditValueCursor();
+              } else {
+                printMenuItemValue((char*)menuItemTmp->linkedVariable);
+              }
+              break;
+            case GEM_VAL_BOOL:
+              if (*(bool*)menuItemTmp->linkedVariable) {
+                _u8g2.drawXBMP(menuValuesLeftOffset, yDraw, checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits);
+              } else {
+                _u8g2.drawXBMP(menuValuesLeftOffset, yDraw, checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits);
+              }
+              break;
+            case GEM_VAL_SELECT:
+              {
+                GEMSelect* select = menuItemTmp->select;
+                if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+                  printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
+                  _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+                  drawEditValueCursor();
+                } else {
+                  printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
+                  _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows_width, selectArrows_height, selectArrows_bits);
+                }
+              }
+              break;
+            #ifdef GEM_SUPPORT_FLOAT_EDIT
+            case GEM_VAL_FLOAT:
+              if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+                printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+                drawEditValueCursor();
+              } else {
+                // sprintf(valueStringTmp,"%.6f", *(float*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+                dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
+                printMenuItemValue(valueStringTmp);
+              }
+              break;
+            case GEM_VAL_DOUBLE:
+              if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
+                printMenuItemValue(_valueString, 0, _editValueVirtualCursorPosition - _editValueCursorPosition);
+                drawEditValueCursor();
+              } else {
+                // sprintf(valueStringTmp,"%.6f", *(double*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+                dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
+                printMenuItemValue(valueStringTmp);
+              }
+              break;
+            #endif
+          }
+          break;
         }
-        break;
       case GEM_ITEM_LINK:
         _u8g2.setCursor(5, yText);
         if (menuItemTmp->readonly) {
@@ -437,7 +476,7 @@ void GEM_u8g2::printMenuItems() {
         break;
     }
     menuItemTmp = menuItemTmp->getMenuItemNext();
-    y += _menuItemHeight;
+    y += getCurrentAppearance()->menuItemHeight;
     i++;
   }
   memset(valueStringTmp, '\0', GEM_STR_LEN - 1);
@@ -447,22 +486,23 @@ void GEM_u8g2::drawMenuPointer() {
   if (_menuPageCurrent->itemsCount > 0) {
     GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
     int pointerPosition = getCurrentItemTopOffset(false);
-    if (_menuPointerType == GEM_POINTER_DASH) {
+    byte menuItemHeight = getCurrentAppearance()->menuItemHeight;
+    if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
       if (menuItemTmp->readonly) {
-        for (byte i = 0; i < (_menuItemHeight - 1) / 2; i++) {
+        for (byte i = 0; i < (menuItemHeight - 1) / 2; i++) {
           _u8g2.drawPixel(0, pointerPosition + i * 2);
           _u8g2.drawPixel(1, pointerPosition + i * 2 + 1);
         }
       } else {
-        _u8g2.drawBox(0, pointerPosition, 2, _menuItemHeight - 1);
+        _u8g2.drawBox(0, pointerPosition, 2, menuItemHeight - 1);
       }
     } else if (!_editValueMode) {
       _u8g2.setDrawColor(2);
-      _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, _menuItemHeight + 1);
+      _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, menuItemHeight + 1);
       _u8g2.setDrawColor(1);
       if (menuItemTmp->readonly) {
         _u8g2.setDrawColor(0);
-        for (byte i = 0; i < (_menuItemHeight + 2) / 2; i++) {
+        for (byte i = 0; i < (menuItemHeight + 2) / 2; i++) {
           _u8g2.drawPixel(0, pointerPosition + i * 2);
           _u8g2.drawPixel(1, pointerPosition + i * 2 - 1);
         }
@@ -473,11 +513,13 @@ void GEM_u8g2::drawMenuPointer() {
 }
 
 void GEM_u8g2::drawScrollbar() {
-  byte screensCount = (_menuPageCurrent->itemsCount % _menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / _menuItemsPerScreen : _menuPageCurrent->itemsCount / _menuItemsPerScreen + 1;
+  byte menuItemsPerScreen = getMenuItemsPerScreen();
+  byte screensCount = (_menuPageCurrent->itemsCount % menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / menuItemsPerScreen : _menuPageCurrent->itemsCount / menuItemsPerScreen + 1;
   if (screensCount > 1) {
-    byte currentScreenNum = _menuPageCurrent->currentItemNum / _menuItemsPerScreen;
-    byte scrollbarHeight = (_u8g2.getDisplayHeight() - _menuPageScreenTopOffset + 1) / screensCount;
-    byte scrollbarPosition = currentScreenNum * scrollbarHeight + _menuPageScreenTopOffset - 1;
+    byte currentScreenNum = _menuPageCurrent->currentItemNum / menuItemsPerScreen;
+    byte menuPageScreenTopOffset = getCurrentAppearance()->menuPageScreenTopOffset;
+    byte scrollbarHeight = (_u8g2.getDisplayHeight() - menuPageScreenTopOffset + 1) / screensCount;
+    byte scrollbarPosition = currentScreenNum * scrollbarHeight + menuPageScreenTopOffset - 1;
     _u8g2.drawLine(_u8g2.getDisplayWidth() - 1, scrollbarPosition, _u8g2.getDisplayWidth() - 1, scrollbarPosition + scrollbarHeight);
   }
 }
@@ -607,7 +649,7 @@ void GEM_u8g2::initEditValueCursor() {
 }
 
 void GEM_u8g2::nextEditValueCursorPosition() {
-  if ((_editValueCursorPosition != _menuItemValueLength - 1) && (_editValueCursorPosition != _editValueLength - 1) && (_valueString[_editValueCursorPosition] != '\0')) {
+  if ((_editValueCursorPosition != getMenuItemValueLength() - 1) && (_editValueCursorPosition != _editValueLength - 1) && (_valueString[_editValueCursorPosition] != '\0')) {
     _editValueCursorPosition++;
   }
   if ((_editValueVirtualCursorPosition != _editValueLength - 1) && (_valueString[_editValueVirtualCursorPosition] != '\0')) {
@@ -628,12 +670,13 @@ void GEM_u8g2::prevEditValueCursorPosition() {
 
 void GEM_u8g2::drawEditValueCursor() {
   int pointerPosition = getCurrentItemTopOffset(false);
-  byte cursorLeftOffset = _menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[_menuItemFontSize].width;
+  byte menuItemFontSize = getMenuItemFontSize();
+  byte cursorLeftOffset = getCurrentAppearance()->menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[menuItemFontSize].width;
   _u8g2.setDrawColor(2);
   if (_editValueType == GEM_VAL_SELECT) {
-    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - cursorLeftOffset - 1, _menuItemHeight + 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _u8g2.getDisplayWidth() - cursorLeftOffset - 1, getCurrentAppearance()->menuItemHeight + 1);
   } else {
-    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[_menuItemFontSize].width + 1, _menuItemHeight + 1);
+    _u8g2.drawBox(cursorLeftOffset - 1, pointerPosition - 1, _menuItemFont[menuItemFontSize].width + 1, getCurrentAppearance()->menuItemHeight + 1);
   }
   _u8g2.setDrawColor(1);
 }

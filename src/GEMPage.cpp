@@ -109,6 +109,11 @@ const char* GEMPage::getTitle() {
   return title;
 }
 
+GEMPage& GEMPage::setAppearance(GEMAppearance* appearance) {
+  _appearance = appearance;
+  return *this;
+}
+
 GEMItem* GEMPage::getMenuItem(byte index, bool total) {
   GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
   for (byte i=0; i<index; i++) {

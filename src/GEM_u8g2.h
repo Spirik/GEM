@@ -40,6 +40,7 @@
 #ifdef GEM_ENABLE_U8G2_VERSION
 
 #include <U8g2lib.h>
+#include "GEMAppearance.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
@@ -113,7 +114,16 @@ class GEM_u8g2 {
       default 86 (suitable for 128x64 screen with other variables at their default values)
     */
     GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    /*
+      @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
+      @param 'appearance_' - object of type GEMAppearance
+    */
+    GEM_u8g2(U8G2& u8g2_, GEMAppearance appearance_);
 
+    /* APPEARANCE OPERATIONS */
+
+    GEM_u8g2& setAppearance(GEMAppearance appearance);        // Set appearance of the menu (can be overridden in GEMPage on per page basis)
+    
     /* INIT OPERATIONS */
 
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
@@ -141,19 +151,17 @@ class GEM_u8g2 {
                                                               // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
     U8G2& _u8g2;
-    byte _menuPointerType;
-    byte _menuItemsPerScreen;
-    byte _menuItemHeight;
-    byte _menuPageScreenTopOffset;
-    byte _menuValuesLeftOffset;
-    byte _menuItemFontSize;
+    GEMAppearance* _appearanceCurrent = nullptr;
+    GEMAppearance _appearance;
+    GEMAppearance* getCurrentAppearance();
+    byte getMenuItemsPerScreen();
+    byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
     FontFamiliesU8g2 _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     bool _cyrillicEnabled = false;
     bool _invertKeysDuringEdit = false;
-    byte _menuItemInsetOffset;
-    byte _menuItemTitleLength;
-    byte _menuItemValueLength;
+    byte getMenuItemTitleLength();
+    byte getMenuItemValueLength();
     Splash _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
@@ -161,7 +169,6 @@ class GEM_u8g2 {
     /* DRAW OPERATIONS */
 
     GEMPage* _menuPageCurrent = nullptr;
-    void layoutMenu();
     void drawTitleBar();
     void printMenuItemString(const char* str, byte num, byte startPos = 0);
     void printMenuItemTitle(const char* str, int offset = 0);

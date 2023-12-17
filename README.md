@@ -35,6 +35,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
   * [GEMCallbackData](#gemcallbackdata)
+  * [GEMAppearance](#gemappearance)
   * [AppContext](#appcontext)
 * [Floating-point variables](#floating-point-variables)
 * [Configuration](#configuration)
@@ -886,12 +887,18 @@ Reference
 
 ### GEM, GEM_u8g2, GEM_adafruit_gfx
 
-Primary class of the library. Responsible for appearance of the menu, communication with display (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
+Primary class of the library. Responsible for general appearance of the menu, communication with display (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
 
 AltSerialGraphicLCD version:
 
 ```cpp
 GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+```
+
+or
+
+```cpp
+GEM menu(glcd[, appearance]);
 ```
 
 U8g2 version:
@@ -900,10 +907,22 @@ U8g2 version:
 GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
 ```
 
+or
+
+```cpp
+GEM_u8g2 menu(u8g2[, appearance]);
+```
+
 Adafruit GFX version:
 
 ```cpp
 GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+```
+
+or
+
+```cpp
+GEM_adafruit_gfx menu(tft[, appearance]);
 ```
 
 * **glcd**  `AltSerialGraphicLCD version`  
@@ -950,6 +969,10 @@ GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeigh
   *Default*: `86`  
   Offset from the left of the screen to the value of variable associated with the menu item (effectively the space left for the title of the menu item to be printed on screen). Default value is suitable for 128x64 screen with other parameters at their default values; 86 - recommended value for 128x64 screen.
 
+* **appearance** [*optional*]  
+  *Type*: `GEMAppearance`  
+  Object of type `GEMAppearance` that holds values of appearance settings that define how menu is rendered on screen. Essentially allows to pass appearance as a single object instead of specifying each option as a aseparate argument.
+
 ![GEM customization](https://github.com/Spirik/GEM/wiki/images/customization.gif)
 
 Calls to `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` constructors `GEM(glcd)`, `GEM_u8g2(u8g2)`, `GEM_adafruit_gfx(tft)` without specifying additional custom parameters are equivalent to the following calls:
@@ -970,7 +993,9 @@ GEM_adafruit_gfx menu(tft, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsP
 
 > **Note:** long title of the menu page `GEMPage` won't overflow to the new line in U8g2 version and will be truncated at the edge of the screen.
 
-For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+> **Note:** it is possible to customize appearance of each menu page individually (since GEM ver. 1.5) by using [`GEMAppearance`](#gemappearance) object.
+
+For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki) and description of [`GEMAppearance`](#gemappearance) struct.
 
 #### Constants
 
@@ -1055,6 +1080,11 @@ For more details on customization see corresponding section of the [wiki](https:
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle `bool` menu item, enter edit mode of the associated non-`bool` variable, exit edit mode with saving the variable, execute code associated with button).
 
 #### Methods
+
+* *GEM&* **setAppearance(** _GEMAppearance_ appearance **)**  
+  *Accepts*: `GEMAppearance`  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
+  Set general appearance of the menu (can be overridden in `GEMPage` on per page basis).
 
 * *GEM&* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
   *Accepts*: `_const uint8_t PROGMEM_ *`  
@@ -1228,7 +1258,7 @@ GEMPage menuPage(title[, parentMenuPage]);
 * *GEMPage&* **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
   *Accepts*: `GEMPage`  
   *Returns*: `GEMPage&`  
-  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object. If called additional time, previously added parent menu page will be overriden with the new one.
+  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object. If called additional time, previously added parent menu page will be overridden with the new one.
 
 * *GEMPage&* **setTitle(** _const char*_ title **)**  
   *Returns*: `GEMPage&`  
@@ -1237,6 +1267,11 @@ GEMPage menuPage(title[, parentMenuPage]);
 * *const char** **getTitle()**  
   *Returns*: `const char*`  
   Get title of the menu page.
+
+* *GEMPage&* **setAppearance(** _GEMAppearance*_ appearance **)**  
+  *Accepts*: `GEMAppearance*`  
+  *Returns*: `GEMPage&`  
+  Set appearance of the menu page. Note that appearance should be passed as a pointer to [`GEMAppearance`](#gemappearance) object. And as such, `GEMAppearance` object should be declared in a global scope.
 
 > **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
@@ -1652,6 +1687,106 @@ void buttonAction(GEMCallbackData callbackData) {
 ```
 
 For more details and examples of using user-defined callback arguments see corresponding sections of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+
+----------
+
+
+### GEMAppearance
+
+Data structure that holds values of appearance settings that define how menu is rendered on screen. Can be submitted to `GEM` (`GEM_u8g2`, `GEM_adafruit_gfx`) constructor instead of specifying each option as a separate argument, or passed as an argument to `GEM::setAppearance()` (`GEM_u8g2::setAppearance()`, `GEM_adafruit_gfx::setAppearance()`) method to set general appearance of the menu (that will be used for every menu page if not overridden). Pointer to object of type `GEMAppearance` can be passed to `GEMPage::setAppearance()` method to customize appearance of corresponding menu page individually.
+
+Object of type `GEMAppearance` defines as follows:
+
+```cpp
+GEMAppearance appearanceGeneral = {menuPointerType, menuItemsPerScreen, menuItemHeight, menuPageScreenTopOffset, menuValuesLeftOffset}
+```
+
+* **menuPointerType**  
+  *Type*: `byte`  
+  *Values*: `GEM_POINTER_ROW`, `GEM_POINTER_DASH`  
+  Type of menu pointer visual appearance: either highlighted row or pointer to the left of the row.
+
+* **menuItemsPerScreen**  
+  *Type*: `byte`   
+  *Values*: number, `GEM_ITEMS_COUNT_AUTO` (alias for `0`)  
+  Count of the menu items per screen. Suitable for 128x64 screen with other variables at their default values. If set to `GEM_ITEMS_COUNT_AUTO`, the number of menu items will be determined automatically based on actual height of the screen.
+
+* **menuItemHeight**  
+  *Type*: `byte`  
+  *Units*: dots  
+  Height of the menu item. Suitable for 128x64 screen with other variables at their default values.
+
+* **menuPageScreenTopOffset**  
+  *Type*: `byte`  
+  *Units*: dots  
+  Offset from the top of the screen to accommodate title of the menu page. Suitable for 128x64 screen with other variables at their default values.
+
+* **menuValuesLeftOffset**  
+  *Type*: `byte`  
+  *Units*: dots  
+  Offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen). Suitable for 128x64 screen with other variables at their default values; 86 - recommended value for 128x64 screen.
+
+Basic example of use:
+
+```cpp
+// Create GEMAppearance object with general values (that will be used for every menu page if not overridden)
+GEMAppearance appearanceGeneral = {/* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ GEM_ITEMS_COUNT_AUTO, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86}
+// Create GEMAppearance object as a copy of appearanceGeneral (its values can be customized later in sketch).
+// Note that it should be created in a global scope of the sketch (in order to be passed as a pointer to menu page)
+GEMAppearance appearanceSettings = appearanceGeneral;
+
+// Create menu object (and pass appearanceGeneral as an argument to constructor)
+GEM menu(glcd, appearanceGeneral);
+
+...
+
+// Later in sketch, e.g. in setupMenu()
+void setupMenu() {
+  ...
+  appearanceSettings.menuValuesLeftOffset = 70;
+  menuPageSettings.setAppearance(&appearanceSettings); // Note `&` operator
+  ...
+}
+
+```
+
+Alternatively:
+
+```cpp
+// Create empty GEMAppearance object (its values can be populated later in sketch).
+// Note that it should be created in a global scope of the sketch (in order to be passed as a pointer to menu page)
+GEMAppearance appearanceSettings;
+
+// Create menu object (its appearance settings will be populated with defaut values)
+GEM menu(glcd);
+
+...
+
+// Later in sketch, e.g. in setupMenu()
+void setupMenu() {
+  ...
+  // Create GEMAppearance object with general values (that will be used for every menu page if not overridden)
+  GEMAppearance appearanceGeneral;
+  appearanceGeneral.menuPointerType = GEM_POINTER_ROW;
+  appearanceGeneral.menuItemsPerScreen = 5;
+  appearanceGeneral.menuItemHeight = 10;
+  appearanceGeneral.menuPageScreenTopOffset = 10;
+  appearanceGeneral.menuValuesLeftOffset = 86;
+
+  // Set appearanceGeneral as a general appearance of the menu
+  menu.setAppearance(appearanceGeneral); // Note there is no `&` operator when setting general (or global) appearance of the menu
+
+  // Copy values from appearanceGeneral object to appearanceSettings for further customization
+  appearanceSettings = appearanceGeneral;
+  appearanceSettings.menuValuesLeftOffset = 70;
+  menuPageSettings.setAppearance(&appearanceSettings); // Note `&` operator
+  ...
+}
+
+```
+
+For more details about appearance customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 
 ----------

@@ -38,6 +38,7 @@
 #define HEADER_GEMPAGE
 
 #include <Arduino.h>
+#include "GEMAppearance.h"
 #include "GEMItem.h"
 
 // Macro constant (alias) for the last possible position that menu item can be added at
@@ -68,6 +69,7 @@ class GEMPage {
     GEMPage& setParentMenuPage(GEMPage& parentMenuPage);        // Specify parent level menu page (to know where to go back to when Back button is pressed)
     GEMPage& setTitle(const char* title_);                      // Set title of the menu page
     const char* getTitle();                                     // Get title of the menu page
+    GEMPage& setAppearance(GEMAppearance* appearance);          // Set appearance of the menu page
   private:
     const char* title;
     byte currentItemNum = 0;                                    // Currently selected (focused) menu item of the page
@@ -83,6 +85,7 @@ class GEMPage {
     GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)}; // Local instance of Back button (created when parent level menu page is specified through
                                                                 // setParentMenuPage(); always becomes the first menu item in a list)
     void (*exitAction)() = nullptr;
+    GEMAppearance* _appearance = nullptr;
 };
   
 #endif

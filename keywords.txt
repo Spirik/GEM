@@ -12,6 +12,7 @@ GEMItem	KEYWORD1
 GEMPage	KEYWORD1
 GEMSelect	KEYWORD1
 GEMCallbackData	KEYWORD1
+GEMAppearance	KEYWORD1
 Splash	KEYWORD1
 FontSize	KEYWORD1
 FontFamilies	KEYWORD1
@@ -26,6 +27,7 @@ SelectOptionDouble	KEYWORD1
 # Methods and Functions (KEYWORD2)
 ####################################################
 
+setAppearance	KEYWORD2
 setSplash	KEYWORD2
 setSplashDelay	KEYWORD2
 hideVersion	KEYWORD2
