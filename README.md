@@ -1784,7 +1784,7 @@ void setupMenu() {
 }
 ```
 
-Passing `GEMAppearance` object to `GEMPage::setAppearance()` method as a pointer allows to change appearance dynamically by changing values stored in object (and making sure that `menu.drawMenu();` is called afterwards) without need for additional call to `GEMPage::setAppearance()`. In contrast, to change general appearance of the menu (and not individual page) `menu.setAppearance(appearanceGeneral);` method should be called with new or updated `GEMAppearance` object supplied as an argument (and `menu.drawMenu();` should be called afterwards as well).
+Passing `GEMAppearance` object to `GEMPage::setAppearance()` method as a pointer allows to change appearance of the _individual menu page_ dynamically by changing values stored in object (and making sure that `menu.drawMenu();` is called afterwards) without need for additional call to `GEMPage::setAppearance()`. In contrast, to change _general appearance_ of the menu (and not individual page) `menu.setAppearance(appearanceGeneral);` method should be called with new or updated `GEMAppearance` object supplied as an argument (and `menu.drawMenu();` should be called afterwards as well).
 
 For more details about appearance customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
