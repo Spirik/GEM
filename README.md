@@ -971,7 +971,7 @@ GEM_adafruit_gfx menu(tft[, appearance]);
 
 * **appearance** [*optional*]  
   *Type*: `GEMAppearance`  
-  Object of type `GEMAppearance` that holds values of appearance settings that define how menu is rendered on screen. Essentially allows to pass appearance as a single object instead of specifying each option as a aseparate argument.
+  Object of type `GEMAppearance` that holds values of appearance settings that define how menu is rendered on screen. Essentially allows to pass appearance as a single object instead of specifying each option as a separate argument.
 
 ![GEM customization](https://github.com/Spirik/GEM/wiki/images/customization.gif)
 
@@ -1748,7 +1748,6 @@ void setupMenu() {
   menuPageSettings.setAppearance(&appearanceSettings); // Note `&` operator
   ...
 }
-
 ```
 
 Alternatively:
@@ -1769,7 +1768,7 @@ void setupMenu() {
   // Create GEMAppearance object with general values (that will be used for every menu page if not overridden)
   GEMAppearance appearanceGeneral;
   appearanceGeneral.menuPointerType = GEM_POINTER_ROW;
-  appearanceGeneral.menuItemsPerScreen = 5;
+  appearanceGeneral.menuItemsPerScreen = GEM_ITEMS_COUNT_AUTO;
   appearanceGeneral.menuItemHeight = 10;
   appearanceGeneral.menuPageScreenTopOffset = 10;
   appearanceGeneral.menuValuesLeftOffset = 86;
@@ -1783,8 +1782,9 @@ void setupMenu() {
   menuPageSettings.setAppearance(&appearanceSettings); // Note `&` operator
   ...
 }
-
 ```
+
+Passing `GEMAppearance` object to `GEMPage::setAppearance()` method as a pointer allows to change appearance dynamically by changing values stored in object (and making sure that `menu.drawMenu();` is called afterwards) without need for additional call to `GEMPage::setAppearance()`. In contrast, to change general appearance of the menu (and not individual page) `menu.setAppearance(appearanceGeneral);` method should be called with new or updated `GEMAppearance` object supplied as an argument (and `menu.drawMenu();` should be called afterwards as well).
 
 For more details about appearance customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
@@ -1870,7 +1870,6 @@ void buttonContextExit() {
   // Clear context (assigns `nullptr` values to function pointers of the `context` property of the `GEM` object and resets `allowExit` flag to its default state)
   menu.clearContext();
 }
-
 ```
 
 To exit currently running context and return to menu, press button associated with `GEM_KEY_CANCEL` key (only if `context.allowExit` flag is set to its default value of `true`, otherwise you should handle exit from the loop manually and call `context.exit()` explicitly) - `context.exit()` callback will be called.
