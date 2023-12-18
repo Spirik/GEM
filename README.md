@@ -12,7 +12,7 @@ Supports buttons that can invoke user-defined actions and create action-specific
 
 Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0), [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) (since GEM ver. 1.3) graphics libraries.
 
-> Note that each of AltSerialGraphicLCD, U8g2 and Adafruit GFX libraries are required by default, regardless of which one of them is actually used to drive display (although the ones that are not used shouldn't affect compiled sketch size much). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. See [Configuration](#configuration) section for details.
+> Note that U8g2 and Adafruit GFX libraries are required by default, regardless of which one of them is actually used to drive display (although the ones that are not used shouldn't affect compiled sketch size much). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. Support for `AltSerialGraphicLCD` is disabled by default since GEM ver. 1.5 (it is still possible to enable it). See [Configuration](#configuration) section for details.
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
@@ -69,7 +69,7 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 
 Whichever option you choose you may need to reload IDE afterwards.
 
-Each of [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html), [U8g2](https://github.com/olikraus/U8g2_Arduino) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) libraries are required to be installed by default as well. However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. See [Configuration](#configuration) section for details.
+[U8g2](https://github.com/olikraus/U8g2_Arduino) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) libraries are required to be installed by default as well. Support for [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) is disabled by default since GEM ver. 1.5 (so it is not required to be installed). However, it is possible to exclude support for not used libraries (since GEM ver. 1.2.2), and/or enable support for `AltSerialGraphicLCD` (since GEM ver 1.5). See [Configuration](#configuration) section for details.
 
 How to use with AltSerialGraphicLCD
 -----------------------------------
@@ -79,7 +79,7 @@ How to use with AltSerialGraphicLCD
 
 ### Requirements
 
-GEM supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
+GEM supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library if enabled (see [Configuration](#configuration) section). LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
 
 In theory GEM is compatible with any display, that is supported by SparkFun Graphic LCD Serial Backpack. Guaranteed to work with [128x64](https://www.sparkfun.com/products/710) pixel displays. [160x128](https://www.sparkfun.com/products/8799) pixel ones should work fine as well, although it wasn't tested.
 
@@ -1922,19 +1922,19 @@ Currently there are two ways of achieving  that.
 
 For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion.
 
-To disable `AltSerialGraphicLCD` support comment out the following line:
+Support for `AltSerialGraphicLCD` is disabled by default since GEM ver. 1.5. To _enable_ `AltSerialGraphicLCD` support comment out the following line:
 
 ```cpp
-#include "config/enable-glcd.h"
+#define GEM_DISABLE_GLCD
 ```
 
-To disable `U8g2` support comment out the following line:
+To _disable_ `U8g2` support comment out the following line:
 
 ```cpp
 #include "config/enable-u8g2.h"
 ```
 
-To disable `Adafruit GFX` support comment out the following line:
+To _disable_ `Adafruit GFX` support comment out the following line:
 
 ```cpp
 #include "config/enable-adafruit-gfx.h"
@@ -1950,8 +1950,8 @@ Alternatively, define corresponding flag before build. E.g. in [PlatformIO](http
 
 ```ini
 build_flags =
-    ; Disable AltSerialGraphicLCD support
-    -D GEM_DISABLE_GLCD
+    ; Enable AltSerialGraphicLCD support
+    -D GEM_ENABLE_GLCD
     ; Disable U8g2 support
     -D GEM_DISABLE_U8G2
     ; Disable Adafruit GFX support
