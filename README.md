@@ -1916,7 +1916,7 @@ It is possible to configure GEM library by excluding some features not needed in
 
 You can also choose which version of GEM library (`AltSerialGraphicLCD`, `U8g2` or `Adafruit GFX` based) should be compiled. That way, there won't be requirement to have all of the supported graphics libraries installed in the system at the same time (regardless of which one is actually used).
 
-Currently there are two ways of achieving  that.
+Currently there are two ways of achieving that.
 
 ### Manual `config.h` edition
 
@@ -1960,7 +1960,7 @@ build_flags =
 
 Compatibility
 -----------
-Some boards (e.g. ESP32, ESP8266, RP2040, nRF52840, etc. based boards) are not supported in AltSerialGraphicLCD version of GEM: this library should be commented out in [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) before compiling.
+Some boards (e.g. ESP32, ESP8266, RP2040, nRF52840, etc. based boards) are not supported in AltSerialGraphicLCD version of GEM: this library should not be enabled in [Configuration](#configuration) before compiling for these boards.
 
 When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp`, `GEM_u8g2.cpp` or `GEM_adafruit_gfx.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips), RP2040 and nRF52840 based boards. ESP32 based boards should be fine as well.
 
