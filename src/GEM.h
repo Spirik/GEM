@@ -122,6 +122,7 @@ class GEM {
     GEM& init();                                        // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     GEM& reInit();                                      // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     GEM& setMenuPageCurrent(GEMPage& menuPageCurrent);  // Set supplied menu page as current
+    GEMPage* getCurrentMenuPage();                      // Get pointer to current menu page
 
     /* CONTEXT OPERATIONS */
 

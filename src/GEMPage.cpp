@@ -129,6 +129,10 @@ GEMItem* GEMPage::getCurrentMenuItem() {
   return getMenuItem(currentItemNum);
 }
 
+byte GEMPage::getCurrentMenuItemIndex() {
+  return currentItemNum;
+}
+
 int GEMPage::getMenuItemNum(GEMItem& menuItem, bool total) {
   GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
   for (byte i=0; i<(total ? itemsCountTotal : itemsCount); i++) {

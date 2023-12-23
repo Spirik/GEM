@@ -139,6 +139,7 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& init();                                         // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     GEM_adafruit_gfx& reInit();                                       // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     GEM_adafruit_gfx& setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
+    GEMPage* getCurrentMenuPage();                                    // Get pointer to current menu page
 
     /* CONTEXT OPERATIONS */
 

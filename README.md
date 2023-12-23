@@ -1176,6 +1176,10 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set supplied menu page as current. Accepts `GEMPage` object.
 
+* *GEMPage** **getCurrentMenuPage()**  
+  *Returns*: `GEMPage*&`  
+  Get pointer to currently active menu page.
+
 * *GEM&* **drawMenu()**  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Draw menu on screen, with menu page set earlier in `setMenuPageCurrent()`.
@@ -1277,6 +1281,14 @@ GEMPage menuPage(title[, parentMenuPage]);
   *Accepts*: `byte`[, `bool`]  
   *Returns*: `GEMItem*`  
   Get pointer to menu item on this page by index, counting hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
+
+* *GEMItem** **getCurrentMenuItem()**  
+  *Returns*: `GEMItem*`  
+  Get pointer to currently focused menu item on this page.
+
+* *byte* **getCurrentMenuItemIndex()**  
+  *Returns*: `byte`  
+  Get index of currently focused menu item on this page.
 
 > **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 

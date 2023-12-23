@@ -270,6 +270,10 @@ GEM_u8g2& GEM_u8g2::setMenuPageCurrent(GEMPage& menuPageCurrent) {
   return *this;
 }
 
+GEMPage* GEM_u8g2::getCurrentMenuPage() {
+  return _menuPageCurrent;
+}
+
 //====================== CONTEXT OPERATIONS
 
 GEM_u8g2& GEM_u8g2::clearContext() {

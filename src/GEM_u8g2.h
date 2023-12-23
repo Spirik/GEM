@@ -134,6 +134,7 @@ class GEM_u8g2 {
     GEM_u8g2& init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
     GEM_u8g2& reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
     GEM_u8g2& setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
+    GEMPage* getCurrentMenuPage();                            // Get pointer to current menu page
 
     /* CONTEXT OPERATIONS */
 
