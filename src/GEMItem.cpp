@@ -1334,6 +1334,11 @@ GEMItem& GEMItem::setPrecision(byte prec) {
   return *this;
 }
 
+GEMItem& GEMItem::setAdjustedASCIIOrder(bool mode) {
+  adjustedAsciiOrder = mode;
+  return *this;
+}
+
 GEMItem& GEMItem::setReadonly(bool mode) {
   readonly = mode;
   return *this;

@@ -50,8 +50,10 @@
 #define GEM_CHAR_CODE_DOT 46
 #define GEM_CHAR_CODE_SPACE 32
 #define GEM_CHAR_CODE_UNDERSCORE 95
-#define GEM_CHAR_CODE_LINE 124
 #define GEM_CHAR_CODE_TILDA 126
+#define GEM_CHAR_CODE_BANG 33
+#define GEM_CHAR_CODE_a 97
+#define GEM_CHAR_CODE_ACCENT 96
 
 // Sprite of the default GEM _splash screen (GEM logo v1)
 /*
@@ -794,22 +796,40 @@ void GEM_adafruit_gfx::drawEditValueCursor(bool clear) {
 }
 
 void GEM_adafruit_gfx::nextEditValueDigit() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
   if (_editValueType == GEM_VAL_CHAR) {
-    switch (code) {
-      case 0:
-        code = GEM_CHAR_CODE_SPACE;
-        break;
-      case GEM_CHAR_CODE_TILDA:
-        code = GEM_CHAR_CODE_SPACE;
-        break;
-      case GEM_CHAR_CODE_LINE - 1:
-        code = GEM_CHAR_CODE_LINE + 1;
-        break;
-      default:
-        code++;
-        break;
+    if (menuItemTmp->adjustedAsciiOrder) {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_a;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = GEM_CHAR_CODE_a;
+          break;
+        case GEM_CHAR_CODE_ACCENT:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_TILDA:
+          code = GEM_CHAR_CODE_BANG;
+          break;
+        default:
+          code++;
+          break;
+      }
+    } else {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_TILDA:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        default:
+          code++;
+          break;
+      }
     }
   } else {
     switch (code) {
@@ -837,22 +857,40 @@ void GEM_adafruit_gfx::nextEditValueDigit() {
 }
 
 void GEM_adafruit_gfx::prevEditValueDigit() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
   if (_editValueType == GEM_VAL_CHAR) {
-    switch (code) {
-      case 0:
-        code = GEM_CHAR_CODE_TILDA;
-        break;
-      case GEM_CHAR_CODE_SPACE:
-        code = GEM_CHAR_CODE_TILDA;
-        break;
-      case GEM_CHAR_CODE_LINE + 1:
-        code = GEM_CHAR_CODE_LINE - 1;
-        break;
-      default:
-        code--;
-        break;
+    if (menuItemTmp->adjustedAsciiOrder) {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_BANG:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_a:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = GEM_CHAR_CODE_ACCENT;
+          break;
+        default:
+          code--;
+          break;
+      }
+    } else {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        default:
+          code--;
+          break;
+      }
     }
   } else {
     switch (code) {

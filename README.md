@@ -1455,6 +1455,11 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: `GEMItem&`  
   Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
 
+* *GEMItem&* **setAdjustedASCIIOrder(** _bool_ mode = true **)**  
+  *Accepts*: `bool`  
+  *Returns*: `GEMItem&`  
+  Turn adjsuted order of characters when editing `char[17]` variables on (`setAdjustedASCIIOrder()`, or `setAdjustedASCIIOrder(true)`) or off (`setAdjustedASCIIOrder(false)`). When adjsuted order is enabled, space character is followed by "a" and preceded by "\`" (grave accent character). By default adjusted order is disabled, and characters follow order in ASCII table (space character is followed by "!"). Adjusted order can be more suitable for editing text variables in certain use cases (so user won't have to scroll past all of the special characters to get to alphabet).
+
 * *GEMItem&* **setReadonly(** _bool_ mode = true **)**  
   *Accepts*: `bool`  
   *Returns*: `GEMItem&`  

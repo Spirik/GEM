@@ -50,8 +50,10 @@
 #define GEM_CHAR_CODE_DOT 46
 #define GEM_CHAR_CODE_SPACE 32
 #define GEM_CHAR_CODE_UNDERSCORE 95
-#define GEM_CHAR_CODE_LINE 124
 #define GEM_CHAR_CODE_TILDA 126
+#define GEM_CHAR_CODE_BANG 33
+#define GEM_CHAR_CODE_a 97
+#define GEM_CHAR_CODE_ACCENT 96
 /*
 // WIP for Cyrillic values support
 #define GEM_CHAR_CODE_CYR_YO 1025
@@ -682,40 +684,61 @@ void GEM_u8g2::drawEditValueCursor() {
 }
 
 void GEM_u8g2::nextEditValueDigit() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
   if (_editValueType == GEM_VAL_CHAR) {
-    switch (code) {
-      case 0:
-        code = GEM_CHAR_CODE_SPACE;
-        break;
-      case GEM_CHAR_CODE_TILDA:
-        code = GEM_CHAR_CODE_SPACE;
-        break;
-      /*
-      // WIP for Cyrillic values support
-      case GEM_CHAR_CODE_TILDA:
-        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_A : GEM_CHAR_CODE_SPACE;
-        break;
-      case GEM_CHAR_CODE_CYR_YA_SM:
-        code = GEM_CHAR_CODE_SPACE;
-        break;
-      case GEM_CHAR_CODE_CYR_E:
-        code = GEM_CHAR_CODE_CYR_YO;
-        break;
-      case GEM_CHAR_CODE_CYR_YO:
-        code = GEM_CHAR_CODE_CYR_E + 1;
-        break;
-      case GEM_CHAR_CODE_CYR_E_SM:
-        code = GEM_CHAR_CODE_CYR_YO_SM;
-        break;
-      case GEM_CHAR_CODE_CYR_YO_SM:
-        code = GEM_CHAR_CODE_CYR_E_SM + 1;
-        break;
-      */
-      default:
-        code++;
-        break;
+    if (menuItemTmp->adjustedAsciiOrder) {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_a;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = GEM_CHAR_CODE_a;
+          break;
+        case GEM_CHAR_CODE_ACCENT:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_TILDA:
+          code = GEM_CHAR_CODE_BANG;
+          break;
+        default:
+          code++;
+          break;
+      }
+    } else {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_TILDA:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        /*
+        // WIP for Cyrillic values support
+        case GEM_CHAR_CODE_TILDA:
+          code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_A : GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_CYR_YA_SM:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_CYR_E:
+          code = GEM_CHAR_CODE_CYR_YO;
+          break;
+        case GEM_CHAR_CODE_CYR_YO:
+          code = GEM_CHAR_CODE_CYR_E + 1;
+          break;
+        case GEM_CHAR_CODE_CYR_E_SM:
+          code = GEM_CHAR_CODE_CYR_YO_SM;
+          break;
+        case GEM_CHAR_CODE_CYR_YO_SM:
+          code = GEM_CHAR_CODE_CYR_E_SM + 1;
+          break;
+        */
+        default:
+          code++;
+          break;
+      }
     }
   } else {
     switch (code) {
@@ -743,43 +766,64 @@ void GEM_u8g2::nextEditValueDigit() {
 }
 
 void GEM_u8g2::prevEditValueDigit() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   char chr = _valueString[_editValueVirtualCursorPosition];
   byte code = (byte)chr;
   if (_editValueType == GEM_VAL_CHAR) {
-    switch (code) {
-      case 0:
-        code = GEM_CHAR_CODE_TILDA;
-        break;
-      case GEM_CHAR_CODE_SPACE:
-        code = GEM_CHAR_CODE_TILDA;
-        break;
-      /*
-      // WIP for Cyrillic values support
-      case 0:
-        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
-        break;
-      case GEM_CHAR_CODE_SPACE:
-        code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
-        break;
-      case GEM_CHAR_CODE_CYR_A:
-        code = GEM_CHAR_CODE_TILDA;
-        break;
-      case GEM_CHAR_CODE_CYR_E + 1:
-        code = GEM_CHAR_CODE_CYR_YO;
-        break;
-      case GEM_CHAR_CODE_CYR_YO:
-        code = GEM_CHAR_CODE_CYR_E;
-        break;
-      case GEM_CHAR_CODE_CYR_E_SM + 1:
-        code = GEM_CHAR_CODE_CYR_YO_SM;
-        break;
-      case GEM_CHAR_CODE_CYR_YO_SM:
-        code = GEM_CHAR_CODE_CYR_E_SM;
-        break;
-      */
-      default:
-        code--;
-        break;
+    if (menuItemTmp->adjustedAsciiOrder) {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_BANG:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_a:
+          code = GEM_CHAR_CODE_SPACE;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = GEM_CHAR_CODE_ACCENT;
+          break;
+        default:
+          code--;
+          break;
+      }
+    } else {
+      switch (code) {
+        case 0:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        /*
+        // WIP for Cyrillic values support
+        case 0:
+          code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_SPACE:
+          code = _cyrillicEnabled ? GEM_CHAR_CODE_CYR_YA_SM : GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_CYR_A:
+          code = GEM_CHAR_CODE_TILDA;
+          break;
+        case GEM_CHAR_CODE_CYR_E + 1:
+          code = GEM_CHAR_CODE_CYR_YO;
+          break;
+        case GEM_CHAR_CODE_CYR_YO:
+          code = GEM_CHAR_CODE_CYR_E;
+          break;
+        case GEM_CHAR_CODE_CYR_E_SM + 1:
+          code = GEM_CHAR_CODE_CYR_YO_SM;
+          break;
+        case GEM_CHAR_CODE_CYR_YO_SM:
+          code = GEM_CHAR_CODE_CYR_E_SM;
+          break;
+        */
+        default:
+          code--;
+          break;
+      }
     }
   } else {
     switch (code) {
