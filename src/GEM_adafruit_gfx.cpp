@@ -864,7 +864,7 @@ void GEM_adafruit_gfx::prevEditValueDigit() {
     if (menuItemTmp->adjustedAsciiOrder) {
       switch (code) {
         case 0:
-          code = GEM_CHAR_CODE_TILDA;
+          code = GEM_CHAR_CODE_ACCENT;
           break;
         case GEM_CHAR_CODE_BANG:
           code = GEM_CHAR_CODE_TILDA;
