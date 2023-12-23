@@ -1250,7 +1250,7 @@ GEMPage menuPage(title[, parentMenuPage]);
 
 #### Methods
 
-* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem, [_byte_ pos = 255[, _bool_ total = true]] **)**  
+* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem[, _byte_ pos = 255[, _bool_ total = true]] **)**  
   *Accepts*: `GEMItem`[, `byte`[, `bool`]]  
   *Returns*: `GEMPage&`  
   Add menu item to menu page. Accepts `GEMItem` object. Optionally menu item can be added at a specified position **pos** (zero-based number from 0 to 255, as a second argument) out of total (flag **total** set to `true`, or `GEM_ITEMS_TOTAL`, as a third argument) or only visible (flag **total** set to `false`, or `GEM_ITEMS_VISIBLE`, as a third argument) number of items. Note that if **pos** is set to 0 and menu page has parent menu page, menu item will be added at position 1 instead (i.e. as a second menu item, after built-in Back button). By default (if optional arguments are not provided) each menu item is added at the end of the list of menu items of the page (including hidden ones).
@@ -1272,6 +1272,11 @@ GEMPage menuPage(title[, parentMenuPage]);
   *Accepts*: `GEMAppearance*`  
   *Returns*: `GEMPage&`  
   Set appearance of the menu page. Note that appearance should be passed as a pointer to [`GEMAppearance`](#gemappearance) object. And as such, `GEMAppearance` object should be declared in a global scope.
+
+* *GEMItem** **getMenuItem(** _byte_ index[, _bool_ total = false] **)**  
+  *Accepts*: `byte`[, `bool`]  
+  *Returns*: `GEMItem*`  
+  Get pointer to menu item on this page by index, counting hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
 
 > **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
@@ -1479,6 +1484,11 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 * *void** **getLinkedVariablePointer()**  
   *Returns*: `void*`  
   Get pointer to a linked variable (relevant for menu items that represent variable). Note that user is reponsible for casting `void*` pointer to a correct pointer type.
+
+* *GEMItem** **getMenuItemNext(** _bool_ total = false **)**  
+  *Accepts*: `bool`  
+  *Returns*: `GEMItem*`  
+  Get pointer to next menu item, i.e. menu item that follows this one on the menu page, including hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
 
 > **Note:** calls to methods that return a reference to the owning `GEMItem` object can be chained, e.g. `menuItemInterval.setReadonly().show();` (since GEM ver. 1.4.6).
 

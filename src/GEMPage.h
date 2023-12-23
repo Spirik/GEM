@@ -70,12 +70,12 @@ class GEMPage {
     GEMPage& setTitle(const char* title_);                      // Set title of the menu page
     const char* getTitle();                                     // Get title of the menu page
     GEMPage& setAppearance(GEMAppearance* appearance);          // Set appearance of the menu page
+    GEMItem* getMenuItem(byte index, bool total = false);       // Get menu item by index (counting hidden ones if total set to true)
   private:
     const char* title;
     byte currentItemNum = 0;                                    // Currently selected (focused) menu item of the page
     byte itemsCount = 0;                                        // Items count excluding hidden ones
     byte itemsCountTotal = 0;                                   // Items count incuding hidden ones
-    GEMItem* getMenuItem(byte index, bool total = false);
     GEMItem* getCurrentMenuItem();
     int getMenuItemNum(GEMItem& menuItem, bool total = false);  // Find index of the supplied menu item
     void hideMenuItem(GEMItem& menuItem);

@@ -1273,36 +1273,43 @@ GEMItem::GEMItem(const char* title_, void (*callbackAction_)(GEMCallbackData), v
 //---
 
 GEMItem& GEMItem::setCallbackVal(byte callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valByte = callbackVal_;
   return *this;
 }
 
 GEMItem& GEMItem::setCallbackVal(int callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valInt = callbackVal_;
   return *this;
 }
 
 GEMItem& GEMItem::setCallbackVal(float callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valFloat = callbackVal_;
   return *this;
 }
 
 GEMItem& GEMItem::setCallbackVal(double callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valDouble = callbackVal_;
   return *this;
 }
 
 GEMItem& GEMItem::setCallbackVal(bool callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valBool = callbackVal_;
   return *this;
 }
 
 GEMItem& GEMItem::setCallbackVal(const char* callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valChar = callbackVal_;
   return *this;
 }
 
 GEMItem& GEMItem::setCallbackVal(void* callbackVal_) {
+  callbackData.pMenuItem = this;
   callbackData.valPointer = callbackVal_;
   return *this;
 }
