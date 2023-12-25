@@ -33,7 +33,7 @@
 */
 
 // Macro constant (alias) for current version of GEM library, printed on _splash screen
-#define GEM_VER "1.4"
+#define GEM_VER "1.5"
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
