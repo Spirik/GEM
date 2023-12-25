@@ -893,11 +893,7 @@ AltSerialGraphicLCD version:
 
 ```cpp
 GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
-```
-
-or
-
-```cpp
+// or
 GEM menu(glcd[, appearance]);
 ```
 
@@ -905,11 +901,7 @@ U8g2 version:
 
 ```cpp
 GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
-```
-
-or
-
-```cpp
+// or
 GEM_u8g2 menu(u8g2[, appearance]);
 ```
 
@@ -917,11 +909,7 @@ Adafruit GFX version:
 
 ```cpp
 GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
-```
-
-or
-
-```cpp
+// or
 GEM_adafruit_gfx menu(tft[, appearance]);
 ```
 
@@ -1177,7 +1165,7 @@ For more details on customization see corresponding section of the [wiki](https:
   Set supplied menu page as current. Accepts `GEMPage` object.
 
 * *GEMPage** **getCurrentMenuPage()**  
-  *Returns*: `GEMPage*&`  
+  *Returns*: `GEMPage*`  
   Get pointer to currently active menu page.
 
 * *GEM&* **drawMenu()**  
