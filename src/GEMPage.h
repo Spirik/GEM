@@ -38,6 +38,7 @@
 #define HEADER_GEMPAGE
 
 #include <Arduino.h>
+#include "GEMAppearance.h"
 #include "GEMItem.h"
 
 // Macro constant (alias) for the last possible position that menu item can be added at
@@ -68,13 +69,15 @@ class GEMPage {
     GEMPage& setParentMenuPage(GEMPage& parentMenuPage);        // Specify parent level menu page (to know where to go back to when Back button is pressed)
     GEMPage& setTitle(const char* title_);                      // Set title of the menu page
     const char* getTitle();                                     // Get title of the menu page
+    GEMPage& setAppearance(GEMAppearance* appearance);          // Set appearance of the menu page
+    GEMItem* getMenuItem(byte index, bool total = false);       // Get pointer to menu item by index (counting hidden ones if total set to true)
+    GEMItem* getCurrentMenuItem();                              // Get pointer to current menu item
+    byte getCurrentMenuItemIndex();                             // Get index of current menu item
   private:
     const char* title;
     byte currentItemNum = 0;                                    // Currently selected (focused) menu item of the page
     byte itemsCount = 0;                                        // Items count excluding hidden ones
     byte itemsCountTotal = 0;                                   // Items count incuding hidden ones
-    GEMItem* getMenuItem(byte index, bool total = false);
-    GEMItem* getCurrentMenuItem();
     int getMenuItemNum(GEMItem& menuItem, bool total = false);  // Find index of the supplied menu item
     void hideMenuItem(GEMItem& menuItem);
     void showMenuItem(GEMItem& menuItem);
@@ -83,6 +86,7 @@ class GEMPage {
     GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)}; // Local instance of Back button (created when parent level menu page is specified through
                                                                 // setParentMenuPage(); always becomes the first menu item in a list)
     void (*exitAction)() = nullptr;
+    GEMAppearance* _appearance = nullptr;
 };
   
 #endif

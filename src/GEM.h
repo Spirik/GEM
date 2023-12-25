@@ -40,6 +40,7 @@
 #ifdef GEM_ENABLE_GLCD_VERSION
 
 #include <AltSerialGraphicLCD.h>
+#include "GEMAppearance.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
@@ -94,6 +95,15 @@ class GEM {
       default 86 (suitable for 128x64 screen with other variables at their default values)
     */
     GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    /*
+      @param 'glcd_' - reference to the instance of the GLCD class created with AltSerialGraphicLCD library
+      @param 'appearance_' - object of type GEMAppearance
+    */
+    GEM(GLCD& glcd_, GEMAppearance appearance_);
+
+    /* APPEARANCE OPERATIONS */
+
+    GEM& setAppearance(GEMAppearance appearance);       // Set apperance of the menu (can be overridden in GEMPage on per page basis)
 
     /* INIT OPERATIONS */
 
@@ -112,6 +122,7 @@ class GEM {
     GEM& init();                                        // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
     GEM& reInit();                                      // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     GEM& setMenuPageCurrent(GEMPage& menuPageCurrent);  // Set supplied menu page as current
+    GEMPage* getCurrentMenuPage();                      // Get pointer to current menu page
 
     /* CONTEXT OPERATIONS */
 
@@ -129,17 +140,15 @@ class GEM {
                                                          // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
     GLCD& _glcd;
-    byte _menuPointerType;
-    byte _menuItemsPerScreen;
-    byte _menuItemHeight;
-    byte _menuPageScreenTopOffset;
-    byte _menuValuesLeftOffset;
-    byte _menuItemFontSize;
+    GEMAppearance* _appearanceCurrent = nullptr;
+    GEMAppearance _appearance;
+    GEMAppearance* getCurrentAppearance();
+    byte getMenuItemsPerScreen();
+    byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
     bool _invertKeysDuringEdit = false;
-    byte _menuItemInsetOffset;
-    byte _menuItemTitleLength;
-    byte _menuItemValueLength;
+    byte getMenuItemTitleLength();
+    byte getMenuItemValueLength();
     const uint8_t *_splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;

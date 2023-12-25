@@ -8,10 +8,12 @@
 
 GEM	KEYWORD1
 GEM_u8g2	KEYWORD1
+GEM_adafruit_gfx	KEYWORD1
 GEMItem	KEYWORD1
 GEMPage	KEYWORD1
 GEMSelect	KEYWORD1
 GEMCallbackData	KEYWORD1
+GEMAppearance	KEYWORD1
 Splash	KEYWORD1
 FontSize	KEYWORD1
 FontFamilies	KEYWORD1
@@ -26,6 +28,7 @@ SelectOptionDouble	KEYWORD1
 # Methods and Functions (KEYWORD2)
 ####################################################
 
+setAppearance	KEYWORD2
 setSplash	KEYWORD2
 setSplashDelay	KEYWORD2
 hideVersion	KEYWORD2
@@ -37,6 +40,7 @@ enableCyrillic	KEYWORD2
 init	KEYWORD2
 reInit	KEYWORD2
 setMenuPageCurrent	KEYWORD2
+getCurrentMenuPage	KEYWORD2
 drawMenu	KEYWORD2
 readyForKey	KEYWORD2
 registerKeyPress	KEYWORD2
@@ -45,7 +49,12 @@ setCallbackVal	KEYWORD2
 getCallbackData	KEYWORD2
 setTitle	KEYWORD2
 getTitle	KEYWORD2
+getMenuItem	KEYWORD2
+getCurrentMenuItem	KEYWORD2
+getCurrentMenuItemIndex	KEYWORD2
+getMenuItemNext	KEYWORD2
 setPrecision	KEYWORD2
+setAdjustedASCIIOrder	KEYWORD2
 setReadonly	KEYWORD2
 getReadonly	KEYWORD2
 hide	KEYWORD2

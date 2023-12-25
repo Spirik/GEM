@@ -12,7 +12,7 @@ Supports buttons that can invoke user-defined actions and create action-specific
 
 Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0), [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) (since GEM ver. 1.3) graphics libraries.
 
-> Note that each of AltSerialGraphicLCD, U8g2 and Adafruit GFX libraries are required by default, regardless of which one of them is actually used to drive display (although the ones that are not used shouldn't affect compiled sketch size much). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. See [Configuration](#configuration) section for details.
+> Note that U8g2 and Adafruit GFX libraries are required by default, regardless of which one of them is actually used to drive display (although the ones that are not used shouldn't affect compiled sketch size much). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. Support for `AltSerialGraphicLCD` is disabled by default since GEM ver. 1.5 (it is still possible to enable it). See [Configuration](#configuration) section for details.
 
 > For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
 
@@ -35,6 +35,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
   * [GEMCallbackData](#gemcallbackdata)
+  * [GEMAppearance](#gemappearance)
   * [AppContext](#appcontext)
 * [Floating-point variables](#floating-point-variables)
 * [Configuration](#configuration)
@@ -68,7 +69,7 @@ Library format is compatible with Arduino IDE 1.5.x+. There are two ways to inst
 
 Whichever option you choose you may need to reload IDE afterwards.
 
-Each of [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html), [U8g2](https://github.com/olikraus/U8g2_Arduino) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) libraries are required to be installed by default as well. However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. See [Configuration](#configuration) section for details.
+[U8g2](https://github.com/olikraus/U8g2_Arduino) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) libraries are required to be installed by default as well. Support for [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) is disabled by default since GEM ver. 1.5 (so it is not required to be installed). However, it is possible to exclude support for not used libraries (since GEM ver. 1.2.2), and/or enable support for `AltSerialGraphicLCD` (since GEM ver 1.5). See [Configuration](#configuration) section for details.
 
 How to use with AltSerialGraphicLCD
 -----------------------------------
@@ -78,7 +79,7 @@ How to use with AltSerialGraphicLCD
 
 ### Requirements
 
-GEM supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library. LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
+GEM supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) library if enabled (see [Configuration](#configuration) section). LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with AltSerialGraphicLCD. Installation and configuration of it is covered in great detail in AltSerialGraphicLCD manual.
 
 In theory GEM is compatible with any display, that is supported by SparkFun Graphic LCD Serial Backpack. Guaranteed to work with [128x64](https://www.sparkfun.com/products/710) pixel displays. [160x128](https://www.sparkfun.com/products/8799) pixel ones should work fine as well, although it wasn't tested.
 
@@ -886,12 +887,18 @@ Reference
 
 ### GEM, GEM_u8g2, GEM_adafruit_gfx
 
-Primary class of the library. Responsible for appearance of the menu, communication with display (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
+Primary class of the library. Responsible for general appearance of the menu, communication with display (via supplied `GLCD`, `U8G2` or `Adafruit_GFX` object), integration of all menu items `GEMItem` and pages `GEMPage` into one menu. Object of corresponding `GEM` class variation defines as follows.
 
 AltSerialGraphicLCD version:
 
 ```cpp
 GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+```
+
+or
+
+```cpp
+GEM menu(glcd[, appearance]);
 ```
 
 U8g2 version:
@@ -900,10 +907,22 @@ U8g2 version:
 GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
 ```
 
+or
+
+```cpp
+GEM_u8g2 menu(u8g2[, appearance]);
+```
+
 Adafruit GFX version:
 
 ```cpp
 GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+```
+
+or
+
+```cpp
+GEM_adafruit_gfx menu(tft[, appearance]);
 ```
 
 * **glcd**  `AltSerialGraphicLCD version`  
@@ -950,6 +969,10 @@ GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeigh
   *Default*: `86`  
   Offset from the left of the screen to the value of variable associated with the menu item (effectively the space left for the title of the menu item to be printed on screen). Default value is suitable for 128x64 screen with other parameters at their default values; 86 - recommended value for 128x64 screen.
 
+* **appearance** [*optional*]  
+  *Type*: `GEMAppearance`  
+  Object of type `GEMAppearance` that holds values of appearance settings that define how menu is rendered on screen. Essentially allows to pass appearance as a single object instead of specifying each option as a separate argument.
+
 ![GEM customization](https://github.com/Spirik/GEM/wiki/images/customization.gif)
 
 Calls to `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` constructors `GEM(glcd)`, `GEM_u8g2(u8g2)`, `GEM_adafruit_gfx(tft)` without specifying additional custom parameters are equivalent to the following calls:
@@ -970,7 +993,9 @@ GEM_adafruit_gfx menu(tft, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsP
 
 > **Note:** long title of the menu page `GEMPage` won't overflow to the new line in U8g2 version and will be truncated at the edge of the screen.
 
-For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+> **Note:** it is possible to customize appearance of each menu page individually (since GEM ver. 1.5) by using [`GEMAppearance`](#gemappearance) object.
+
+For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki) and description of [`GEMAppearance`](#gemappearance) struct.
 
 #### Constants
 
@@ -1055,6 +1080,11 @@ For more details on customization see corresponding section of the [wiki](https:
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle `bool` menu item, enter edit mode of the associated non-`bool` variable, exit edit mode with saving the variable, execute code associated with button).
 
 #### Methods
+
+* *GEM&* **setAppearance(** _GEMAppearance_ appearance **)**  
+  *Accepts*: `GEMAppearance`  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
+  Set general appearance of the menu (can be overridden in `GEMPage` on per page basis).
 
 * *GEM&* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
   *Accepts*: `_const uint8_t PROGMEM_ *`  
@@ -1146,6 +1176,10 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set supplied menu page as current. Accepts `GEMPage` object.
 
+* *GEMPage** **getCurrentMenuPage()**  
+  *Returns*: `GEMPage*&`  
+  Get pointer to currently active menu page.
+
 * *GEM&* **drawMenu()**  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Draw menu on screen, with menu page set earlier in `setMenuPageCurrent()`.
@@ -1220,7 +1254,7 @@ GEMPage menuPage(title[, parentMenuPage]);
 
 #### Methods
 
-* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem, [_byte_ pos = 255[, _bool_ total = true]] **)**  
+* *GEMPage&* **addMenuItem(** _GEMItem&_ menuItem[, _byte_ pos = 255[, _bool_ total = true]] **)**  
   *Accepts*: `GEMItem`[, `byte`[, `bool`]]  
   *Returns*: `GEMPage&`  
   Add menu item to menu page. Accepts `GEMItem` object. Optionally menu item can be added at a specified position **pos** (zero-based number from 0 to 255, as a second argument) out of total (flag **total** set to `true`, or `GEM_ITEMS_TOTAL`, as a third argument) or only visible (flag **total** set to `false`, or `GEM_ITEMS_VISIBLE`, as a third argument) number of items. Note that if **pos** is set to 0 and menu page has parent menu page, menu item will be added at position 1 instead (i.e. as a second menu item, after built-in Back button). By default (if optional arguments are not provided) each menu item is added at the end of the list of menu items of the page (including hidden ones).
@@ -1228,7 +1262,7 @@ GEMPage menuPage(title[, parentMenuPage]);
 * *GEMPage&* **setParentMenuPage(** _GEMPage&_ parentMenuPage **)**  
   *Accepts*: `GEMPage`  
   *Returns*: `GEMPage&`  
-  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object. If called additional time, previously added parent menu page will be overriden with the new one.
+  Specify parent level menu page (to know where to go back to when pressing Back button, which will be added automatically). Accepts `GEMPage` object. If called additional time, previously added parent menu page will be overridden with the new one.
 
 * *GEMPage&* **setTitle(** _const char*_ title **)**  
   *Returns*: `GEMPage&`  
@@ -1237,6 +1271,24 @@ GEMPage menuPage(title[, parentMenuPage]);
 * *const char** **getTitle()**  
   *Returns*: `const char*`  
   Get title of the menu page.
+
+* *GEMPage&* **setAppearance(** _GEMAppearance*_ appearance **)**  
+  *Accepts*: `GEMAppearance*`  
+  *Returns*: `GEMPage&`  
+  Set appearance of the menu page. Note that appearance should be passed as a pointer to [`GEMAppearance`](#gemappearance) object. And as such, `GEMAppearance` object should be declared in a global scope.
+
+* *GEMItem** **getMenuItem(** _byte_ index[, _bool_ total = false] **)**  
+  *Accepts*: `byte`[, `bool`]  
+  *Returns*: `GEMItem*`  
+  Get pointer to menu item on this page by index, counting hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
+
+* *GEMItem** **getCurrentMenuItem()**  
+  *Returns*: `GEMItem*`  
+  Get pointer to currently focused menu item on this page.
+
+* *byte* **getCurrentMenuItemIndex()**  
+  *Returns*: `byte`  
+  Get index of currently focused menu item on this page.
 
 > **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
@@ -1415,6 +1467,11 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: `GEMItem&`  
   Explicitly set precision for `float` or `double` variable as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) conversion used internally, i.e. the number of digits **after** the decimal sign.
 
+* *GEMItem&* **setAdjustedASCIIOrder(** _bool_ mode = true **)**  
+  *Accepts*: `bool`  
+  *Returns*: `GEMItem&`  
+  Turn adjsuted order of characters when editing `char[17]` variables on (`setAdjustedASCIIOrder()`, or `setAdjustedASCIIOrder(true)`) or off (`setAdjustedASCIIOrder(false)`). When adjsuted order is enabled, space character is followed by "a" and preceded by "\`" (grave accent character). By default adjusted order is disabled, and characters follow order in ASCII table (space character is followed by "!"). Adjusted order can be more suitable for editing text variables in certain use cases (so user won't have to scroll past all of the special characters to get to alphabet).
+
 * *GEMItem&* **setReadonly(** _bool_ mode = true **)**  
   *Accepts*: `bool`  
   *Returns*: `GEMItem&`  
@@ -1444,6 +1501,11 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 * *void** **getLinkedVariablePointer()**  
   *Returns*: `void*`  
   Get pointer to a linked variable (relevant for menu items that represent variable). Note that user is reponsible for casting `void*` pointer to a correct pointer type.
+
+* *GEMItem** **getMenuItemNext(** _bool_ total = false **)**  
+  *Accepts*: `bool`  
+  *Returns*: `GEMItem*`  
+  Get pointer to next menu item, i.e. menu item that follows this one on the menu page, including hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
 
 > **Note:** calls to methods that return a reference to the owning `GEMItem` object can be chained, e.g. `menuItemInterval.setReadonly().show();` (since GEM ver. 1.4.6).
 
@@ -1657,6 +1719,106 @@ For more details and examples of using user-defined callback arguments see corre
 ----------
 
 
+### GEMAppearance
+
+Data structure that holds values of appearance settings that define how menu is rendered on screen. Can be submitted to `GEM` (`GEM_u8g2`, `GEM_adafruit_gfx`) constructor instead of specifying each option as a separate argument, or passed as an argument to `GEM::setAppearance()` (`GEM_u8g2::setAppearance()`, `GEM_adafruit_gfx::setAppearance()`) method to set general appearance of the menu (that will be used for every menu page if not overridden). Pointer to object of type `GEMAppearance` can be passed to `GEMPage::setAppearance()` method to customize appearance of corresponding menu page individually.
+
+Object of type `GEMAppearance` defines as follows:
+
+```cpp
+GEMAppearance appearanceGeneral = {menuPointerType, menuItemsPerScreen, menuItemHeight, menuPageScreenTopOffset, menuValuesLeftOffset}
+```
+
+* **menuPointerType**  
+  *Type*: `byte`  
+  *Values*: `GEM_POINTER_ROW`, `GEM_POINTER_DASH`  
+  Type of menu pointer visual appearance: either highlighted row or pointer to the left of the row.
+
+* **menuItemsPerScreen**  
+  *Type*: `byte`   
+  *Values*: number, `GEM_ITEMS_COUNT_AUTO` (alias for `0`)  
+  Count of the menu items per screen. Suitable for 128x64 screen with other variables at their default values. If set to `GEM_ITEMS_COUNT_AUTO`, the number of menu items will be determined automatically based on actual height of the screen.
+
+* **menuItemHeight**  
+  *Type*: `byte`  
+  *Units*: dots  
+  Height of the menu item. Suitable for 128x64 screen with other variables at their default values.
+
+* **menuPageScreenTopOffset**  
+  *Type*: `byte`  
+  *Units*: dots  
+  Offset from the top of the screen to accommodate title of the menu page. Suitable for 128x64 screen with other variables at their default values.
+
+* **menuValuesLeftOffset**  
+  *Type*: `byte`  
+  *Units*: dots  
+  Offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen). Suitable for 128x64 screen with other variables at their default values; 86 - recommended value for 128x64 screen.
+
+Basic example of use:
+
+```cpp
+// Create GEMAppearance object with general values (that will be used for every menu page if not overridden)
+GEMAppearance appearanceGeneral = {/* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ GEM_ITEMS_COUNT_AUTO, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86}
+// Create GEMAppearance object as a copy of appearanceGeneral (its values can be customized later in sketch).
+// Note that it should be created in a global scope of the sketch (in order to be passed as a pointer to menu page)
+GEMAppearance appearanceSettings = appearanceGeneral;
+
+// Create menu object (and pass appearanceGeneral as an argument to constructor)
+GEM menu(glcd, appearanceGeneral);
+
+...
+
+// Later in sketch, e.g. in setupMenu()
+void setupMenu() {
+  ...
+  appearanceSettings.menuValuesLeftOffset = 70;
+  menuPageSettings.setAppearance(&appearanceSettings); // Note `&` operator
+  ...
+}
+```
+
+Alternatively:
+
+```cpp
+// Create empty GEMAppearance object (its values can be populated later in sketch).
+// Note that it should be created in a global scope of the sketch (in order to be passed as a pointer to menu page)
+GEMAppearance appearanceSettings;
+
+// Create menu object (its appearance settings will be populated with defaut values)
+GEM menu(glcd);
+
+...
+
+// Later in sketch, e.g. in setupMenu()
+void setupMenu() {
+  ...
+  // Create GEMAppearance object with general values (that will be used for every menu page if not overridden)
+  GEMAppearance appearanceGeneral;
+  appearanceGeneral.menuPointerType = GEM_POINTER_ROW;
+  appearanceGeneral.menuItemsPerScreen = GEM_ITEMS_COUNT_AUTO;
+  appearanceGeneral.menuItemHeight = 10;
+  appearanceGeneral.menuPageScreenTopOffset = 10;
+  appearanceGeneral.menuValuesLeftOffset = 86;
+
+  // Set appearanceGeneral as a general appearance of the menu
+  menu.setAppearance(appearanceGeneral); // Note there is no `&` operator when setting general (or global) appearance of the menu
+
+  // Copy values from appearanceGeneral object to appearanceSettings for further customization
+  appearanceSettings = appearanceGeneral;
+  appearanceSettings.menuValuesLeftOffset = 70;
+  menuPageSettings.setAppearance(&appearanceSettings); // Note `&` operator
+  ...
+}
+```
+
+Passing `GEMAppearance` object to `GEMPage::setAppearance()` method as a pointer allows to change appearance of the _individual menu page_ dynamically by changing values stored in object (and making sure that `menu.drawMenu();` is called afterwards) without need for additional call to `GEMPage::setAppearance()`. In contrast, to change _general appearance_ of the menu (and not individual page) `menu.setAppearance(appearanceGeneral);` method should be called with new or updated `GEMAppearance` object supplied as an argument (and `menu.drawMenu();` should be called afterwards as well).
+
+For more details about appearance customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+
+----------
+
+
 ### AppContext
 
 Data structure that represents "context" of the currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` (`GEM_u8g2`, `GEM_adafruit_gfx`) object is of type `AppContext`. 
@@ -1735,7 +1897,6 @@ void buttonContextExit() {
   // Clear context (assigns `nullptr` values to function pointers of the `context` property of the `GEM` object and resets `allowExit` flag to its default state)
   menu.clearContext();
 }
-
 ```
 
 To exit currently running context and return to menu, press button associated with `GEM_KEY_CANCEL` key (only if `context.allowExit` flag is set to its default value of `true`, otherwise you should handle exit from the loop manually and call `context.exit()` explicitly) - `context.exit()` callback will be called.
@@ -1782,25 +1943,25 @@ It is possible to configure GEM library by excluding some features not needed in
 
 You can also choose which version of GEM library (`AltSerialGraphicLCD`, `U8g2` or `Adafruit GFX` based) should be compiled. That way, there won't be requirement to have all of the supported graphics libraries installed in the system at the same time (regardless of which one is actually used).
 
-Currently there are two ways of achieving  that.
+Currently there are two ways of achieving that.
 
 ### Manual `config.h` edition
 
 For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion.
 
-To disable `AltSerialGraphicLCD` support comment out the following line:
+Support for `AltSerialGraphicLCD` is disabled by default since GEM ver. 1.5. To _enable_ `AltSerialGraphicLCD` support comment out the following line:
 
 ```cpp
-#include "config/enable-glcd.h"
+#define GEM_DISABLE_GLCD
 ```
 
-To disable `U8g2` support comment out the following line:
+To _disable_ `U8g2` support comment out the following line:
 
 ```cpp
 #include "config/enable-u8g2.h"
 ```
 
-To disable `Adafruit GFX` support comment out the following line:
+To _disable_ `Adafruit GFX` support comment out the following line:
 
 ```cpp
 #include "config/enable-adafruit-gfx.h"
@@ -1816,8 +1977,8 @@ Alternatively, define corresponding flag before build. E.g. in [PlatformIO](http
 
 ```ini
 build_flags =
-    ; Disable AltSerialGraphicLCD support
-    -D GEM_DISABLE_GLCD
+    ; Enable AltSerialGraphicLCD support
+    -D GEM_ENABLE_GLCD
     ; Disable U8g2 support
     -D GEM_DISABLE_U8G2
     ; Disable Adafruit GFX support
@@ -1826,7 +1987,7 @@ build_flags =
 
 Compatibility
 -----------
-Some boards (e.g. ESP32, ESP8266, RP2040, nRF52840, etc. based boards) are not supported in AltSerialGraphicLCD version of GEM: this library should be commented out in [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) before compiling.
+Some boards (e.g. ESP32, ESP8266, RP2040, nRF52840, etc. based boards) are not supported in AltSerialGraphicLCD version of GEM: this library should not be enabled in [Configuration](#configuration) before compiling for these boards.
 
 When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp`, `GEM_u8g2.cpp` or `GEM_adafruit_gfx.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips), RP2040 and nRF52840 based boards. ESP32 based boards should be fine as well.
 
