@@ -1002,7 +1002,7 @@ void GEM_adafruit_gfx::saveEditValue() {
     }
     exitEditValue();
   } else {
-    // exitEditValue(false); // Can speed up work of Adafruit GFX version of GEM on Uno R3, but disabled to be in line with other GEM versions
+    // exitEditValue(false); // Can speed up work of Adafruit GFX version of GEM on UNO R3, but disabled to be in line with other GEM versions
     exitEditValue();
   }
 }
