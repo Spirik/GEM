@@ -1772,7 +1772,7 @@ Alternatively:
 // Note that it should be created in a global scope of the sketch (in order to be passed as a pointer to menu page)
 GEMAppearance appearanceSettings;
 
-// Create menu object (its appearance settings will be populated with defaut values)
+// Create menu object (its appearance settings will be populated with default values)
 GEM menu(glcd);
 
 ...

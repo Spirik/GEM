@@ -376,7 +376,6 @@ void loop() {
   }
 }
 
-
 void flashButtonTitle(const char* title, bool redraw = true) {
   GEMItem* menuItemButtonTmp = menu.getCurrentMenuPage()->getCurrentMenuItem();
   const char* titleOrig = menuItemButtonTmp->getTitle();
