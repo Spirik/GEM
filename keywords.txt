@@ -32,6 +32,8 @@ setAppearance	KEYWORD2
 setSplash	KEYWORD2
 setSplashDelay	KEYWORD2
 hideVersion	KEYWORD2
+setFontBig	KEYWORD2
+setFontSmall	KEYWORD2
 setForegroundColor	KEYWORD2
 setBackgroundColor	KEYWORD2
 invertKeysDuringEdit	KEYWORD2

@@ -354,7 +354,7 @@ void GEM_u8g2::printMenuItemFull(const char* str, int offset) {
 byte GEM_u8g2::getMenuItemInsetOffset(bool forSprite) {
   byte menuItemFontSize = getMenuItemFontSize();
   byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height) / 2;
-  return menuItemInsetOffset + (forSprite ? (menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  return menuItemInsetOffset + (forSprite ? (menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for sprites and text for better visual alignment
 }
 
 byte GEM_u8g2::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {
