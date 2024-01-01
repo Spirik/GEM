@@ -1002,6 +1002,26 @@ For more details on customization see corresponding section of the [wiki](https:
   *Value*: `0`  
   Alias for the option to automatically determine the number of menu items that will fit on the screen based on actual height of the screen (submitted as **menuItemsPerScreen** setting to `GEM`, `GEM_u8g2` and `GEM_adafruit_gfx` constructors).
 
+* **GEM_FONT_BIG**  
+  * `GEM_adafruit_gfx`:  
+    *Type*: macro `#define GEM_FONT_BIG &Fixed6x12`  
+    *Value*: `&Fixed6x12`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_FONT_BIG u8g2_font_6x12_tr`  
+    *Value*: `u8g2_font_6x12_tr` 
+  
+  Alias for the default big font version used to print menu items. Submitted as a default value to `GEM_u8g2::setFontBig()` and `GEM_adafruit_gfx::setFontBig()` methods.
+
+* **GEM_FONT_SMALL**  
+  * `GEM_adafruit_gfx`:  
+    *Type*: macro `#define GEM_FONT_SMALL &TomThumbMono`  
+    *Value*: `&TomThumbMono`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_FONT_SMALL u8g2_font_tom_thumb_4x6_tr`  
+    *Value*: `u8g2_font_tom_thumb_4x6_tr` 
+  
+  Alias for the default small font version used to print titles of menu pages (and menu items when big font won't fit). Submitted as a default value to `GEM_u8g2::setFontSmall()` and `GEM_adafruit_gfx::setFontSmall()` methods.
+
 * **GEM_KEY_NONE**  
   *Type*: macro `#define GEM_KEY_NONE 0`  
   *Value*: `0`  
@@ -1152,12 +1172,12 @@ For more details on customization see corresponding section of the [wiki](https:
 * *GEM_adafruit_gfx&* **setFontBig(** _const GFXfont*_ font = GEM_FONT_BIG[, _byte_ width = 6[, _byte_ height = 8[, _byte_ baselineOffset = 8]]] **)**  `Adafruit GFX version`  
   *Accepts*: `const GFXfont*`[, `byte`[, `byte`[, `byte`]]]  
   *Returns*: `GEM_adafruit_gfx&`  
-  Set font that will be displayed if height of menu item is enough to fit it (else small font will be used instead). Accepts pointer to the font that Adafruit GFX supports. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts) for details on font format and possible conversion options. Note that using mono-spaced font is recommended (especially for editable menu items). Options `width` and `height` describes size of a single character, `baselineOffset` sets offset from the top of the character to baseline (helps to better adjust vertical alignment). Call this method without arguments to revert to default font supplied with GEM.
+  Set font that will be displayed if height of menu item is enough to fit it (else small font will be used instead). Accepts pointer to the font that Adafruit GFX supports. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts) for details on font format and possible conversion options. Note that using mono-spaced font is recommended (especially for editable menu items). Options `width` and `height` describe size of a single character, `baselineOffset` sets offset from the top of the character to baseline (helps to better adjust vertical alignment). Call this method without arguments to revert to default font supplied with GEM.
 
-* *GEM_adafruit_gfx&* **setFontSmall(** _const GFXfont*_ font = GEM_FONT_BIG[, _byte_ width = 4[, _byte_ height = 6[, _byte_ baselineOffset = 6]]] **)**  `Adafruit GFX version`  
+* *GEM_adafruit_gfx&* **setFontSmall(** _const GFXfont*_ font = GEM_FONT_SMALL[, _byte_ width = 4[, _byte_ height = 6[, _byte_ baselineOffset = 6]]] **)**  `Adafruit GFX version`  
   *Accepts*: `const GFXfont*`[, `byte`[, `byte`[, `byte`]]]  
   *Returns*: `GEM_adafruit_gfx&`  
-  Set font that will be displayed if height of menu item is not enough to fit big font. Also used in titles of menu pages. Accepts pointer to the font that Adafruit GFX supports. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts) for details on font format and possible conversion options. Note that using mono-spaced font is recommended (especially for editable menu items). Options `width` and `height` describes size of a single character, `baselineOffset` sets offset from the top of the character to baseline (helps to better adjust vertical alignment). Call this method without arguments to revert to default font supplied with GEM.
+  Set font that will be displayed if height of menu item is not enough to fit big font. Also used in titles of menu pages. Accepts pointer to the font that Adafruit GFX supports. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts) for details on font format and possible conversion options. Note that using mono-spaced font is recommended (especially for editable menu items). Options `width` and `height` describe size of a single character, `baselineOffset` sets offset from the top of the character to baseline (helps to better adjust vertical alignment). Call this method without arguments to revert to default font supplied with GEM.
 
 * *GEM_adafruit_gfx&* **setForegroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
   *Accepts*: `uint16_t`  
