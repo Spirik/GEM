@@ -38,6 +38,7 @@ setForegroundColor	KEYWORD2
 setBackgroundColor	KEYWORD2
 invertKeysDuringEdit	KEYWORD2
 setTextSize	KEYWORD2
+enableUTF8	KEYWORD2
 enableCyrillic	KEYWORD2
 init	KEYWORD2
 reInit	KEYWORD2
