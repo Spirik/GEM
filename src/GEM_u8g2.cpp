@@ -346,7 +346,7 @@ void GEM_u8g2::printMenuItemString(const char* str, byte num, byte startPos) {
 
     byte j = 0;
     byte p = 0;
-    while (j < startPos && str[p] != '\0') {
+    while ((j < startPos || ((byte)str[p] >= 128 && (byte)str[p] <= 191)) && str[p] != '\0') {
       if ((byte)str[p] <= 127 || (byte)str[p] >= 194) {
         j++;
       }
@@ -356,7 +356,7 @@ void GEM_u8g2::printMenuItemString(const char* str, byte num, byte startPos) {
 
     byte i = j;
     byte k = startPosReal;
-    while (i < num + j && str[k] != '\0') {
+    while ((i < num + j || ((byte)str[k] >= 128 && (byte)str[k] <= 191)) && str[k] != '\0') {
       _u8g2.print(str[k]);
       if ((byte)str[k] <= 127 || (byte)str[k] >= 194) {
         i++;
