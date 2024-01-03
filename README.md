@@ -1199,7 +1199,7 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM_u8g2&`  
   Set font that will be displayed if height of menu item is enough to fit it (else small font will be used instead). Accepts pointer to the font that U8g2 supports. See U8g2 [documentation](https://github.com/olikraus/u8g2/wiki/fntlistall) for list of available fonts. Note that using mono-spaced font is recommended for correct calculations internally (especially for editable menu items). Options `width` and `height` describe size of a single character. Adjusting `height` may help to achieve better vertical alignment. Call this method without arguments to revert to default font settings.
 
-* *GEM_u8g2&* **setFontSmall(** _const uint8_t*_ font[, _byte_ width = 6[, _byte_ height = 8]] **)**  `U8g2 version`  
+* *GEM_u8g2&* **setFontSmall(** _const uint8_t*_ font[, _byte_ width = 4[, _byte_ height = 6]] **)**  `U8g2 version`  
   *Accepts*: `const uint8_t*`[, `byte`[, `byte`]]  
   *Returns*: `GEM_u8g2&`  
   Set font that will be displayed if height of menu item is not enough to fit big font. Also used in titles of menu pages. Accepts pointer to the font that U8g2 supports. See U8g2 [documentation](https://github.com/olikraus/u8g2/wiki/fntlistall) for list of available fonts. Note that using mono-spaced font is recommended for correct calculations internally (especially for editable menu items). Options `width` and `height` describe size of a single character. Adjusting `height` may help to achieve better vertical alignment. Call this method without arguments to revert to default font settings.
