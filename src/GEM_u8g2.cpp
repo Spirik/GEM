@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -83,6 +83,8 @@ static const unsigned char logo_bits [] U8X8_PROGMEM = {
 };
 
 // Sprites of the UI elements used to draw menu
+
+#define sprite_height  8
 
 #define arrowRight_width  6
 #define arrowRight_height 8
@@ -166,7 +168,7 @@ byte GEM_u8g2::getMenuItemsPerScreen() {
 }
 
 byte GEM_u8g2::getMenuItemFontSize() {
-  return getCurrentAppearance()->menuItemHeight >= 8 ? 0 : 1;
+  return getCurrentAppearance()->menuItemHeight >= _menuItemFont[0].height ? 0 : 1;
 }
 
 byte GEM_u8g2::getMenuItemTitleLength() {
@@ -194,15 +196,49 @@ GEM_u8g2& GEM_u8g2::hideVersion(bool flag) {
   return *this;
 }
 
-GEM_u8g2& GEM_u8g2::enableCyrillic(bool flag) {
-  _cyrillicEnabled = flag;
-  if (_cyrillicEnabled) {
-    _fontFamilies = {(uint8_t *)GEM_FONT_BIG_CYR, (uint8_t *)GEM_FONT_SMALL_CYR};
+GEM_u8g2& GEM_u8g2::enableUTF8(bool flag) {
+  _UTF8Enabled = flag;
+  if (_UTF8Enabled) {
     _u8g2.enableUTF8Print();
   } else {
-    _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
     _u8g2.disableUTF8Print();
   }
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::enableCyrillic(bool flag) {
+  enableUTF8(flag);
+  if (_UTF8Enabled) {
+    _fontFamilies = {(uint8_t *)GEM_FONT_BIG_CYR, (uint8_t *)GEM_FONT_SMALL_CYR};
+  } else {
+    _fontFamilies = {(uint8_t *)GEM_FONT_BIG, (uint8_t *)GEM_FONT_SMALL};
+  }
+  _menuItemFont[0] = {6, 8};
+  _menuItemFont[1] = {4, 6};
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::setFontBig(const uint8_t* font, uint8_t width, uint8_t height) {
+  _fontFamilies.big = font;
+  _menuItemFont[0] = {width, height};
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::setFontBig() {
+  _fontFamilies.big = _UTF8Enabled ? GEM_FONT_BIG_CYR : GEM_FONT_BIG;
+  _menuItemFont[0] = {6, 8};
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::setFontSmall(const uint8_t* font, uint8_t width, uint8_t height) {
+  _fontFamilies.small = font;
+  _menuItemFont[1] = {width, height};
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::setFontSmall() {
+  _fontFamilies.small = _UTF8Enabled ? GEM_FONT_SMALL_CYR : GEM_FONT_SMALL;
+  _menuItemFont[1] = {4, 6};
   return *this;
 }
 
@@ -257,7 +293,7 @@ GEM_u8g2& GEM_u8g2::reInit() {
   _u8g2.clear();
   _u8g2.setDrawColor(1);
   _u8g2.setFontPosTop();
-  if (_cyrillicEnabled) {
+  if (_UTF8Enabled) {
     _u8g2.enableUTF8Print();
   } else {
     _u8g2.disableUTF8Print();
@@ -306,23 +342,23 @@ void GEM_u8g2::drawTitleBar() {
 }
 
 void GEM_u8g2::printMenuItemString(const char* str, byte num, byte startPos) {
-  if (_cyrillicEnabled) {
+  if (_UTF8Enabled) {
 
     byte j = 0;
     byte p = 0;
-    while (j < startPos && str[p] != '\0') {
-      if ((byte)str[p] != 208 && (byte)str[p] != 209) {
+    while ((j < startPos || ((byte)str[p] >= 128 && (byte)str[p] <= 191)) && str[p] != '\0') {
+      if ((byte)str[p] <= 127 || (byte)str[p] >= 194) {
         j++;
       }
       p++;
     }
     byte startPosReal = p;
 
-    byte i = startPosReal;
+    byte i = j;
     byte k = startPosReal;
-    while (i < num + startPosReal && str[k] != '\0') {
+    while ((i < num + j || ((byte)str[k] >= 128 && (byte)str[k] <= 191)) && str[k] != '\0') {
       _u8g2.print(str[k]);
-      if ((byte)str[k] != 208 && (byte)str[k] != 209) {
+      if ((byte)str[k] <= 127 || (byte)str[k] >= 194) {
         i++;
       }
       k++;
@@ -354,7 +390,7 @@ void GEM_u8g2::printMenuItemFull(const char* str, int offset) {
 byte GEM_u8g2::getMenuItemInsetOffset(bool forSprite) {
   byte menuItemFontSize = getMenuItemFontSize();
   byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height) / 2;
-  return menuItemInsetOffset + (forSprite ? (menuItemFontSize ? -1 : 0) : -1 ); // With additional offset for 6x8 sprites to compensate for smaller font size
+  return menuItemInsetOffset + (forSprite ? (_menuItemFont[menuItemFontSize].height - sprite_height) / 2 : -1); // With additional offset for sprites and text for better visual alignment
 }
 
 byte GEM_u8g2::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {

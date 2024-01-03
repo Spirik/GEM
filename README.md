@@ -1002,6 +1002,36 @@ For more details on customization see corresponding section of the [wiki](https:
   *Value*: `0`  
   Alias for the option to automatically determine the number of menu items that will fit on the screen based on actual height of the screen (submitted as **menuItemsPerScreen** setting to `GEM`, `GEM_u8g2` and `GEM_adafruit_gfx` constructors).
 
+* **GEM_FONT_BIG**  
+  * `GEM_adafruit_gfx`:  
+    *Type*: macro `#define GEM_FONT_BIG &Fixed6x12`  
+    *Value*: `&Fixed6x12`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_FONT_BIG u8g2_font_6x12_tr`  
+    *Value*: `u8g2_font_6x12_tr` 
+  
+  Alias for the default big font version used to print menu items. Submitted as a default value to `GEM_adafruit_gfx::setFontBig()` method.
+
+* **GEM_FONT_BIG_CYR**  `GEM_u8g2 version only`  
+  *Type*: macro `#define GEM_FONT_BIG_CYR u8g2_font_6x12_t_cyrillic`  
+  *Value*: `u8g2_font_6x12_t_cyrillic`  
+  Alias for the default Cyrillic big font version used to print menu items.
+
+* **GEM_FONT_SMALL**  
+  * `GEM_adafruit_gfx`:  
+    *Type*: macro `#define GEM_FONT_SMALL &TomThumbMono`  
+    *Value*: `&TomThumbMono`  
+  * `GEM_u8g2`:  
+    *Type*: macro `#define GEM_FONT_SMALL u8g2_font_tom_thumb_4x6_tr`  
+    *Value*: `u8g2_font_tom_thumb_4x6_tr` 
+  
+  Alias for the default small font version used to print titles of menu pages (and menu items when big font won't fit). Submitted as a default value to `GEM_adafruit_gfx::setFontSmall()` method.
+
+* **GEM_FONT_SMALL_CYR**  `GEM_u8g2 version only`  
+  *Type*: macro `#define GEM_FONT_SMALL_CYR u8g2_font_4x6_t_cyrillic`  
+  *Value*: `u8g2_font_4x6_t_cyrillic`  
+  Alias for the default Cyrillic small font version used to print titles of menu pages (and menu items when big font won't fit).
+
 * **GEM_KEY_NONE**  
   *Type*: macro `#define GEM_KEY_NONE 0`  
   *Value*: `0`  
@@ -1106,10 +1136,15 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Turn printing of the current GEM library version on splash screen off (`hideVersion()`) or back on (`hideVersion(false)`). By default the version is printed. Should be called before `init()`.
 
+* *GEM_u8g2&* **enableUTF8(** _bool_ flag = true **)**  `U8g2 version only`  
+  *Accepts*: `bool`  
+  *Returns*: `GEM_u8g2&`  
+  Turn support for multi-byte UTF8 fonts on (`enableUTF8()`) or off (`enableUTF8(false)`). Fonts are set using `GEM_u8g2::setFontBig()` and `GEM_u8g2::setFontSmall()` methods. You may use UTF8 fonts in menu title, menu item labels (`GEMItem`, including buttons and menu page links), and select options (`SelectOptionInt`, `SelectOptionByte`, `SelectOptionChar` data structures). Editable strings with UTF8 characters are **not supported** (edit mode of such strings may lead to unpredictable results due to incompatibility with multi-byte UTF8 characters). By default support for UTF8 is off. Should be called before `GEM_u8g2::init()`.
+
 * *GEM_u8g2&* **enableCyrillic(** _bool_ flag = true **)**  `U8g2 version only`  
   *Accepts*: `bool`  
   *Returns*: `GEM_u8g2&`  
-  Turn Cyrillic typeset on (`enableCyrillic()`) or off (`enableCyrillic(false)`). [`u8g2_font_6x12_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_t_cyrillic.png) and [`u8g2_font_4x6_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_4x6_t_cyrillic.png) fonts from [U8g2](https://github.com/olikraus/u8g2/wiki/fntlistall) will be used when Cyrillic typeset is enabled, and default fonts [`u8g2_font_6x12_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_tr.png) and [`u8g2_font_tom_thumb_4x6_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_tom_thumb_4x6_tr.png) will be used otherwise. You may use Cyrillic in menu title, menu item labels (`GEMItem`, including buttons and menu page links), and select options (`SelectOptionInt`, `SelectOptionByte`, `SelectOptionChar` data structures). Editable strings with Cyrillic characters are **not supported** (edit mode of such strings may lead to unpredictable results due to incompatibility with 2-byte characters). Increases required program storage space, use cautiously. By default Cyrillic typeset is off. Should be called before `GEM_u8g2::init()`.
+  Turn Cyrillic typeset on (`enableCyrillic()`) or off (`enableCyrillic(false)`). By default [`u8g2_font_6x12_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_t_cyrillic.png) and [`u8g2_font_4x6_t_cyrillic`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_4x6_t_cyrillic.png) fonts from [U8g2](https://github.com/olikraus/u8g2/wiki/fntlistall) will be used when Cyrillic typeset is enabled, and fonts [`u8g2_font_6x12_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_6x12_tr.png) and [`u8g2_font_tom_thumb_4x6_tr`](https://raw.githubusercontent.com/wiki/olikraus/u8g2/fntpic/u8g2_font_tom_thumb_4x6_tr.png) will be used otherwise (if not overridden via `GEM_u8g2::setFontBig()` and `GEM_u8g2::setFontSmall()` methods). You may use Cyrillic in menu title, menu item labels (`GEMItem`, including buttons and menu page links), and select options (`SelectOptionInt`, `SelectOptionByte`, `SelectOptionChar` data structures). Editable strings with Cyrillic characters are **not supported** (edit mode of such strings may lead to unpredictable results due to incompatibility with multi-byte UTF8 characters). Increases required program storage space, use cautiously. By default Cyrillic typeset is off. Should be called before `GEM_u8g2::init()`.
 
 * *GEM&* **invertKeysDuringEdit(** _bool_ invert = true **)**  
   *Accepts*: `bool`  
@@ -1148,6 +1183,26 @@ For more details on customization see corresponding section of the [wiki](https:
   *Accepts*: `uint8_t`  
   *Returns*: `GEM_adafruit_gfx&`  
   Set text 'magnification' size (as per Adafruit GFX docs) to supplied value. See Adafruit GFX [documentation](http://adafruit.github.io/Adafruit-GFX-Library/html/class_adafruit___g_f_x.html#a39eb4a8a2c9fa4ab7d58ceffd19535d5) for details on internaly called method of the same name. Sprites (i.e. various menu icons) will be scaled maximum up to two times regardless of the value. If not called explicitly, magnification size will be set to 1. Should be called before `init()`.
+
+* *GEM_adafruit_gfx&* **setFontBig(** _const GFXfont*_ font = GEM_FONT_BIG[, _byte_ width = 6[, _byte_ height = 8[, _byte_ baselineOffset = 8]]] **)**  `Adafruit GFX version`  
+  *Accepts*: `const GFXfont*`[, `byte`[, `byte`[, `byte`]]]  
+  *Returns*: `GEM_adafruit_gfx&`  
+  Set font that will be displayed if height of menu item is enough to fit it (else small font will be used instead). Accepts pointer to the font that Adafruit GFX supports. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts) for details on font format and possible conversion options. Note that using mono-spaced font is recommended for correct calculations internally (especially for editable menu items). Options `width` and `height` describe size of a single character, `baselineOffset` sets offset from the top of the character to baseline (helps to better adjust vertical alignment). Call this method without arguments to revert to default font supplied with GEM.
+
+* *GEM_adafruit_gfx&* **setFontSmall(** _const GFXfont*_ font = GEM_FONT_SMALL[, _byte_ width = 4[, _byte_ height = 6[, _byte_ baselineOffset = 6]]] **)**  `Adafruit GFX version`  
+  *Accepts*: `const GFXfont*`[, `byte`[, `byte`[, `byte`]]]  
+  *Returns*: `GEM_adafruit_gfx&`  
+  Set font that will be displayed if height of menu item is not enough to fit big font. Also used in titles of menu pages. Accepts pointer to the font that Adafruit GFX supports. See Adafruit GFX [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library/using-fonts) for details on font format and possible conversion options. Note that using mono-spaced font is recommended for correct calculations internally (especially for editable menu items). Options `width` and `height` describe size of a single character, `baselineOffset` sets offset from the top of the character to baseline (helps to better adjust vertical alignment). Call this method without arguments to revert to default font supplied with GEM.
+
+* *GEM_u8g2&* **setFontBig(** _const uint8_t*_ font[, _byte_ width = 6[, _byte_ height = 8]] **)**  `U8g2 version`  
+  *Accepts*: `const uint8_t*`[, `byte`[, `byte`]]  
+  *Returns*: `GEM_u8g2&`  
+  Set font that will be displayed if height of menu item is enough to fit it (else small font will be used instead). Accepts pointer to the font that U8g2 supports. See U8g2 [documentation](https://github.com/olikraus/u8g2/wiki/fntlistall) for list of available fonts. Note that using mono-spaced font is recommended for correct calculations internally (especially for editable menu items). Options `width` and `height` describe size of a single character. Adjusting `height` may help to achieve better vertical alignment. Call this method without arguments to revert to default font settings.
+
+* *GEM_u8g2&* **setFontSmall(** _const uint8_t*_ font[, _byte_ width = 4[, _byte_ height = 6]] **)**  `U8g2 version`  
+  *Accepts*: `const uint8_t*`[, `byte`[, `byte`]]  
+  *Returns*: `GEM_u8g2&`  
+  Set font that will be displayed if height of menu item is not enough to fit big font. Also used in titles of menu pages. Accepts pointer to the font that U8g2 supports. See U8g2 [documentation](https://github.com/olikraus/u8g2/wiki/fntlistall) for list of available fonts. Note that using mono-spaced font is recommended for correct calculations internally (especially for editable menu items). Options `width` and `height` describe size of a single character. Adjusting `height` may help to achieve better vertical alignment. Call this method without arguments to revert to default font settings.
 
 * *GEM_adafruit_gfx&* **setForegroundColor(** _uint16_t_ color **)**  `Adafruit GFX version only`  
   *Accepts*: `uint16_t`  

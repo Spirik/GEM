@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -129,7 +129,12 @@ class GEM_u8g2 {
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
     GEM_u8g2& setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
     GEM_u8g2& hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
-    GEM_u8g2& enableCyrillic(bool flag = true);               // Enable Cyrillic set of fonts. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
+    GEM_u8g2& enableUTF8(bool flag = true);                   // Enable UTF8 fonts support. Generally should be called before GEM_u8g2::init(). To disable UTF8 fonts support pass false: enableUTF8(false).
+    GEM_u8g2& enableCyrillic(bool flag = true);               // Enable default Cyrillic set of fonts with GEM. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
+    GEM_u8g2& setFontBig(const uint8_t* font, uint8_t width = 6, uint8_t height = 8);   // Set big font
+    GEM_u8g2& setFontBig();                                   // Revert big font to default value (with respect to _UTF8Enabled flag)
+    GEM_u8g2& setFontSmall(const uint8_t* font, uint8_t width = 4, uint8_t height = 6); // Set small font
+    GEM_u8g2& setFontSmall();                                 // Revert small font to default value (with respect to _UTF8Enabled flag)
     GEM_u8g2& invertKeysDuringEdit(bool invert = true);       // Turn inverted order of characters during edit mode on or off
     GEM_u8g2& init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
     GEM_u8g2& reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
@@ -159,7 +164,7 @@ class GEM_u8g2 {
     byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
     FontFamiliesU8g2 _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
-    bool _cyrillicEnabled = false;
+    bool _UTF8Enabled = false;
     bool _invertKeysDuringEdit = false;
     byte getMenuItemTitleLength();
     byte getMenuItemValueLength();

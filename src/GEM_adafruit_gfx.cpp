@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -249,7 +249,7 @@ byte GEM_adafruit_gfx::getMenuItemsPerScreen() {
 }
 
 byte GEM_adafruit_gfx::getMenuItemFontSize() {
-  return getCurrentAppearance()->menuItemHeight >= 8 * _textSize ? 0 : 1;
+  return getCurrentAppearance()->menuItemHeight >= _menuItemFont[0].height * _textSize ? 0 : 1;
 }
 
 byte GEM_adafruit_gfx::getMenuItemTitleLength() {
@@ -283,6 +283,18 @@ GEM_adafruit_gfx& GEM_adafruit_gfx::setTextSize(uint8_t size) {
   if (_splash.image == logo[0].image || _splash.image == logo[1].image) {
     _splash = logo[_textSize > 1 ? 1 : 0];
   }
+  return *this;
+}
+
+GEM_adafruit_gfx& GEM_adafruit_gfx::setFontBig(const GFXfont* font, uint8_t width, uint8_t height, uint8_t baselineOffset) {
+  _fontFamilies.big = font;
+  _menuItemFont[0] = {width, height, baselineOffset};
+  return *this;
+}
+
+GEM_adafruit_gfx& GEM_adafruit_gfx::setFontSmall(const GFXfont* font, uint8_t width, uint8_t height, uint8_t baselineOffset) {
+  _fontFamilies.small = font;
+  _menuItemFont[1] = {width, height, baselineOffset};
   return *this;
 }
 
@@ -412,7 +424,7 @@ byte GEM_adafruit_gfx::getMenuItemInsetOffset(bool forSprite) {
   byte menuItemFontSize = getMenuItemFontSize();
   byte spriteHeight = _textSize > 1 ? sprite_height_scaled : sprite_height;
   byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height * _textSize) / 2;
-  return menuItemInsetOffset + (forSprite ? (_menuItemFont[menuItemFontSize].height * _textSize - spriteHeight) / 2 : (menuItemFontSize ? -1 * _textSize : -2 * _textSize)); // With additional offset for sprites and text for better visual alignment
+  return menuItemInsetOffset + (forSprite ? (_menuItemFont[menuItemFontSize].height * _textSize - spriteHeight) / 2 : -1 * _textSize); // With additional offset for sprites and text for better visual alignment
 }
 
 byte GEM_adafruit_gfx::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {
