@@ -41,6 +41,7 @@
 
 #include <U8g2lib.h>
 #include "GEMAppearance.h"
+#include "GEMContext.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
@@ -77,19 +78,6 @@ struct FontSize {
 struct FontFamiliesU8g2 {
   const uint8_t *big;    // Big font family (i.e., 6x12)
   const uint8_t *small;  // Small font family (i.e., 4x6)
-};
-
-// Declaration of AppContext type
-struct AppContext {
-  void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function: if context is defined, executed each regular loop() iteration),
-                    // usually contains code of user-defined action that is run when menu Button is pressed
-  void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, called manually, generally once before context's loop() function, optional),
-                    // usually contains some additional set up required by the user-defined action pointed to by context's loop()
-  void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context, optional),
-                    // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again,
-                    // if no user-defined function specified, default action will take place that consists of call to reInit(), drawMenu() and clearContext() methods
-  bool allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
-                          // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
 };
 
 // Forward declaration of necessary classes
@@ -143,7 +131,7 @@ class GEM_u8g2 {
 
     /* CONTEXT OPERATIONS */
 
-    AppContext context;                                       // Currently set context
+    GEMContext context;                                       // Currently set context
     GEM_u8g2& clearContext();                                 // Clear context
 
     /* DRAW OPERATIONS */

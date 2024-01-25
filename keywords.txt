@@ -14,10 +14,11 @@ GEMPage	KEYWORD1
 GEMSelect	KEYWORD1
 GEMCallbackData	KEYWORD1
 GEMAppearance	KEYWORD1
+GEMContext	KEYWORD1
+AppContext	KEYWORD1
 Splash	KEYWORD1
 FontSize	KEYWORD1
 FontFamilies	KEYWORD1
-AppContext	KEYWORD1
 SelectOptionInt	KEYWORD1
 SelectOptionByte	KEYWORD1
 SelectOptionChar	KEYWORD1

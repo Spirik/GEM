@@ -36,7 +36,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMSelect](#gemselect)
   * [GEMCallbackData](#gemcallbackdata)
   * [GEMAppearance](#gemappearance)
-  * [AppContext](#appcontext)
+  * [GEMContext](#gemcontext)
 * [Floating-point variables](#floating-point-variables)
 * [Configuration](#configuration)
 * [Compatibility](#compatibility)
@@ -360,7 +360,7 @@ void printData() {
 }
 ```
 
-> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#appcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
+> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#gemcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
 #### Sketch
 
@@ -576,7 +576,7 @@ void printData() {
 }
 ```
 
-> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#appcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
+> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#gemcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
 #### Sketch
 
@@ -866,7 +866,7 @@ void printData() {
 }
 ```
 
-> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#appcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
+> This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#gemcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
 #### Sketch
 
@@ -1177,7 +1177,7 @@ For more details on customization see corresponding section of the [wiki](https:
 
 * *GEM&* **reInit()**  
   **Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
-  Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD, U8g2 or Adafruit GFX graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#appcontext) for more details.
+  Set GEM specific settings to their values, set initially in `init()` method. If you were working with AltSerialGraphicLCD, U8g2 or Adafruit GFX graphics in your own user-defined button action, it may be a good idea to call `reInit()` before drawing menu back to screen (generally in custom `context.exit()` routine). See [context](#gemcontext) for more details.
 
 * *GEM_adafruit_gfx&* **setTextSize(** _uint8_t_ size **)**  `Adafruit GFX version only`  
   *Accepts*: `uint8_t`  
@@ -1245,8 +1245,8 @@ For more details on customization see corresponding section of the [wiki](https:
 #### Properties
 
 * **context**  
-  *Type*: `AppContext`  
-  Currently set [context](#appcontext).
+  *Type*: `GEMContext`  
+  Currently set [context](#gemcontext).
 
 
 ----------
@@ -1272,7 +1272,7 @@ GEMPage menuPage(title[, parentMenuPage]);
 
 * **exitAction** [*optional*]  
   *Type*: `pointer to function`  
-  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Current menu item will be set to the first item of the menu page upon calling this function, this change will be reflected with the subsequent explicit redraw of the menu (e.g. by calling `drawMenu()` method of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object).
+  Pointer to a function that will be executed when `GEM_KEY_CANCEL` key is pressed while being on top level menu page (i.e. page that has no parent menu page) and not in edit mode. Action-specific [context](#gemcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Current menu item will be set to the first item of the menu page upon calling this function, this change will be reflected with the subsequent explicit redraw of the menu (e.g. by calling `drawMenu()` method of `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` object).
 
 * **parentMenuPage** [*optional*]  
   *Type*: `GEMPage`  
@@ -1455,7 +1455,7 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 
 * **buttonAction**  
   *Type*: `pointer to function`  
-  Pointer to function that will be executed when menu item is activated. Action-specific [context](#appcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
+  Pointer to function that will be executed when menu item is activated. Action-specific [context](#gemcontext) can be created, which can have its own enter (setup) and exit callbacks as well as loop function. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
 
 * **callbackVal** [*optional*]  
   *Type*: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`  
@@ -1862,16 +1862,16 @@ For more details about appearance customization see corresponding section of the
 ----------
 
 
-### AppContext
+### GEMContext
 
-Data structure that represents "context" of the currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` (`GEM_u8g2`, `GEM_adafruit_gfx`) object is of type `AppContext`. 
+Data structure that represents "context" of currently executing user action, toggled by pressing menu item button. Property `context` of the `GEM` (`GEM_u8g2`, `GEM_adafruit_gfx`) object is of type `GEMContext`. 
 
 Consists of pointers to user-supplied functions that represent setup and loop functions (named `context.enter()` and `context.loop()` respectively) of the context. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
-Object of type `AppContext` defines as follows:
+Object of type `GEMContext` (also aliased as `AppContext`) defines as follows:
 
 ```cpp
-AppContext myContext = {loop, enter, exit, allowExit};
+GEMContext myContext = {loop, enter, exit, allowExit};
 ```
 
 * **loop**  
