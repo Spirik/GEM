@@ -110,39 +110,41 @@ class GEM_u8g2 {
 
     /* APPEARANCE OPERATIONS */
 
-    GEM_u8g2& setAppearance(GEMAppearance appearance);        // Set appearance of the menu (can be overridden in GEMPage on per page basis)
+    GEM_u8g2& setAppearance(GEMAppearance appearance);          // Set appearance of the menu (can be overridden in GEMPage on per page basis)
     
     /* INIT OPERATIONS */
 
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
-    GEM_u8g2& setSplashDelay(uint16_t value);                 // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
-    GEM_u8g2& hideVersion(bool flag = true);                  // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
-    GEM_u8g2& enableUTF8(bool flag = true);                   // Enable UTF8 fonts support. Generally should be called before GEM_u8g2::init(). To disable UTF8 fonts support pass false: enableUTF8(false).
-    GEM_u8g2& enableCyrillic(bool flag = true);               // Enable default Cyrillic set of fonts with GEM. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
+    GEM_u8g2& setSplashDelay(uint16_t value);                   // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
+    GEM_u8g2& hideVersion(bool flag = true);                    // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
+    GEM_u8g2& enableUTF8(bool flag = true);                     // Enable UTF8 fonts support. Generally should be called before GEM_u8g2::init(). To disable UTF8 fonts support pass false: enableUTF8(false).
+    GEM_u8g2& enableCyrillic(bool flag = true);                 // Enable default Cyrillic set of fonts with GEM. Generally should be called before GEM_u8g2::init(). To revert to non-Cyrillic fonts pass false: enableCyrillic(false).
     GEM_u8g2& setFontBig(const uint8_t* font, uint8_t width = 6, uint8_t height = 8);   // Set big font
-    GEM_u8g2& setFontBig();                                   // Revert big font to default value (with respect to _UTF8Enabled flag)
+    GEM_u8g2& setFontBig();                                     // Revert big font to default value (with respect to _UTF8Enabled flag)
     GEM_u8g2& setFontSmall(const uint8_t* font, uint8_t width = 4, uint8_t height = 6); // Set small font
-    GEM_u8g2& setFontSmall();                                 // Revert small font to default value (with respect to _UTF8Enabled flag)
-    GEM_u8g2& invertKeysDuringEdit(bool invert = true);       // Turn inverted order of characters during edit mode on or off
-    GEM_u8g2& init();                                         // Init the menu (set necessary settings, display GEM splash screen, etc.)
-    GEM_u8g2& reInit();                                       // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
-    GEM_u8g2& setMenuPageCurrent(GEMPage& menuPageCurrent);   // Set supplied menu page as current
-    GEMPage* getCurrentMenuPage();                            // Get pointer to current menu page
+    GEM_u8g2& setFontSmall();                                   // Revert small font to default value (with respect to _UTF8Enabled flag)
+    GEM_u8g2& invertKeysDuringEdit(bool invert = true);         // Turn inverted order of characters during edit mode on or off
+    GEM_u8g2& init();                                           // Init the menu (set necessary settings, display GEM splash screen, etc.)
+    GEM_u8g2& reInit();                                         // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
+    GEM_u8g2& setMenuPageCurrent(GEMPage& menuPageCurrent);     // Set supplied menu page as current
+    GEMPage* getCurrentMenuPage();                              // Get pointer to current menu page
 
     /* CONTEXT OPERATIONS */
 
-    GEMContext context;                                       // Currently set context
-    GEM_u8g2& clearContext();                                 // Clear context
+    GEMContext context;                                         // Currently set context
+    GEM_u8g2& clearContext();                                   // Clear context
 
     /* DRAW OPERATIONS */
 
-    GEM_u8g2& drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
+    GEM_u8g2& drawMenu();                                       // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
+    GEM_u8g2& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_u8g2::drawMenu()
+    GEM_u8g2& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_u8g2::drawMenu()
 
     /* KEY DETECTION */
 
-    bool readyForKey();                                       // Check that menu is waiting for the key press
-    GEM_u8g2& registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
-                                                              // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
+    bool readyForKey();                                         // Check that menu is waiting for the key press
+    GEM_u8g2& registerKeyPress(byte keyCode);                   // Register the key press and trigger corresponding action
+                                                                // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   private:
     U8G2& _u8g2;
     GEMAppearance* _appearanceCurrent = nullptr;
@@ -163,6 +165,7 @@ class GEM_u8g2 {
     /* DRAW OPERATIONS */
 
     GEMPage* _menuPageCurrent = nullptr;
+    void (*drawMenuCallback)() = nullptr;
     void drawTitleBar();
     void printMenuItemString(const char* str, byte num, byte startPos = 0);
     void printMenuItemTitle(const char* str, int offset = 0);

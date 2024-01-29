@@ -259,6 +259,19 @@ GEM& GEM::drawMenu() {
   printMenuItems();
   drawMenuPointer();
   drawScrollbar();
+  if (drawMenuCallback != nullptr) {
+    drawMenuCallback();
+  }
+  return *this;
+}
+
+GEM& GEM::setDrawMenuCallback(void (*drawMenuCallback_)()) {
+  drawMenuCallback = drawMenuCallback_;
+  return *this;
+}
+
+GEM& GEM::removeDrawMenuCallback() {
+  drawMenuCallback = nullptr;
   return *this;
 }
 

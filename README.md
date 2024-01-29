@@ -1227,6 +1227,15 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Draw menu on screen, with menu page set earlier in `setMenuPageCurrent()`.
 
+* *GEM&* **setDrawMenuCallback(** _void_ (*drawMenuCallback)() **)**  
+  *Accepts*: `pointer to function`  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
+  Specify callback function that will be called at the end of `drawMenu()`. Potentially can be used to draw something on top of the menu, e.g. notification icons in menu title, battery status, etc. However, note that for different versions of GEM drawMenuCallback may be called different number of times: e.g. U8g2 version of GEM calls `drawMenu()` method more often than other versions do, especially when buffer modes `_1` or `_2` of U8g2 is enabled. Alternatively, Adafruit GFX and AltSerialGraphicLCD versions of GEM make use of partial updates of the screen, hence call to `drawMenu()` is less common. Keep that in mind when specifying callback function, and consider using U8g2 version of GEM with full buffer `_F` mode.
+
+* *GEM&* **removeDrawMenuCallback()**  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
+  Disable callback that was called at the end of `drawMenu()`.
+
 * *bool* **readyForKey()**  
   *Returns*: `bool`  
   Check that menu is waiting for the key press.
