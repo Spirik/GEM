@@ -34,6 +34,7 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include "constants.h"
 #include "GEMPage.h"
 
@@ -274,8 +275,8 @@ class GEMItem {
     GEMItem& setCallbackVal(const char* callbackVal_);
     GEMItem& setCallbackVal(void* callbackVal_);
     GEMCallbackData getCallbackData();                  // Get GEMCallbackData struct associated with menu item
-    GEMItem& setTitle(const char* title_);              // Set title of the menu item
-    const char* getTitle();                             // Get title of the menu item
+    GEM_VIRTUAL GEMItem& setTitle(const char* title_);  // Set title of the menu item
+    GEM_VIRTUAL const char* getTitle();                 // Get title of the menu item
     GEMItem& setPrecision(byte prec);                   // Explicitly set precision for float or double variables as required by dtostrf() conversion,
                                                         // i.e. the number of digits after the decimal sign
     GEMItem& setAdjustedASCIIOrder(bool mode = true);   // Turn adjsuted order of characters when editing char[17] variables on (with space character followed by `a` and preceded by `) or off
@@ -288,8 +289,8 @@ class GEMItem {
     GEMItem& show();                                    // Explicitly show menu item
     bool getHidden();                                   // Get hidden state of the menu item
     GEMItem& remove();                                  // Remove menu item from parent menu page
-    void* getLinkedVariablePointer();                   // Get pointer to a linked variable (relevant for menu items that represent variable)
-    GEMItem* getMenuItemNext(bool total = false);       // Get next menu item (including hidden ones if total set to true)
+    GEM_VIRTUAL void* getLinkedVariablePointer();       // Get pointer to a linked variable (relevant for menu items that represent variable)
+    GEM_VIRTUAL GEMItem* getMenuItemNext(bool total = false); // Get next menu item (including hidden ones if total set to true)
   protected:
     const char* title;
     void* linkedVariable = nullptr;

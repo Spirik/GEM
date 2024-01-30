@@ -126,8 +126,8 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& setForegroundColor(uint16_t color);               // Set foreground color of the menu (default is 0xFF)
     GEM_adafruit_gfx& setBackgroundColor(uint16_t color);               // Set background color of the menu (default is 0x00)
     GEM_adafruit_gfx& invertKeysDuringEdit(bool invert = true);         // Turn inverted order of characters during edit mode on or off
-    GEM_adafruit_gfx& init();                                           // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
-    GEM_adafruit_gfx& reInit();                                         // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
+    GEM_VIRTUAL GEM_adafruit_gfx& init();                               // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
+    GEM_VIRTUAL GEM_adafruit_gfx& reInit();                             // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
     GEM_adafruit_gfx& setMenuPageCurrent(GEMPage& menuPageCurrent);     // Set supplied menu page as current
     GEMPage* getCurrentMenuPage();                                      // Get pointer to current menu page
 
@@ -138,7 +138,7 @@ class GEM_adafruit_gfx {
 
     /* DRAW OPERATIONS */
 
-    GEM_adafruit_gfx& drawMenu();                                       // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
+    GEM_VIRTUAL GEM_adafruit_gfx& drawMenu();                                       // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
     GEM_adafruit_gfx& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_adafruit_gfx::drawMenu()
     GEM_adafruit_gfx& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_adafruit_gfx::drawMenu()
 
@@ -158,8 +158,8 @@ class GEM_adafruit_gfx {
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     byte _textSize = 1;
     bool _invertKeysDuringEdit = false;
-    byte getMenuItemTitleLength();
-    byte getMenuItemValueLength();
+    GEM_VIRTUAL byte getMenuItemTitleLength();
+    GEM_VIRTUAL byte getMenuItemValueLength();
     Splash _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
@@ -170,24 +170,24 @@ class GEM_adafruit_gfx {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
-    void drawTitleBar();
-    void drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color);
-    void printMenuItemString(const char* str, byte num, byte startPos = 0);
-    void printMenuItemTitle(const char* str, int offset = 0);
-    void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
-    void printMenuItemFull(const char* str, int offset = 0);
-    byte getMenuItemInsetOffset(bool forSprite = false);
-    byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
-    void printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color);
-    void printMenuItems();
-    void drawMenuPointer(bool clear = false);
-    void drawScrollbar();
+    GEM_VIRTUAL void drawTitleBar();
+    GEM_VIRTUAL void drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color);
+    GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
+    GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
+    GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
+    GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
+    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL void printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color);
+    GEM_VIRTUAL void printMenuItems();
+    GEM_VIRTUAL void drawMenuPointer(bool clear = false);
+    GEM_VIRTUAL void drawScrollbar();
 
     /* MENU ITEMS NAVIGATION */
 
-    void nextMenuItem();
-    void prevMenuItem();
-    void menuItemSelect();
+    GEM_VIRTUAL void nextMenuItem();
+    GEM_VIRTUAL void prevMenuItem();
+    GEM_VIRTUAL void menuItemSelect();
 
     /* VALUE EDIT */
 
@@ -198,22 +198,22 @@ class GEM_adafruit_gfx {
     byte _editValueVirtualCursorPosition;
     char _valueString[GEM_STR_LEN];
     int _valueSelectNum;
-    void enterEditValueMode();
-    void checkboxToggle();
-    void clearValueVisibleRange();
-    void initEditValueCursor();
-    void nextEditValueCursorPosition();
-    void prevEditValueCursorPosition();
-    void drawEditValueCursor(bool clear = false);
-    void nextEditValueDigit();
-    void prevEditValueDigit();
-    void drawEditValueDigit(byte code, bool clear = false);
-    void nextEditValueSelect();
-    void prevEditValueSelect();
-    void drawEditValueSelect();
-    void saveEditValue();
-    void cancelEditValue();
-    void exitEditValue(bool redrawMenu = true);
+    GEM_VIRTUAL void enterEditValueMode();
+    GEM_VIRTUAL void checkboxToggle();
+    GEM_VIRTUAL void clearValueVisibleRange();
+    GEM_VIRTUAL void initEditValueCursor();
+    GEM_VIRTUAL void nextEditValueCursorPosition();
+    GEM_VIRTUAL void prevEditValueCursorPosition();
+    GEM_VIRTUAL void drawEditValueCursor(bool clear = false);
+    GEM_VIRTUAL void nextEditValueDigit();
+    GEM_VIRTUAL void prevEditValueDigit();
+    GEM_VIRTUAL void drawEditValueDigit(byte code, bool clear = false);
+    GEM_VIRTUAL void nextEditValueSelect();
+    GEM_VIRTUAL void prevEditValueSelect();
+    GEM_VIRTUAL void drawEditValueSelect();
+    GEM_VIRTUAL void saveEditValue();
+    GEM_VIRTUAL void cancelEditValue();
+    GEM_VIRTUAL void exitEditValue(bool redrawMenu = true);
     char* trimString(char* str);
 
     /* KEY DETECTION */

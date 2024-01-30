@@ -124,8 +124,8 @@ class GEM_u8g2 {
     GEM_u8g2& setFontSmall(const uint8_t* font, uint8_t width = 4, uint8_t height = 6); // Set small font
     GEM_u8g2& setFontSmall();                                   // Revert small font to default value (with respect to _UTF8Enabled flag)
     GEM_u8g2& invertKeysDuringEdit(bool invert = true);         // Turn inverted order of characters during edit mode on or off
-    GEM_u8g2& init();                                           // Init the menu (set necessary settings, display GEM splash screen, etc.)
-    GEM_u8g2& reInit();                                         // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
+    GEM_VIRTUAL GEM_u8g2& init();                               // Init the menu (set necessary settings, display GEM splash screen, etc.)
+    GEM_VIRTUAL GEM_u8g2& reInit();                             // Reinitialize the menu (call U8g2::initDisplay() and then reapply GEM specific settings)
     GEM_u8g2& setMenuPageCurrent(GEMPage& menuPageCurrent);     // Set supplied menu page as current
     GEMPage* getCurrentMenuPage();                              // Get pointer to current menu page
 
@@ -136,7 +136,7 @@ class GEM_u8g2 {
 
     /* DRAW OPERATIONS */
 
-    GEM_u8g2& drawMenu();                                       // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
+    GEM_VIRTUAL GEM_u8g2& drawMenu();                           // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
     GEM_u8g2& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_u8g2::drawMenu()
     GEM_u8g2& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_u8g2::drawMenu()
 
@@ -156,8 +156,8 @@ class GEM_u8g2 {
     FontFamiliesU8g2 _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     bool _UTF8Enabled = false;
     bool _invertKeysDuringEdit = false;
-    byte getMenuItemTitleLength();
-    byte getMenuItemValueLength();
+    GEM_VIRTUAL byte getMenuItemTitleLength();
+    GEM_VIRTUAL byte getMenuItemValueLength();
     Splash _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
@@ -166,22 +166,22 @@ class GEM_u8g2 {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
-    void drawTitleBar();
-    void printMenuItemString(const char* str, byte num, byte startPos = 0);
-    void printMenuItemTitle(const char* str, int offset = 0);
-    void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
-    void printMenuItemFull(const char* str, int offset = 0);
-    byte getMenuItemInsetOffset(bool forSprite = false);
-    byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
-    void printMenuItems();
-    void drawMenuPointer();
-    void drawScrollbar();
+    GEM_VIRTUAL void drawTitleBar();
+    GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
+    GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
+    GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
+    GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
+    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL void printMenuItems();
+    GEM_VIRTUAL void drawMenuPointer();
+    GEM_VIRTUAL void drawScrollbar();
 
     /* MENU ITEMS NAVIGATION */
 
-    void nextMenuItem();
-    void prevMenuItem();
-    void menuItemSelect();
+    GEM_VIRTUAL void nextMenuItem();
+    GEM_VIRTUAL void prevMenuItem();
+    GEM_VIRTUAL void menuItemSelect();
 
     /* VALUE EDIT */
 
@@ -192,20 +192,20 @@ class GEM_u8g2 {
     byte _editValueVirtualCursorPosition;
     char _valueString[GEM_STR_LEN];
     int _valueSelectNum;
-    void enterEditValueMode();
-    void checkboxToggle();
-    void initEditValueCursor();
-    void nextEditValueCursorPosition();
-    void prevEditValueCursorPosition();
-    void drawEditValueCursor();
-    void nextEditValueDigit();
-    void prevEditValueDigit();
-    void drawEditValueDigit(byte code);
-    void nextEditValueSelect();
-    void prevEditValueSelect();
-    void saveEditValue();
-    void cancelEditValue();
-    void exitEditValue();
+    GEM_VIRTUAL void enterEditValueMode();
+    GEM_VIRTUAL void checkboxToggle();
+    GEM_VIRTUAL void initEditValueCursor();
+    GEM_VIRTUAL void nextEditValueCursorPosition();
+    GEM_VIRTUAL void prevEditValueCursorPosition();
+    GEM_VIRTUAL void drawEditValueCursor();
+    GEM_VIRTUAL void nextEditValueDigit();
+    GEM_VIRTUAL void prevEditValueDigit();
+    GEM_VIRTUAL void drawEditValueDigit(byte code);
+    GEM_VIRTUAL void nextEditValueSelect();
+    GEM_VIRTUAL void prevEditValueSelect();
+    GEM_VIRTUAL void saveEditValue();
+    GEM_VIRTUAL void cancelEditValue();
+    GEM_VIRTUAL void exitEditValue();
     char* trimString(char* str);
 
     /* KEY DETECTION */
