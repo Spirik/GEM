@@ -82,7 +82,7 @@ class GEMSelect {
     GEMSelect(byte length_, SelectOptionChar* options_);
     GEMSelect(byte length_, SelectOptionFloat* options_);
     GEMSelect(byte length_, SelectOptionDouble* options_);
-  private:
+  protected:
     byte _type;
     byte _length;
     void* _options;

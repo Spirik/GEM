@@ -73,7 +73,7 @@ class GEMPage {
     GEMItem* getMenuItem(byte index, bool total = false);       // Get pointer to menu item by index (counting hidden ones if total set to true)
     GEMItem* getCurrentMenuItem();                              // Get pointer to current menu item
     byte getCurrentMenuItemIndex();                             // Get index of current menu item
-  private:
+  protected:
     const char* title;
     byte currentItemNum = 0;                                    // Currently selected (focused) menu item of the page
     byte itemsCount = 0;                                        // Items count excluding hidden ones

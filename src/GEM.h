@@ -128,7 +128,7 @@ class GEM {
     bool readyForKey();                                     // Check that menu is waiting for the key press
     GEM& registerKeyPress(byte keyCode);                    // Register the key press and trigger corresponding action
                                                             // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
-  private:
+  protected:
     GLCD& _glcd;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;

@@ -290,7 +290,7 @@ class GEMItem {
     GEMItem& remove();                                  // Remove menu item from parent menu page
     void* getLinkedVariablePointer();                   // Get pointer to a linked variable (relevant for menu items that represent variable)
     GEMItem* getMenuItemNext(bool total = false);       // Get next menu item (including hidden ones if total set to true)
-  private:
+  protected:
     const char* title;
     void* linkedVariable = nullptr;
     byte linkedType;
