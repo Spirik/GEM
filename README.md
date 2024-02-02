@@ -1104,6 +1104,10 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set general appearance of the menu (can be overridden in `GEMPage` on per page basis).
 
+* *GEMAppearance** **getCurrentAppearance()**  
+  *Returns*: `GEMAppearance*`  
+  Get appearance (as a pointer to [`GEMAppearance`](#gemappearance) object) applied to current menu page (or general if menu page has none of its own).
+
 * *GEM&* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
   *Accepts*: `_const uint8_t PROGMEM_ *`  
   *Returns*: `GEM&`  

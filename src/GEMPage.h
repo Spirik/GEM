@@ -84,7 +84,7 @@ class GEMPage {
     GEM_VIRTUAL void removeMenuItem(GEMItem& menuItem);                     // Remove menu item from menu page
     GEMItem* _menuItem = nullptr;                                           // First menu item of the page (the following ones are linked from within one another)
     GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)};             // Local instance of Back button (created when parent level menu page is specified through
-                                                                          // setParentMenuPage(); always becomes the first menu item in a list)
+                                                                            // setParentMenuPage(); always becomes the first menu item in a list)
     void (*exitAction)() = nullptr;
     GEMAppearance* _appearance = nullptr;
 };

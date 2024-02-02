@@ -30,6 +30,7 @@ SelectOptionDouble	KEYWORD1
 ####################################################
 
 setAppearance	KEYWORD2
+getCurrentAppearance	KEYWORD2
 setSplash	KEYWORD2
 setSplashDelay	KEYWORD2
 hideVersion	KEYWORD2

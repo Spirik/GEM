@@ -111,6 +111,7 @@ class GEM_u8g2 {
     /* APPEARANCE OPERATIONS */
 
     GEM_u8g2& setAppearance(GEMAppearance appearance);          // Set appearance of the menu (can be overridden in GEMPage on per page basis)
+    GEMAppearance* getCurrentAppearance();                      // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
     
     /* INIT OPERATIONS */
 
@@ -149,7 +150,6 @@ class GEM_u8g2 {
     U8G2& _u8g2;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
-    GEMAppearance* getCurrentAppearance();
     byte getMenuItemsPerScreen();
     byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};

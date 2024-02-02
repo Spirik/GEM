@@ -92,6 +92,7 @@ class GEM {
     /* APPEARANCE OPERATIONS */
 
     GEM& setAppearance(GEMAppearance appearance);           // Set apperance of the menu (can be overridden in GEMPage on per page basis)
+    GEMAppearance* getCurrentAppearance();                  // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
 
     /* INIT OPERATIONS */
 
@@ -132,7 +133,6 @@ class GEM {
     GLCD& _glcd;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
-    GEMAppearance* getCurrentAppearance();
     byte getMenuItemsPerScreen();
     byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
