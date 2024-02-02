@@ -38,6 +38,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMAppearance](#gemappearance)
   * [GEMContext](#gemcontext)
 * [Floating-point variables](#floating-point-variables)
+* [Advanced Mode](#advanced-mode)
 * [Configuration](#configuration)
 * [Compatibility](#compatibility)
 * [Examples](#examples)
@@ -1102,7 +1103,7 @@ For more details on customization see corresponding section of the [wiki](https:
 * *GEM&* **setAppearance(** _GEMAppearance_ appearance **)**  
   *Accepts*: `GEMAppearance`  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
-  Set general appearance of the menu (can be overridden in `GEMPage` on per page basis).
+  Set general [appearance](#gemappearance) of the menu (can be overridden in `GEMPage` on per page basis).
 
 * *GEMAppearance** **getCurrentAppearance()**  
   *Returns*: `GEMAppearance*`  
@@ -1993,6 +1994,38 @@ build_flags =
 
 Note that option selects support `float` and `double` variables regardless of this setting.
 
+Advanced Mode
+-----------
+Advanced Mode provides additional means to modify, customize and extend functionality of GEM.
+
+When Advanced Mode is enabled some of the internal methods of the library is made `virtual` (marked with `GEM_VIRTUAL` macro in source code). That (alongside with `public` and `protected` access specifiers) makes it possible to override those methods in your own sketch. However keep in mind that inner workings of GEM is more prone to change than its public interface (e.g. during code refactoring), so be cautios to upgrade GEM version if your code is relying on derivative classes and overrides.
+
+Additional features of Advanced Mode may be added in the future.
+
+To enable Advanced Mode, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out the following line:
+
+```cpp
+#define GEM_DISABLE_ADVANCED_MODE
+```
+
+to
+
+```cpp
+// #define GEM_DISABLE_ADVANCED_MODE
+```
+
+> Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
+
+Or, alternatively, define `GEM_ENABLE_ADVANCED_MODE` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
+
+```ini
+build_flags =
+    ; Enable Advanced Mode
+    -D GEM_ENABLE_ADVANCED_MODE
+```
+
+Note that GEM in Advanced Mode requires more memory to run, so plan accordingly.
+
 Configuration
 -----------
 It is possible to configure GEM library by excluding some features not needed in your project. That may help to save some additional program storage space. E.g., you can disable support for editable floating-point variables (see previous [section](#floating-point-variables)).
@@ -2023,7 +2056,7 @@ To _disable_ `Adafruit GFX` support comment out the following line:
 #include "config/enable-adafruit-gfx.h"
 ```
 
-More configuration options may be be added in the future.
+More configuration options may be added in the future.
 
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
