@@ -1998,7 +1998,7 @@ Advanced Mode
 -----------
 Advanced Mode provides additional means to modify, customize and extend functionality of GEM.
 
-When Advanced Mode is enabled some of the internal methods of the library is made `virtual` (marked with `GEM_VIRTUAL` macro in source code). That (alongside with `public` and `protected` access specifiers) makes it possible to override those methods in your own sketch. However keep in mind that inner workings of GEM is more prone to change than its public interface (e.g. during code refactoring), so be cautios to upgrade GEM version if your code is relying on derivative classes and overrides.
+When Advanced Mode is enabled some of the internal methods of the library is made `virtual` (marked with `GEM_VIRTUAL` macro in source code). That (alongside with `public` and `protected` access specifiers) makes it possible to override those methods in your own sketch. However keep in mind that inner workings of GEM is more prone to change than its public interface (e.g. during code refactoring), so be cautious to upgrade GEM version if your code is relying on derivative classes and overrides.
 
 Additional features of Advanced Mode may be added in the future.
 
