@@ -41,6 +41,7 @@
 
 #include <AltSerialGraphicLCD.h>
 #include "GEMAppearance.h"
+#include "GEMContext.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
 #include "constants.h"
@@ -58,19 +59,6 @@
 struct FontSize {
   byte width;   // Width of the character
   byte height;  // Height of the character
-};
-
-// Declaration of AppContext type
-struct AppContext {
-  void (*loop)();   // Pointer to loop() function of current context (similar to regular loop() function: if context is defined, executed each regular loop() iteration),
-                    // usually contains code of user-defined action that is run when menu Button is pressed
-  void (*enter)();  // Pointer to enter() function of current context (similar to regular setup() function, called manually, generally once before context's loop() function, optional),
-                    // usually contains some additional set up required by the user-defined action pointed to by context's loop()
-  void (*exit)();   // Pointer to exit() function of current context (executed when user exits currently running context, optional),
-                    // usually contains instructions to do some cleanup after context's loop() and to draw menu on screen again,
-                    // if no user-defined function specified, default action will take place that consists of call to reInit(), drawMenu() and clearContext() methods
-  bool allowExit = true;  // Setting to false will require manually exit the context's loop() from within the loop itself (all necessary key detection should be done in context's loop() accordingly),
-                          // otherwise exit is handled automatically by pressing GEM_KEY_CANCEL key (default is true)
 };
 
 // Forward declaration of necessary classes
@@ -103,52 +91,54 @@ class GEM {
 
     /* APPEARANCE OPERATIONS */
 
-    GEM& setAppearance(GEMAppearance appearance);       // Set apperance of the menu (can be overridden in GEMPage on per page basis)
+    GEM& setAppearance(GEMAppearance appearance);           // Set apperance of the menu (can be overridden in GEMPage on per page basis)
+    GEMAppearance* getCurrentAppearance();                  // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
 
     /* INIT OPERATIONS */
 
-    GEM& setSplash(const uint8_t *sprite);              // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
-                                                        // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
-                                                        // The sprite commences with two bytes which are the width and height of the image in pixels.
-                                                        // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
-                                                        // is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel.
-                                                        // A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed
-                                                        // by the next row of 8 vertical pixels and so on.
-                                                        // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
-                                                        // (although this does not matter).
-    GEM& setSplashDelay(uint16_t value);                // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
-    GEM& hideVersion(bool flag = true);                 // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
-    GEM& invertKeysDuringEdit(bool invert = true);      // Turn inverted order of characters during edit mode on or off
-    GEM& init();                                        // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
-    GEM& reInit();                                      // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
-    GEM& setMenuPageCurrent(GEMPage& menuPageCurrent);  // Set supplied menu page as current
-    GEMPage* getCurrentMenuPage();                      // Get pointer to current menu page
+    GEM& setSplash(const uint8_t *sprite);                  // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+                                                            // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
+                                                            // The sprite commences with two bytes which are the width and height of the image in pixels.
+                                                            // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
+                                                            // is the top-left pixel and the most significant bit (MSB) tends towards the bottom-left pixel.
+                                                            // A complete row of 8 vertical pixels across the image width comprises the first row, this is then followed
+                                                            // by the next row of 8 vertical pixels and so on.
+                                                            // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
+                                                            // (although this does not matter).
+    GEM& setSplashDelay(uint16_t value);                    // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
+    GEM& hideVersion(bool flag = true);                     // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
+    GEM& invertKeysDuringEdit(bool invert = true);          // Turn inverted order of characters during edit mode on or off
+    GEM_VIRTUAL GEM& init();                                // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
+    GEM_VIRTUAL GEM& reInit();                              // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
+    GEM& setMenuPageCurrent(GEMPage& menuPageCurrent);      // Set supplied menu page as current
+    GEMPage* getCurrentMenuPage();                          // Get pointer to current menu page
 
     /* CONTEXT OPERATIONS */
 
-    AppContext context;                                  // Currently set context
-    GEM& clearContext();                                 // Clear context
+    GEMContext context;                                     // Currently set context
+    GEM& clearContext();                                    // Clear context
 
     /* DRAW OPERATIONS */
 
-    GEM& drawMenu();                                     // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    GEM_VIRTUAL GEM& drawMenu();                                        // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    GEM& setDrawMenuCallback(void (*drawMenuCallback_)());  // Set callback that will be called at the end of GEM::drawMenu()
+    GEM& removeDrawMenuCallback();                          // Remove callback that was called at the end of GEM::drawMenu()
 
     /* KEY DETECTION */
 
-    bool readyForKey();                                  // Check that menu is waiting for the key press
-    GEM& registerKeyPress(byte keyCode);                 // Register the key press and trigger corresponding action
-                                                         // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
-  private:
+    bool readyForKey();                                     // Check that menu is waiting for the key press
+    GEM& registerKeyPress(byte keyCode);                    // Register the key press and trigger corresponding action
+                                                            // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
+  protected:
     GLCD& _glcd;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
-    GEMAppearance* getCurrentAppearance();
     byte getMenuItemsPerScreen();
     byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
     bool _invertKeysDuringEdit = false;
-    byte getMenuItemTitleLength();
-    byte getMenuItemValueLength();
+    GEM_VIRTUAL byte getMenuItemTitleLength();
+    GEM_VIRTUAL byte getMenuItemValueLength();
     const uint8_t *_splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
@@ -156,22 +146,23 @@ class GEM {
     /* DRAW OPERATIONS */
 
     GEMPage* _menuPageCurrent = nullptr;
-    void drawTitleBar();
-    void printMenuItemString(const char* str, byte num, byte startPos = 0);
-    void printMenuItemTitle(const char* str, int offset = 0);
-    void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
-    void printMenuItemFull(const char* str, int offset = 0);
-    byte getMenuItemInsetOffset(bool forSprite = false);
-    byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
-    void printMenuItems();
-    void drawMenuPointer();
-    void drawScrollbar();
+    void (*drawMenuCallback)() = nullptr;
+    GEM_VIRTUAL void drawTitleBar();
+    GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
+    GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
+    GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
+    GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
+    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL void printMenuItems();
+    GEM_VIRTUAL void drawMenuPointer();
+    GEM_VIRTUAL void drawScrollbar();
 
     /* MENU ITEMS NAVIGATION */
 
-    void nextMenuItem();
-    void prevMenuItem();
-    void menuItemSelect();
+    GEM_VIRTUAL void nextMenuItem();
+    GEM_VIRTUAL void prevMenuItem();
+    GEM_VIRTUAL void menuItemSelect();
 
     /* VALUE EDIT */
 
@@ -182,22 +173,22 @@ class GEM {
     byte _editValueVirtualCursorPosition;
     char _valueString[GEM_STR_LEN];
     int _valueSelectNum;
-    void enterEditValueMode();
-    void checkboxToggle();
-    void clearValueVisibleRange();
-    void initEditValueCursor();
-    void nextEditValueCursorPosition();
-    void prevEditValueCursorPosition();
-    void drawEditValueCursor();
-    void nextEditValueDigit();
-    void prevEditValueDigit();
-    void drawEditValueDigit(byte code);
-    void nextEditValueSelect();
-    void prevEditValueSelect();
-    void drawEditValueSelect();
-    void saveEditValue();
-    void cancelEditValue();
-    void exitEditValue();
+    GEM_VIRTUAL void enterEditValueMode();
+    GEM_VIRTUAL void checkboxToggle();
+    GEM_VIRTUAL void clearValueVisibleRange();
+    GEM_VIRTUAL void initEditValueCursor();
+    GEM_VIRTUAL void nextEditValueCursorPosition();
+    GEM_VIRTUAL void prevEditValueCursorPosition();
+    GEM_VIRTUAL void drawEditValueCursor();
+    GEM_VIRTUAL void nextEditValueDigit();
+    GEM_VIRTUAL void prevEditValueDigit();
+    GEM_VIRTUAL void drawEditValueDigit(byte code);
+    GEM_VIRTUAL void nextEditValueSelect();
+    GEM_VIRTUAL void prevEditValueSelect();
+    GEM_VIRTUAL void drawEditValueSelect();
+    GEM_VIRTUAL void saveEditValue();
+    GEM_VIRTUAL void cancelEditValue();
+    GEM_VIRTUAL void exitEditValue();
     char* trimString(char* str);
 
     /* KEY DETECTION */

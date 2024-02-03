@@ -65,26 +65,26 @@ class GEMPage {
     GEMPage(const char* title_);
     GEMPage(const char* title_, void (*exitAction_)());
     GEMPage(const char* title_, GEMPage& parentMenuPage_);
-    GEMPage& addMenuItem(GEMItem& menuItem, byte pos = GEM_LAST_POS, bool total = GEM_ITEMS_TOTAL);  // Add menu item to menu page (optionally at specified index out of total or only visible items)
-    GEMPage& setParentMenuPage(GEMPage& parentMenuPage);        // Specify parent level menu page (to know where to go back to when Back button is pressed)
-    GEMPage& setTitle(const char* title_);                      // Set title of the menu page
-    const char* getTitle();                                     // Get title of the menu page
-    GEMPage& setAppearance(GEMAppearance* appearance);          // Set appearance of the menu page
-    GEMItem* getMenuItem(byte index, bool total = false);       // Get pointer to menu item by index (counting hidden ones if total set to true)
-    GEMItem* getCurrentMenuItem();                              // Get pointer to current menu item
-    byte getCurrentMenuItemIndex();                             // Get index of current menu item
-  private:
+    GEM_VIRTUAL GEMPage& addMenuItem(GEMItem& menuItem, byte pos = GEM_LAST_POS, bool total = GEM_ITEMS_TOTAL);  // Add menu item to menu page (optionally at specified index out of total or only visible items)
+    GEM_VIRTUAL GEMPage& setParentMenuPage(GEMPage& parentMenuPage);        // Specify parent level menu page (to know where to go back to when Back button is pressed)
+    GEM_VIRTUAL GEMPage& setTitle(const char* title_);                      // Set title of the menu page
+    GEM_VIRTUAL const char* getTitle();                                     // Get title of the menu page
+    GEMPage& setAppearance(GEMAppearance* appearance);                      // Set appearance of the menu page
+    GEM_VIRTUAL GEMItem* getMenuItem(byte index, bool total = false);       // Get pointer to menu item by index (counting hidden ones if total set to true)
+    GEM_VIRTUAL GEMItem* getCurrentMenuItem();                              // Get pointer to current menu item
+    GEM_VIRTUAL byte getCurrentMenuItemIndex();                             // Get index of current menu item
+  protected:
     const char* title;
-    byte currentItemNum = 0;                                    // Currently selected (focused) menu item of the page
-    byte itemsCount = 0;                                        // Items count excluding hidden ones
-    byte itemsCountTotal = 0;                                   // Items count incuding hidden ones
-    int getMenuItemNum(GEMItem& menuItem, bool total = false);  // Find index of the supplied menu item
+    byte currentItemNum = 0;                                                // Currently selected (focused) menu item of the page
+    byte itemsCount = 0;                                                    // Items count excluding hidden ones
+    byte itemsCountTotal = 0;                                               // Items count incuding hidden ones
+    GEM_VIRTUAL int getMenuItemNum(GEMItem& menuItem, bool total = false);  // Find index of the supplied menu item
     void hideMenuItem(GEMItem& menuItem);
     void showMenuItem(GEMItem& menuItem);
-    void removeMenuItem(GEMItem& menuItem);                     // Remove menu item from menu page
-    GEMItem* _menuItem = nullptr;                               // First menu item of the page (the following ones are linked from within one another)
-    GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)}; // Local instance of Back button (created when parent level menu page is specified through
-                                                                // setParentMenuPage(); always becomes the first menu item in a list)
+    GEM_VIRTUAL void removeMenuItem(GEMItem& menuItem);                     // Remove menu item from menu page
+    GEMItem* _menuItem = nullptr;                                           // First menu item of the page (the following ones are linked from within one another)
+    GEMItem _menuItemBack {"", static_cast<GEMPage*>(nullptr)};             // Local instance of Back button (created when parent level menu page is specified through
+                                                                            // setParentMenuPage(); always becomes the first menu item in a list)
     void (*exitAction)() = nullptr;
     GEMAppearance* _appearance = nullptr;
 };

@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -59,3 +59,10 @@
                            // (note that char[] array should be big enough to hold select option with the longest value)
 #define GEM_VAL_FLOAT 5    // Associated variable is of type float
 #define GEM_VAL_DOUBLE 6   // Associated variable is of type double
+
+// Macro used internally to mark virtual functions in Advanced Mode
+#ifdef GEM_ENABLE_ADVANCED_MODE
+#define GEM_VIRTUAL virtual
+#else
+#define GEM_VIRTUAL
+#endif

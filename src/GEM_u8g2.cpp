@@ -330,7 +330,20 @@ GEM_u8g2& GEM_u8g2::drawMenu() {
     printMenuItems();
     drawMenuPointer();
     drawScrollbar();
+    if (drawMenuCallback != nullptr) {
+      drawMenuCallback();
+    }
   } while (_u8g2.nextPage());
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::setDrawMenuCallback(void (*drawMenuCallback_)()) {
+  drawMenuCallback = drawMenuCallback_;
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::removeDrawMenuCallback() {
+  drawMenuCallback = nullptr;
   return *this;
 }
 

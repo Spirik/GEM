@@ -37,6 +37,9 @@
 #ifndef HEADER_GEMSELECT
 #define HEADER_GEMSELECT
 
+#include "config.h"
+#include "constants.h"
+
 // Declaration of SelectOptionInt type
 struct SelectOptionInt {
   const char* name;    // Text label of the option as displayed in select
@@ -82,16 +85,16 @@ class GEMSelect {
     GEMSelect(byte length_, SelectOptionChar* options_);
     GEMSelect(byte length_, SelectOptionFloat* options_);
     GEMSelect(byte length_, SelectOptionDouble* options_);
-  private:
+  protected:
     byte _type;
     byte _length;
     void* _options;
     byte getType();
     byte getLength();
-    int getSelectedOptionNum(void* variable);
-    const char* getSelectedOptionName(void* variable);
-    const char* getOptionNameByIndex(int index);
-    void setValue(void* variable, int index);  // Assign value of the selected option to supplied variable
+    GEM_VIRTUAL int getSelectedOptionNum(void* variable);
+    GEM_VIRTUAL const char* getSelectedOptionName(void* variable);
+    GEM_VIRTUAL const char* getOptionNameByIndex(int index);
+    GEM_VIRTUAL void setValue(void* variable, int index);  // Assign value of the selected option to supplied variable
 };
   
 #endif

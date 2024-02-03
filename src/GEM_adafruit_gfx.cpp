@@ -382,6 +382,19 @@ GEM_adafruit_gfx& GEM_adafruit_gfx::drawMenu() {
   printMenuItems();
   drawMenuPointer();
   drawScrollbar();
+  if (drawMenuCallback != nullptr) {
+    drawMenuCallback();
+  }
+  return *this;
+}
+
+GEM_adafruit_gfx& GEM_adafruit_gfx::setDrawMenuCallback(void (*drawMenuCallback_)()) {
+  drawMenuCallback = drawMenuCallback_;
+  return *this;
+}
+
+GEM_adafruit_gfx& GEM_adafruit_gfx::removeDrawMenuCallback() {
+  drawMenuCallback = nullptr;
   return *this;
 }
 
