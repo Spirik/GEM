@@ -62,7 +62,7 @@ Menu created with GEM library comprises of three base elements:
 Installation
 ------------
 
-Library format is compatible with Arduino IDE 1.5.x+. There are two ways to install the library:
+Library format is compatible with Arduino IDE 1.5.x+. There are number of ways to install the library:
 
 - Download ZIP-archive directly from [Releases](https://github.com/Spirik/GEM/releases) section (or Master branch) and extract it into GEM folder inside your Library folder.
 - Using Library Manager (since Arduino IDE 1.6.2): navigate to `Sketch > Include Library > Manage Libraries` inside your Arduino IDE and search for GEM library, then click `Install`. (Alternatively you can add previously downloaded ZIP through `Sketch > Include Library > Add .ZIP Library` menu).
