@@ -517,18 +517,18 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
         drawSprite(_agfx.width() - 8 * _spriteSize, yDraw, arrowRight, color);
         break;
       case GEM_ITEM_BACK:
-        drawSprite(5 * _textSize, yDraw, arrowLeft, color);
+        drawSprite(5 * _textSize + 2 * (_spriteSize > 1 ? 1 : 0), yDraw, arrowLeft, color);
         break;
       case GEM_ITEM_BUTTON:
         byte variant = _spriteSize > 1 ? 1 : 0;
-        _agfx.setCursor((5 * _textSize + arrowBtn[variant].width), yText);
+        _agfx.setCursor((5 * _textSize + arrowBtn[variant].width + 2 * variant), yText);
         if (menuItemTmp->readonly) {
           printMenuItemFull(menuItemTmp->title, -1);
           _agfx.print("^");
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        drawSprite(5 * _textSize, yDraw, arrowBtn, color);
+        drawSprite(5 * _textSize + 2 * variant, yDraw, arrowBtn, color);
         break;
     }
   _agfx.setTextColor(_menuForegroundColor);
@@ -560,27 +560,27 @@ void GEM_adafruit_gfx::drawMenuPointer(bool clear) {
     byte menuItemHeight = getCurrentAppearance()->menuItemHeight;
     if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
       byte menuPageScreenTopOffset = getCurrentAppearance()->menuPageScreenTopOffset;
-      _agfx.fillRect(0, menuPageScreenTopOffset, 2 * _textSize, _agfx.height() - menuPageScreenTopOffset, _menuBackgroundColor);
+      _agfx.fillRect(0, menuPageScreenTopOffset, 2 * _spriteSize, _agfx.height() - menuPageScreenTopOffset, _menuBackgroundColor);
       if (menuItemTmp->readonly) {
         for (byte i = 0; i < (menuItemHeight - 1) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuForegroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 + 1, _menuForegroundColor);
-          if (_textSize > 1) {
+          if (_spriteSize > 1) {
             _agfx.drawPixel(2, pointerPosition + i * 2, _menuForegroundColor);
             _agfx.drawPixel(3, pointerPosition + i * 2 + 1, _menuForegroundColor);
           }
         }
       } else {
-        _agfx.fillRect(0, pointerPosition, 2 * _textSize, menuItemHeight - 1, _menuForegroundColor);
+        _agfx.fillRect(0, pointerPosition, 2 * _spriteSize, menuItemHeight - 1, _menuForegroundColor);
       }
       if (clear) {
-        byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[getMenuItemFontSize()].baselineOffset * _textSize;
+        byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[getMenuItemFontSize()].baselineOffset * _spriteSize;
         byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
-        _agfx.fillRect(5 * _textSize, pointerPosition - 1, _agfx.width() - 2, menuItemHeight + 1, _menuBackgroundColor);
+        _agfx.fillRect(5 * _spriteSize, pointerPosition - 1, _agfx.width() - 2, menuItemHeight + 1, _menuBackgroundColor);
         printMenuItem(menuItemTmp, yText, yDraw, _menuForegroundColor);
       }
     } else {
-      byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[getMenuItemFontSize()].baselineOffset * _textSize;
+      byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[getMenuItemFontSize()].baselineOffset * _spriteSize;
       byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
       byte menuItemsPerScreen = getMenuItemsPerScreen();
       byte screensCount = (_menuPageCurrent->itemsCount % menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / menuItemsPerScreen : _menuPageCurrent->itemsCount / menuItemsPerScreen + 1;
@@ -590,7 +590,7 @@ void GEM_adafruit_gfx::drawMenuPointer(bool clear) {
         for (byte i = 0; i < (menuItemHeight + 2) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuBackgroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 - 1, _menuBackgroundColor);
-          if (_textSize > 1) {
+          if (_spriteSize > 1) {
             _agfx.drawPixel(2, pointerPosition + i * 2, _menuBackgroundColor);
             _agfx.drawPixel(3, pointerPosition + i * 2 - 1, _menuBackgroundColor);
           }
