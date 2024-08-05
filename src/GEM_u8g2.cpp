@@ -516,7 +516,6 @@ void GEM_u8g2::printMenuItems() {
         _u8g2.drawXBMP(_u8g2.getDisplayWidth() - 8, yDraw, arrowRight_width, arrowRight_height, arrowRight_bits);
         break;
       case GEM_ITEM_BACK:
-        _u8g2.setCursor(11, yText);
         _u8g2.drawXBMP(5, yDraw, arrowLeft_width, arrowLeft_height, arrowLeft_bits);
         break;
       case GEM_ITEM_BUTTON:

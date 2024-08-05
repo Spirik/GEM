@@ -280,8 +280,14 @@ GEM_adafruit_gfx& GEM_adafruit_gfx::hideVersion(bool flag) {
 
 GEM_adafruit_gfx& GEM_adafruit_gfx::setTextSize(uint8_t size) {
   _textSize = size > 0 ? size : 1;
+  setSpriteSize(_textSize);
+  return *this;
+}
+
+GEM_adafruit_gfx& GEM_adafruit_gfx::setSpriteSize(uint8_t size) {
+  _spriteSize = size > 0 ? size : 1;
   if (_splash.image == logo[0].image || _splash.image == logo[1].image) {
-    _splash = logo[_textSize > 1 ? 1 : 0];
+    _splash = logo[_spriteSize > 1 ? 1 : 0];
   }
   return *this;
 }
@@ -409,7 +415,7 @@ void GEM_adafruit_gfx::drawTitleBar() {
 }
 
 void GEM_adafruit_gfx::drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color) {
-  byte variant = _textSize > 1 ? 1 : 0;
+  byte variant = _spriteSize > 1 ? 1 : 0;
   _agfx.drawBitmap(x, y, sprite[variant].image, sprite[variant].width, sprite[variant].height, color);
 }
 
@@ -435,7 +441,7 @@ void GEM_adafruit_gfx::printMenuItemFull(const char* str, int offset) {
 
 byte GEM_adafruit_gfx::getMenuItemInsetOffset(bool forSprite) {
   byte menuItemFontSize = getMenuItemFontSize();
-  byte spriteHeight = _textSize > 1 ? sprite_height_scaled : sprite_height;
+  byte spriteHeight = _spriteSize > 1 ? sprite_height_scaled : sprite_height;
   byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height * _textSize) / 2;
   return menuItemInsetOffset + (forSprite ? (_menuItemFont[menuItemFontSize].height * _textSize - spriteHeight) / 2 : -1 * _textSize); // With additional offset for sprites and text for better visual alignment
 }
@@ -482,7 +488,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
               {
                 GEMSelect* select = menuItemTmp->select;
                 printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-                drawSprite(_agfx.width() - 7 * _textSize, yDraw, selectArrows, color);
+                drawSprite(_agfx.width() - 7 * _spriteSize, yDraw, selectArrows, color);
               }
               break;
             #ifdef GEM_SUPPORT_FLOAT_EDIT
@@ -508,21 +514,21 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        drawSprite(_agfx.width() - 8 * _textSize, yDraw, arrowRight, color);
+        drawSprite(_agfx.width() - 8 * _spriteSize, yDraw, arrowRight, color);
         break;
       case GEM_ITEM_BACK:
-        _agfx.setCursor((5 + _menuItemFont[getMenuItemFontSize()].width) * _textSize, yText);
-        drawSprite(5 * _textSize, yDraw, arrowLeft, color);
+        drawSprite(5 * _textSize + 2 * (_spriteSize > 1 ? 1 : 0), yDraw, arrowLeft, color);
         break;
       case GEM_ITEM_BUTTON:
-        _agfx.setCursor((5 + _menuItemFont[getMenuItemFontSize()].width) * _textSize, yText);
+        byte variant = _spriteSize > 1 ? 1 : 0;
+        _agfx.setCursor((5 * _textSize + arrowBtn[variant].width + 2 * variant), yText);
         if (menuItemTmp->readonly) {
           printMenuItemFull(menuItemTmp->title, -1);
           _agfx.print("^");
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        drawSprite(5 * _textSize, yDraw, arrowBtn, color);
+        drawSprite(5 * _textSize + 2 * variant, yDraw, arrowBtn, color);
         break;
     }
   _agfx.setTextColor(_menuForegroundColor);
@@ -554,37 +560,35 @@ void GEM_adafruit_gfx::drawMenuPointer(bool clear) {
     byte menuItemHeight = getCurrentAppearance()->menuItemHeight;
     if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
       byte menuPageScreenTopOffset = getCurrentAppearance()->menuPageScreenTopOffset;
-      _agfx.fillRect(0, menuPageScreenTopOffset, 2 * _textSize, _agfx.height() - menuPageScreenTopOffset, _menuBackgroundColor);
+      _agfx.fillRect(0, menuPageScreenTopOffset, 2 * _spriteSize, _agfx.height() - menuPageScreenTopOffset, _menuBackgroundColor);
       if (menuItemTmp->readonly) {
         for (byte i = 0; i < (menuItemHeight - 1) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuForegroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 + 1, _menuForegroundColor);
-          if (_textSize > 1) {
+          if (_spriteSize > 1) {
             _agfx.drawPixel(2, pointerPosition + i * 2, _menuForegroundColor);
             _agfx.drawPixel(3, pointerPosition + i * 2 + 1, _menuForegroundColor);
           }
         }
       } else {
-        _agfx.fillRect(0, pointerPosition, 2 * _textSize, menuItemHeight - 1, _menuForegroundColor);
+        _agfx.fillRect(0, pointerPosition, 2 * _spriteSize, menuItemHeight - 1, _menuForegroundColor);
       }
       if (clear) {
         byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[getMenuItemFontSize()].baselineOffset * _textSize;
         byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
-        _agfx.fillRect(5 * _textSize, pointerPosition - 1, _agfx.width() - 2, menuItemHeight + 1, _menuBackgroundColor);
+        _agfx.fillRect(5 * _spriteSize, pointerPosition - 1, _agfx.width() - 2, menuItemHeight + 1, _menuBackgroundColor);
         printMenuItem(menuItemTmp, yText, yDraw, _menuForegroundColor);
       }
     } else {
       byte yText = pointerPosition + getMenuItemInsetOffset() + _menuItemFont[getMenuItemFontSize()].baselineOffset * _textSize;
       byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
-      byte menuItemsPerScreen = getMenuItemsPerScreen();
-      byte screensCount = (_menuPageCurrent->itemsCount % menuItemsPerScreen == 0) ? _menuPageCurrent->itemsCount / menuItemsPerScreen : _menuPageCurrent->itemsCount / menuItemsPerScreen + 1;
-      _agfx.fillRect(0, pointerPosition - 1, _agfx.width() + (screensCount > 1 ? -2 : 0), menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
+      _agfx.fillRect(0, pointerPosition - 1, _agfx.width() - 2, menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
       printMenuItem(menuItemTmp, yText, yDraw, clear ? _menuForegroundColor : _menuBackgroundColor);
       if (menuItemTmp->readonly) {
         for (byte i = 0; i < (menuItemHeight + 2) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuBackgroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 - 1, _menuBackgroundColor);
-          if (_textSize > 1) {
+          if (_spriteSize > 1) {
             _agfx.drawPixel(2, pointerPosition + i * 2, _menuBackgroundColor);
             _agfx.drawPixel(3, pointerPosition + i * 2 - 1, _menuBackgroundColor);
           }
@@ -745,7 +749,7 @@ void GEM_adafruit_gfx::checkboxToggle() {
     byte menuPointerType = getCurrentAppearance()->menuPointerType;
     uint16_t foreColor = (menuPointerType == GEM_POINTER_DASH) ? _menuForegroundColor : _menuBackgroundColor;
     uint16_t backColor = (menuPointerType == GEM_POINTER_DASH) ? _menuBackgroundColor : _menuForegroundColor;
-    byte variant = _textSize > 1 ? 1 : 0;
+    byte variant = _spriteSize > 1 ? 1 : 0;
     byte menuValuesLeftOffset = getCurrentAppearance()->menuValuesLeftOffset;
     if (!checkboxValue) {
       _agfx.fillRect(menuValuesLeftOffset, topOffset, checkboxChecked[variant].width, checkboxChecked[variant].height, backColor);
@@ -988,7 +992,7 @@ void GEM_adafruit_gfx::drawEditValueSelect() {
   _agfx.setCursor(getCurrentAppearance()->menuValuesLeftOffset, yText);
   
   printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
-  drawSprite(_agfx.width() - 7 * _textSize, getCurrentItemTopOffset(true, true), selectArrows, _menuBackgroundColor);
+  drawSprite(_agfx.width() - 7 * _spriteSize, getCurrentItemTopOffset(true, true), selectArrows, _menuBackgroundColor);
   _agfx.setTextColor(_menuForegroundColor);
 }
 

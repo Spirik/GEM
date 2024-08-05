@@ -386,7 +386,6 @@ void GEM::printMenuItems() {
         _glcd.drawSprite(_glcd.xdim-8, yDraw, GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BACK:
-        _glcd.setX(11);
         _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BUTTON:

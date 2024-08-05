@@ -122,6 +122,7 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& setSplashDelay(uint16_t value);                   // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_adafruit_gfx::init().
     GEM_adafruit_gfx& hideVersion(bool flag = true);                    // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_adafruit_gfx::init().
     GEM_adafruit_gfx& setTextSize(uint8_t size);                        // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
+    GEM_adafruit_gfx& setSpriteSize(uint8_t size);                      // Set sprite scaling factor if it should be different from the 'magnification' size above; sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
     GEM_adafruit_gfx& setFontBig(const GFXfont* font = GEM_FONT_BIG, uint8_t width = 6, uint8_t height = 8, uint8_t baselineOffset = 8);      // Set big font
     GEM_adafruit_gfx& setFontSmall(const GFXfont* font = GEM_FONT_SMALL, uint8_t width = 4, uint8_t height = 6, uint8_t baselineOffset = 6);  // Set small font
     GEM_adafruit_gfx& setForegroundColor(uint16_t color);               // Set foreground color of the menu (default is 0xFF)
@@ -139,7 +140,7 @@ class GEM_adafruit_gfx {
 
     /* DRAW OPERATIONS */
 
-    GEM_VIRTUAL GEM_adafruit_gfx& drawMenu();                                       // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
+    GEM_VIRTUAL GEM_adafruit_gfx& drawMenu();                           // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
     GEM_adafruit_gfx& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_adafruit_gfx::drawMenu()
     GEM_adafruit_gfx& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_adafruit_gfx::drawMenu()
 
@@ -157,6 +158,7 @@ class GEM_adafruit_gfx {
     FontSizeAGFX _menuItemFont[2] = {{6,8,8},{4,6,6}};
     FontFamiliesAGFX _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     byte _textSize = 1;
+    byte _spriteSize = 1;
     bool _invertKeysDuringEdit = false;
     GEM_VIRTUAL byte getMenuItemTitleLength();
     GEM_VIRTUAL byte getMenuItemValueLength();
