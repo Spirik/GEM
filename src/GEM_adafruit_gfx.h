@@ -140,7 +140,7 @@ class GEM_adafruit_gfx {
 
     /* DRAW OPERATIONS */
 
-    GEM_VIRTUAL GEM_adafruit_gfx& drawMenu();                                       // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
+    GEM_VIRTUAL GEM_adafruit_gfx& drawMenu();                           // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
     GEM_adafruit_gfx& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_adafruit_gfx::drawMenu()
     GEM_adafruit_gfx& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_adafruit_gfx::drawMenu()
 

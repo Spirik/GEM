@@ -120,7 +120,7 @@ class GEM {
 
     /* DRAW OPERATIONS */
 
-    GEM_VIRTUAL GEM& drawMenu();                                        // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
+    GEM_VIRTUAL GEM& drawMenu();                            // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
     GEM& setDrawMenuCallback(void (*drawMenuCallback_)());  // Set callback that will be called at the end of GEM::drawMenu()
     GEM& removeDrawMenuCallback();                          // Remove callback that was called at the end of GEM::drawMenu()
 
