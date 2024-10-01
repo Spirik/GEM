@@ -23,6 +23,12 @@
 #include "config/support-float-edit.h"      // Support for editable float and double variables (option selects support them regardless of this setting)
 #endif
 
+// Support for spinner (GEMSpinner) menu items enabled by default.
+// Can be disabled either by defining GEM_DISABLE_SPINNER (via compiler flag or define) or manual edition here.
+#if !defined(GEM_DISABLE_SPINNER)
+#include "config/support-spinner.h"         // Support for increment/decrement spinner menu items
+#endif
+
 // Support for Advanced Mode is disabled by default.
 // Advanced Mode provides additional means to modify, customize and extend functionality of GEM.
 // Can be enabled either by defining GEM_ENABLE_ADVANCED_MODE (via compiler flag or define) or manual edition here.

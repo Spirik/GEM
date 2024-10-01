@@ -24,6 +24,13 @@ SelectOptionByte	KEYWORD1
 SelectOptionChar	KEYWORD1
 SelectOptionFloat	KEYWORD1
 SelectOptionDouble	KEYWORD1
+GEMSpinner	KEYWORD1
+GEMSpinnerBoundaries	KEYWORD1
+GEMSpinnerBoundariesByte	KEYWORD1
+GEMSpinnerBoundariesInt	KEYWORD1
+GEMSpinnerBoundariesFloat	KEYWORD1
+GEMSpinnerBoundariesDouble	KEYWORD1
+GEMSpinnerValue	KEYWORD1
 
 ####################################################
 # Methods and Functions (KEYWORD2)
@@ -112,6 +119,7 @@ GEM_VAL_BOOLEAN	LITERAL1
 GEM_VAL_SELECT	LITERAL1
 GEM_VAL_FLOAT	LITERAL1
 GEM_VAL_DOUBLE	LITERAL1
+GEM_VAL_SPINNER	LITERAL1
 
 GEM_KEY_NONE	LITERAL1
 GEM_KEY_UP	LITERAL1

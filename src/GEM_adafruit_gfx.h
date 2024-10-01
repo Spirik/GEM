@@ -46,6 +46,9 @@
 #include "GEMContext.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
+#ifdef GEM_SUPPORT_SPINNER
+#include "GEMSpinner.h"
+#endif
 #include "constants.h"
 
 // Macro constants (aliases) for Adafruit GFX font families used to draw menu
@@ -212,6 +215,10 @@ class GEM_adafruit_gfx {
     GEM_VIRTUAL void drawEditValueDigit(byte code, bool clear = false);
     GEM_VIRTUAL void nextEditValueSelect();
     GEM_VIRTUAL void prevEditValueSelect();
+    #ifdef GEM_SUPPORT_SPINNER
+    GEM_VIRTUAL void nextEditValueSpinner();
+    GEM_VIRTUAL void prevEditValueSpinner();
+    #endif
     GEM_VIRTUAL void drawEditValueSelect();
     GEM_VIRTUAL void saveEditValue();
     GEM_VIRTUAL void cancelEditValue();

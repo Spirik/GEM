@@ -44,6 +44,9 @@
 #include "GEMContext.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
+#ifdef GEM_SUPPORT_SPINNER
+#include "GEMSpinner.h"
+#endif
 #include "constants.h"
 
 // Macro constants (aliases) for u8g2 font families used to draw menu
@@ -203,6 +206,10 @@ class GEM_u8g2 {
     GEM_VIRTUAL void drawEditValueDigit(byte code);
     GEM_VIRTUAL void nextEditValueSelect();
     GEM_VIRTUAL void prevEditValueSelect();
+    #ifdef GEM_SUPPORT_SPINNER
+    GEM_VIRTUAL void nextEditValueSpinner();
+    GEM_VIRTUAL void prevEditValueSpinner();
+    #endif
     GEM_VIRTUAL void saveEditValue();
     GEM_VIRTUAL void cancelEditValue();
     GEM_VIRTUAL void exitEditValue();

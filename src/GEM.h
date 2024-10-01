@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -44,6 +44,9 @@
 #include "GEMContext.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
+#ifdef GEM_SUPPORT_SPINNER
+#include "GEMSpinner.h"
+#endif
 #include "constants.h"
 
 // Macro constants (aliases) for the keys (buttons) used to navigate and interact with menu
@@ -185,6 +188,10 @@ class GEM {
     GEM_VIRTUAL void drawEditValueDigit(byte code);
     GEM_VIRTUAL void nextEditValueSelect();
     GEM_VIRTUAL void prevEditValueSelect();
+    #ifdef GEM_SUPPORT_SPINNER
+    GEM_VIRTUAL void nextEditValueSpinner();
+    GEM_VIRTUAL void prevEditValueSpinner();
+    #endif
     GEM_VIRTUAL void drawEditValueSelect();
     GEM_VIRTUAL void saveEditValue();
     GEM_VIRTUAL void cancelEditValue();

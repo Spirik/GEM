@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -57,6 +57,9 @@
 class GEMItem;
 class GEMPage;
 class GEMSelect;
+#ifdef GEM_SUPPORT_SPINNER
+class GEMSpinner;
+#endif
 
 // Declaration of GEMCallbackData type
 struct GEMCallbackData {
@@ -152,6 +155,69 @@ class GEMItem {
     GEMItem(const char* title_, char* linkedVariable_, GEMSelect& select_, bool readonly_ = false);
     GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, bool readonly_ = false);
     GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, bool readonly_ = false);
+    #ifdef GEM_SUPPORT_SPINNER
+    /* 
+      Constructors for menu item that represents spinner, w/ callback (optionally w/ user-defined callback argument)
+      @param 'title_' - title of the menu item displayed on the screen
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, float, or double)
+      @param 'spinner_' - reference to GEMSpinner object
+      @param 'callbackAction_' - pointer to callback function executed when associated variable is successfully saved
+      @param 'callbackVal_' - value of an argument that will be passed to callback within GEMCallbackData (either byte, int, bool, float, double, char or void pointer)
+    */
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)());
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)());
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)());
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)());
+
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData));
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_);
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_);
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_);
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_);
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
+
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData));
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
+
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData));
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
+
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData));
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
+    /* 
+      Constructors for menu item that represents spinner, w/o callback
+      @param 'title_' - title of the menu item displayed on the screen
+      @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, float, or double)
+      @param 'spinner_' - reference to GEMSpinner object
+      @param 'readonly_' (optional) - set readonly mode for variable that spinner is associated with
+      values GEM_READONLY (alias for true)
+      default false
+    */
+    GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, bool readonly_ = false);
+    GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, bool readonly_ = false);
+    GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, bool readonly_ = false);
+    GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, bool readonly_ = false);
+    #endif
     /* 
       Constructors for menu item that represents variable, w/ callback (optionally w/ user-defined callback argument)
       @param 'title_' - title of the menu item displayed on the screen
@@ -282,7 +348,7 @@ class GEMItem {
     GEMItem& setAdjustedASCIIOrder(bool mode = true);   // Turn adjsuted order of characters when editing char[17] variables on (with space character followed by `a` and preceded by `) or off
     GEMItem& setReadonly(bool mode = true);             // Explicitly set or unset readonly mode for variable that menu item is associated with
                                                         // (relevant for GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_FLOAT, GEM_VAL_DOUBLE, GEM_VAL_CHAR,
-                                                        // GEM_VAL_BOOL variable menu items and GEM_VAL_SELECT option select), or menu button GEM_ITEM_BUTTON
+                                                        // GEM_VAL_BOOL variable menu items, GEM_VAL_SELECT option select and GEM_VAL_SPINNER spinner), or menu button GEM_ITEM_BUTTON
                                                         // and menu link GEM_ITEM_LINK, pressing of which won't result in any action, associated with them
     bool getReadonly();                                 // Get readonly state of the variable that menu item is associated with (as well as menu link or button)
     GEMItem& hide(bool hide = true);                    // Explicitly hide or show menu item
@@ -301,6 +367,9 @@ class GEMItem {
     bool readonly = false;
     bool hidden = false;
     GEMSelect* select = nullptr;
+    #ifdef GEM_SUPPORT_SPINNER
+    GEMSpinner* spinner = nullptr;
+    #endif
     GEMPage* parentPage = nullptr;
     GEMPage* linkedPage = nullptr;
     GEMItem* menuItemNext = nullptr;
