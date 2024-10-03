@@ -70,6 +70,8 @@ const byte channelA = 2;
 const byte channelB = 3;
 const byte buttonPin = 4;
 
+byte chanB = HIGH; // Variable to store Channel B readings
+
 // Array of Key objects that will link GEM key identifiers with dedicated pins
 // (it is only necessary to detect signal change on a single channel of the encoder, either A or B;
 // order of the channel and push-button Key objects in an array is not important)
@@ -302,6 +304,7 @@ void loop() {
 
   // If menu is ready to accept button press...
   if (menu.readyForKey()) {
+    chanB = digitalRead(channelB); // Reading Channel B signal beforehand to account for possible delays due to polling nature of KeyDetector algorithm
     // ...detect key press using KeyDetector library
     // and pass pressed button to menu
     myKeyDetector.detect();
@@ -310,19 +313,9 @@ void loop() {
     // calculateFreeRam();
   
     switch (myKeyDetector.trigger) {
-      case KEY_C:
-        // Button was pressed
-        // Save current time as a time of the key press event
-        keyPressTime = now;
-        break;
-    }
-    /* Detecting rotation of the encoder on release rather than push
-    (i.e. myKeyDetector.triggerRelease rather myKeyDetector.trigger)
-    may lead to more stable readings (without excessive signal ripple) */
-    switch (myKeyDetector.triggerRelease) {
       case KEY_A:
         // Signal from Channel A of encoder was detected
-        if (digitalRead(channelB) == LOW) {
+        if (chanB == LOW) {
           // If channel B is low then the knob was rotated CCW
           if (myKeyDetector.current == KEY_C) {
             // If push-button was pressed at that time, then treat this action as GEM_KEY_LEFT,...
@@ -346,6 +339,13 @@ void loop() {
           }
         }
         break;
+      case KEY_C:
+        // Button was pressed
+        // Save current time as a time of the key press event
+        keyPressTime = now;
+        break;
+    }
+    switch (myKeyDetector.triggerRelease) {
       case KEY_C:
         // Button was released
         if (!secondaryPressed) {
