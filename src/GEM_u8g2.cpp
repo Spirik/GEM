@@ -1053,6 +1053,10 @@ void GEM_u8g2::exitEditValue() {
   drawMenu();
 }
 
+bool GEM_u8g2::isEditMode() {
+  return _editValueMode;
+}
+
 // Trim leading/trailing whitespaces
 // Author: Adam Rosenfield, https://stackoverflow.com/a/122721
 char* GEM_u8g2::trimString(char* str) {

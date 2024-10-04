@@ -144,9 +144,13 @@ class GEM_u8g2 {
     GEM_u8g2& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_u8g2::drawMenu()
     GEM_u8g2& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_u8g2::drawMenu()
 
+    /* VALUE EDIT */
+
+    bool isEditMode();                                          // Checks if menu is in edit mode
+
     /* KEY DETECTION */
 
-    bool readyForKey();                                         // Check that menu is waiting for the key press
+    bool readyForKey();                                         // Checks that menu is waiting for the key press
     GEM_u8g2& registerKeyPress(byte keyCode);                   // Register the key press and trigger corresponding action
                                                                 // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   protected:

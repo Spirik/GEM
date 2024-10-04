@@ -1141,6 +1141,10 @@ void GEM_adafruit_gfx::exitEditValue(bool redrawMenu) {
   }
 }
 
+bool GEM_adafruit_gfx::isEditMode() {
+  return _editValueMode;
+}
+
 // Trim leading/trailing whitespaces
 // Author: Adam Rosenfield, https://stackoverflow.com/a/122721
 char* GEM_adafruit_gfx::trimString(char* str) {

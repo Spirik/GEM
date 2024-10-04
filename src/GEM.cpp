@@ -962,6 +962,10 @@ void GEM::exitEditValue() {
   drawMenu();
 }
 
+bool GEM::isEditMode() {
+  return _editValueMode;
+}
+
 // Trim leading/trailing whitespaces
 // Author: Adam Rosenfield, https://stackoverflow.com/a/122721
 char* GEM::trimString(char* str) {

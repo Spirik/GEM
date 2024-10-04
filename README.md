@@ -1247,9 +1247,13 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Disable callback that was called at the end of `drawMenu()`.
 
+* *bool* **isEditMode()**  
+  *Returns*: `bool`  
+  Checks if menu is in edit mode (returns `true` when editing a variable or navigating through option select or spinner).
+
 * *bool* **readyForKey()**  
   *Returns*: `bool`  
-  Check that menu is waiting for the key press.
+  Checks that menu is waiting for the key press.
 
 * *GEM&* **registerKeyPress(** _byte_ keyCode **)**  
   *Accepts*: `byte` (*Values*: `GEM_KEY_NONE`, `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, `GEM_KEY_OK`)  
