@@ -34,6 +34,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMPage](#gempage)
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
+  * [GEMSpinner](#gemspinner)
   * [GEMCallbackData](#gemcallbackdata)
   * [GEMAppearance](#gemappearance)
   * [GEMContext](#gemcontext)
@@ -163,7 +164,7 @@ Initialize an instance of the SoftwareSerial library called `serialLCD`:
 SoftwareSerial serialLCD(rxPin, txPin);
 ```
 
-Create an instance of the `GLCD` class named `glcd`. This instance is used to call all the subsequent GLCD functions (internally from GEM library, or manually in your sketch if it is required). Instance is created with a reference to the software serial object:
+Create an instance of the `GLCD` class named `glcd`. This instance is used to call all of the subsequent GLCD functions (internally from GEM library, or manually in your sketch if it is required). Instance is created with a reference to the software serial object:
 
 ```cpp
 GLCD glcd(serialLCD);
@@ -416,7 +417,7 @@ Let's create a simple one page menu with one editable menu item associated with 
 
 U8g2 library supports numerous popular display controllers. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
 
-In our case create an instance of the `U8G2_KS0108_128X64_1` class named `u8g2`. This instance is used to call all the subsequent U8g2 functions (internally from GEM library, or manually in your sketch if it is required).
+In our case create an instance of the `U8G2_KS0108_128X64_1` class named `u8g2`. This instance is used to call all of the subsequent U8g2 functions (internally from GEM library, or manually in your sketch if it is required).
 
 ```cpp
 U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0, /*dc=*/ A1, /*cs0=*/ A3, /*cs1=*/ A2, /*cs2=*/ U8X8_PIN_NONE, /* reset=*/ U8X8_PIN_NONE);
@@ -672,7 +673,7 @@ Navigation buttons initial setup is now complete.
 
 Adafruit GFX library supports several different display controllers (through separately installed and included libraries). Choose a matching library for the correct initialization of the display. See available libraries and supported controllers in the [documentation](https://learn.adafruit.com/adafruit-gfx-graphics-library) for Adafruit GFX library.
 
-In our case we included Adafruit_ST7735 library, and now we need to create an instance of the `Adafruit_ST7735` class named `tft`. This instance is used to call all the subsequent Adafruit GFX functions (internally from GEM library, or manually in your sketch if it is required). Before that, we define aliases for the pins display is connected to.
+In our case we included Adafruit_ST7735 library, and now we need to create an instance of the `Adafruit_ST7735` class named `tft`. This instance is used to call all of the subsequent Adafruit GFX functions (internally from GEM library, or manually in your sketch if it is required). Before that, we define aliases for the pins display is connected to.
 
 ```cpp
 #define TFT_CS    A2
@@ -754,7 +755,7 @@ You can optionally [rotate](https://learn.adafruit.com/adafruit-gfx-graphics-lib
 tft.setRotation(3);
 ```
 
-Init menu. That will run some initialization routines (e.g. load sprites into LCD Serial Backpack's internal memory), then show splash screen (which can be customized).
+Init menu. That will run some initialization routines, then show splash screen (which can be customized).
 
 ```cpp
 menu.init();
@@ -1246,9 +1247,13 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Disable callback that was called at the end of `drawMenu()`.
 
+* *bool* **isEditMode()**  
+  *Returns*: `bool`  
+  Checks if menu is in edit mode (returns `true` when editing a variable or navigating through option select or spinner).
+
 * *bool* **readyForKey()**  
   *Returns*: `bool`  
-  Check that menu is waiting for the key press.
+  Checks that menu is waiting for the key press.
 
 * *GEM&* **registerKeyPress(** _byte_ keyCode **)**  
   *Accepts*: `byte` (*Values*: `GEM_KEY_NONE`, `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, `GEM_KEY_OK`)  
@@ -1360,9 +1365,9 @@ GEMPage menuPage(title[, parentMenuPage]);
 
 ### GEMItem
 
-Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
+Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; incremental spinner of type `int`, `byte`, `float`, `double`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
 
-> **Note:** support for editable variables of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
+> **Note:** support for editable variables (and spinner) of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
 
 #### Variable
 
@@ -1420,6 +1425,45 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback[, callbackVa
 * **select**  
   *Type*: `GEMSelect`  
   Reference to [`GEMSelect`](#gemselect) option select object that represents a list of available values.
+
+* **readonly** [*optional*]  
+  *Type*: `bool`  
+  *Values*: `GEM_READONLY` (alias for `true`), `false`  
+  *Default*: `false`  
+  Sets readonly mode for variable that menu item is associated with.
+
+* **saveCallback** [*optional*]  
+  *Type*: `pointer to function`  
+  Pointer to callback function executed when associated variable is successfully saved. Optionally, callback function can expect argument of type `GEMCallbackData` to be passed to it when it is executed. In this case optional user-defined value of an argument can be specified (see below).
+
+* **callbackVal** [*optional*]  
+  *Type*: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`  
+  *Default*: `0`  
+  Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
+
+> **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
+
+#### Spinner
+
+```cpp
+GEMItem menuItemSpinner(title, linkedVariable, spinner[, readonly]);
+```
+or
+```cpp
+GEMItem menuItemSpinner(title, linkedVariable, spinner[, saveCallback[, callbackVal]]);
+```
+
+* **title**  
+  *Type*: `const char*`  
+  Title of the menu item displayed on the screen.
+
+* **linkedVariable**  
+  *Type*: `int`, `byte`, `float`, `double`  
+  Reference to variable that menu item is associated with.
+
+* **spinner**  
+  *Type*: `GEMSpinner`  
+  Reference to [`GEMSpinner`](#gemspinner) spinner object that represents available range of values.
 
 * **readonly** [*optional*]  
   *Type*: `bool`  
@@ -1690,6 +1734,142 @@ SelectOptionChar selectOption = {name, val_char};
 * **val_char**  
   *Type*: `const char*`  
   Value of the option that is assigned to linked variable upon option selection. Note that character array of associated with menu item variable (of type `char[n]`) should be big enough to hold select option with the longest value to avoid overflows.
+
+
+----------
+
+
+### GEMSpinner
+
+Spinner is similar to option select, but instead of specifying available options as an array, requires setting of minimum and maximum values of available range and a step with which increment/decrement of the linked variable is performed. Available since GEM ver. 1.6. 
+
+`GEMSpinner` represents range of values available for incremental spinner. Supplied to `GEMItem` constructor. Object of class `GEMSpinner` defines as follows:
+
+```cpp
+GEMSpinner mySpinner(boundaries);
+```
+
+* **boundaries**  
+  *Type*: `GEMSpinnerBoundariesInt`, or `GEMSpinnerBoundariesByte`, or `GEMSpinnerBoundariesFloat`, or `GEMSpinnerBoundariesDouble`  
+  Settings of the incremental spinner, such as minimum and maximum boundaries of available values in range, and step with which increment/decrement of value is performed. Type of boundaries object is either `GEMSpinnerBoundariesInt`, or `GEMSpinnerBoundariesByte`, or `GEMSpinnerBoundariesFloat`, or `GEMSpinnerBoundariesDouble` depending on the type of variable the spinner is associated with. See the following section for definition of these custom types.
+
+Example of use:
+
+```cpp
+// Integer spinner
+// 1) Define settings (boundaries) of the spinner:
+GEMSpinnerBoundariesInt mySpinnerBoundaries = { .step = 50, .min = -150, .max = 150 };
+// 2) Supply settings to GEMSpinner constructor:
+GEMSpinner mySpinner(mySpinnerBoundaries);
+```
+
+It is possible to exclude support for spinner menu items to save some space on your chip. For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
+
+```cpp
+#include "config/support-spinner.h"
+```
+
+to
+
+```cpp
+// #include "config/support-spinner.h"
+```
+
+> Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
+
+Or, alternatively, define `GEM_DISABLE_SPINNER` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
+
+```ini
+build_flags =
+    ; Disable support for increment/decrement spinner menu items
+    -D GEM_DISABLE_SPINNER
+```
+
+
+----------
+
+
+### GEMSpinnerBoundariesInt
+
+Data structure that represents settings of the spinner of type `int`. Object of type `GEMSpinnerBoundariesInt` defines as follows:
+
+```cpp
+GEMSpinnerBoundariesInt boundaries = {step, min, max};
+```
+
+* **step**  
+  *Type*: `int`  
+  Step with which increment/decrement of the spinner value is performed.
+
+* **min**  
+  *Type*: `int`  
+  Minimum boundary of the spinner range.
+
+* **max**  
+  *Type*: `int`  
+  Maximum boundary of the spinner range.
+
+### GEMSpinnerBoundariesByte
+
+Data structure that represents settings of the spinner of type `byte`. Object of type `GEMSpinnerBoundariesByte` defines as follows:
+
+```cpp
+GEMSpinnerBoundariesByte boundaries = {step, min, max};
+```
+
+* **step**  
+  *Type*: `byte`  
+  Step with which increment/decrement of the spinner value is performed.
+
+* **min**  
+  *Type*: `byte`  
+  Minimum boundary of the spinner range.
+
+* **max**  
+  *Type*: `byte`  
+  Maximum boundary of the spinner range.
+
+### GEMSpinnerBoundariesFloat
+
+Data structure that represents settings of the spinner of type `float`. Object of type `GEMSpinnerBoundariesFloat` defines as follows:
+
+```cpp
+GEMSpinnerBoundariesFloat boundaries = {step, min, max};
+```
+
+* **step**  
+  *Type*: `float`  
+  Step with which increment/decrement of the spinner value is performed.
+
+* **min**  
+  *Type*: `float`  
+  Minimum boundary of the spinner range.
+
+* **max**  
+  *Type*: `float`  
+  Maximum boundary of the spinner range.
+
+### GEMSpinnerBoundariesDouble
+
+Data structure that represents settings of the spinner of type `double`. Object of type `GEMSpinnerBoundariesDouble` defines as follows:
+
+```cpp
+GEMSpinnerBoundariesDouble boundaries = {step, min, max};
+```
+
+* **step**  
+  *Type*: `double`  
+  Step with which increment/decrement of the spinner value is performed.
+
+* **min**  
+  *Type*: `double`  
+  Minimum boundary of the spinner range.
+
+* **max**  
+  *Type*: `double`  
+  Maximum boundary of the spinner range.
+
+> **Note:** It is up to author of the sketch to make sure that initial value of the associated variable is within allowable range of spinner, and that type of variable and types of step and min/max boundaries match (and their values don't exceed capacity of their data type). Increment/decrement of variable will stop closest to the corresponding min/max boundary of allowable range, and result variable value may not always reach said boundaries exactly, if initial value and step combination won't allow it. If initial value is not within min/max boundaries interaction with spinner won't affect it (it will be possible to enter edit mode but won't be possible to increment/decrement value). If step is supplied as a negative value, the absolute value will be taken instead. If supplied value of min is greater than max, min/max values will be swapped. So `{ .step = -50, .min = 150, .max = 49 }` is equivalent to `{ .step = 50, .min = 49, .max = 150 }`.
 
 
 ----------

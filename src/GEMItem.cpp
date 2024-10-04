@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -579,6 +579,444 @@ GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_
   , readonly(readonly_)
   , select(&select_)
 { }
+
+//---
+
+#ifdef GEM_SUPPORT_SPINNER
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackAction(callbackAction_)
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackAction(callbackAction_)
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackAction(callbackAction_)
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)())
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackAction(callbackAction_)
+{ }
+
+//---
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData))
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { 0 } }
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valByte = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valInt = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valFloat = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valDouble = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valBool = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valChar = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valPointer = callbackVal_ }}
+{ }
+
+//---
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData))
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { 0 } }
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valByte = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valInt = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valFloat = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valDouble = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valBool = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valChar = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valPointer = callbackVal_ }}
+{ }
+
+//---
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData))
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { 0 } }
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valByte = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valInt = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valFloat = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valDouble = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valBool = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valChar = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valPointer = callbackVal_ }}
+{ }
+
+//---
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData))
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { 0 } }
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), byte callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valByte = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), int callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valInt = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), float callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valFloat = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), double callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valDouble = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valBool = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valChar = callbackVal_ }}
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , spinner(&spinner_)
+  , callbackActionArg(callbackAction_)
+  , callbackWithArgs(true)
+  , callbackData{ this, { .valPointer = callbackVal_ }}
+{ }
+
+//---
+
+GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSpinner& spinner_, bool readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , readonly(readonly_)
+  , spinner(&spinner_)
+{ }
+
+GEMItem::GEMItem(const char* title_, int& linkedVariable_, GEMSpinner& spinner_, bool readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , readonly(readonly_)
+  , spinner(&spinner_)
+{ }
+
+GEMItem::GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, bool readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , readonly(readonly_)
+  , spinner(&spinner_)
+{ }
+
+GEMItem::GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, bool readonly_)
+  : title(title_)
+  , linkedVariable(&linkedVariable_)
+  , linkedType(GEM_VAL_SPINNER)
+  , type(GEM_ITEM_VAL)
+  , readonly(readonly_)
+  , spinner(&spinner_)
+{ }
+#endif
 
 //---
 

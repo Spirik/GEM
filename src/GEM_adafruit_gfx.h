@@ -46,6 +46,9 @@
 #include "GEMContext.h"
 #include "GEMPage.h"
 #include "GEMSelect.h"
+#ifdef GEM_SUPPORT_SPINNER
+#include "GEMSpinner.h"
+#endif
 #include "constants.h"
 
 // Macro constants (aliases) for Adafruit GFX font families used to draw menu
@@ -144,9 +147,13 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_adafruit_gfx::drawMenu()
     GEM_adafruit_gfx& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_adafruit_gfx::drawMenu()
 
+    /* VALUE EDIT */
+
+    bool isEditMode();                                                  // Checks if menu is in edit mode
+
     /* KEY DETECTION */
 
-    bool readyForKey();                                                 // Check that menu is waiting for the key press
+    bool readyForKey();                                                 // Checks that menu is waiting for the key press
     GEM_adafruit_gfx& registerKeyPress(byte keyCode);                   // Register the key press and trigger corresponding action
                                                                         // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   protected:
@@ -212,6 +219,10 @@ class GEM_adafruit_gfx {
     GEM_VIRTUAL void drawEditValueDigit(byte code, bool clear = false);
     GEM_VIRTUAL void nextEditValueSelect();
     GEM_VIRTUAL void prevEditValueSelect();
+    #ifdef GEM_SUPPORT_SPINNER
+    GEM_VIRTUAL void nextEditValueSpinner();
+    GEM_VIRTUAL void prevEditValueSpinner();
+    #endif
     GEM_VIRTUAL void drawEditValueSelect();
     GEM_VIRTUAL void saveEditValue();
     GEM_VIRTUAL void cancelEditValue();

@@ -32,8 +32,8 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Macro constant (alias) for current version of GEM library, printed on _splash screen
-#define GEM_VER "1.5"
+// Macro constant (alias) for current version of GEM library, printed on splash screen
+#define GEM_VER "1.6"
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
@@ -55,10 +55,11 @@
 #define GEM_VAL_CHAR 2     // Associated variable is of type char[GEM_STR_LEN]
 #define GEM_VAL_BOOL 3     // Associated variable is of type bool
 #define GEM_VAL_BOOLEAN GEM_VAL_BOOL
-#define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte or char[] with option select used to pick a predefined value from the list
+#define GEM_VAL_SELECT 4   // Associated variable is either of type int, byte, char[], float or double with option select used to pick a predefined value from the list
                            // (note that char[] array should be big enough to hold select option with the longest value)
 #define GEM_VAL_FLOAT 5    // Associated variable is of type float
 #define GEM_VAL_DOUBLE 6   // Associated variable is of type double
+#define GEM_VAL_SPINNER 7  // Associated variable is either of type int, byte, float or double with spinner to increment or decrement value with given step
 
 // Macro used internally to mark virtual functions in Advanced Mode
 #ifdef GEM_ENABLE_ADVANCED_MODE
