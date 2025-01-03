@@ -610,12 +610,16 @@ void GEM::checkboxToggle() {
   bool checkboxValue = *(bool*)menuItemTmp->linkedVariable;
   *(bool*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
+    resetEditValueState(); // Explicitly reset edit value state to be more predictable before user-defined callback is called
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
     } else {
       menuItemTmp->callbackAction();
     }
-    exitEditValue();
+    if (!_editValueMode) { // Edge case e.g. when edit mode was activated from inside callback (e.g. on another menu item)
+      drawEditValueCursor();
+      drawMenu();
+    }
   } else {
     if (!checkboxValue) {
       _glcd.drawSprite(getCurrentAppearance()->menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);

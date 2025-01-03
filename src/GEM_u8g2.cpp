@@ -742,12 +742,14 @@ void GEM_u8g2::checkboxToggle() {
   bool checkboxValue = *(bool*)menuItemTmp->linkedVariable;
   *(bool*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
+    resetEditValueState(); // Explicitly reset edit value state to be more predictable before user-defined callback is called
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
     } else {
       menuItemTmp->callbackAction();
     }
-    exitEditValue();
+    drawEditValueCursor();
+    drawMenu();
   } else {
     _editValueMode = false;
   }

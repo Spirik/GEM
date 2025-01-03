@@ -774,12 +774,15 @@ void GEM_adafruit_gfx::checkboxToggle() {
   bool checkboxValue = *(bool*)menuItemTmp->linkedVariable;
   *(bool*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
+    resetEditValueState(); // Explicitly reset edit value state to be more predictable before user-defined callback is called
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
     } else {
       menuItemTmp->callbackAction();
     }
-    exitEditValue();
+    if (!_editValueMode) { // Edge case e.g. when edit mode was activated from inside callback (e.g. on another menu item)
+      drawMenu();
+    }
   } else {
     byte menuPointerType = getCurrentAppearance()->menuPointerType;
     uint16_t foreColor = (menuPointerType == GEM_POINTER_DASH) ? _menuForegroundColor : _menuBackgroundColor;
