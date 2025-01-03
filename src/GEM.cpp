@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -318,6 +318,7 @@ void GEM::printMenuItems() {
   GEMItem* menuItemTmp = _menuPageCurrent->getMenuItem(currentPageScreenNum * menuItemsPerScreen);
   byte y = getCurrentAppearance()->menuPageScreenTopOffset;
   byte i = 0;
+  char valueStringTmp[GEM_STR_LEN];
   while (menuItemTmp != nullptr && i < menuItemsPerScreen) {
     _glcd.setY(y + getMenuItemInsetOffset());
     byte yDraw = y + getMenuItemInsetOffset(true);
@@ -336,12 +337,12 @@ void GEM::printMenuItems() {
           _glcd.setX(menuValuesLeftOffset);
           switch (menuItemTmp->linkedType) {
             case GEM_VAL_INTEGER:
-              itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
-              printMenuItemValue(_valueString);
+              itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+              printMenuItemValue(valueStringTmp);
               break;
             case GEM_VAL_BYTE:
-              itoa(*(byte*)menuItemTmp->linkedVariable, _valueString, 10);
-              printMenuItemValue(_valueString);
+              itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
+              printMenuItemValue(valueStringTmp);
               break;
             case GEM_VAL_CHAR:
               printMenuItemValue((char*)menuItemTmp->linkedVariable);
@@ -366,35 +367,35 @@ void GEM::printMenuItems() {
                 GEMSpinner* spinner = menuItemTmp->spinner;
                 switch (spinner->getType()) {
                   case GEM_VAL_BYTE:
-                    itoa(*(byte*)menuItemTmp->linkedVariable, _valueString, 10);
+                    itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
                     break;
                   case GEM_VAL_INTEGER:
-                    itoa(*(int*)menuItemTmp->linkedVariable, _valueString, 10);
+                    itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
                     break;
                   #ifdef GEM_SUPPORT_FLOAT_EDIT
                   case GEM_VAL_FLOAT:
-                    dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
+                    dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
                     break;
                   case GEM_VAL_DOUBLE:
-                    dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
+                    dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
                     break;
                   #endif
                 }
-                printMenuItemValue(_valueString);
+                printMenuItemValue(valueStringTmp);
                 _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
               }
               break;
             #endif
             #ifdef GEM_SUPPORT_FLOAT_EDIT
             case GEM_VAL_FLOAT:
-              // sprintf(_valueString,"%.6f", *(float*)menuItemTmp->linkedVariable); // May work for non-AVR boards
-              dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
-              printMenuItemValue(_valueString);
+              // sprintf(valueStringTmp,"%.6f", *(float*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+              dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
+              printMenuItemValue(valueStringTmp);
               break;
             case GEM_VAL_DOUBLE:
-              // sprintf(_valueString,"%.6f", *(double*)menuItemTmp->linkedVariable); // May work for non-AVR boards
-              dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, _valueString);
-              printMenuItemValue(_valueString);
+              // sprintf(valueStringTmp,"%.6f", *(double*)menuItemTmp->linkedVariable); // May work for non-AVR boards
+              dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
+              printMenuItemValue(valueStringTmp);
               break;
             #endif
           }
@@ -428,7 +429,7 @@ void GEM::printMenuItems() {
     y += getCurrentAppearance()->menuItemHeight;
     i++;
   }
-  memset(_valueString, '\0', GEM_STR_LEN - 1);
+  memset(valueStringTmp, '\0', GEM_STR_LEN - 1);
 }
 
 void GEM::drawMenuPointer() {
@@ -941,23 +942,33 @@ void GEM::saveEditValue() {
     #endif
   }
   if (menuItemTmp->callbackAction != nullptr) {
+    resetEditValueState(); // Explicitly reset edit value state to be more predictable before user-defined callback is called
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
     } else {
       menuItemTmp->callbackAction();
     }
+    if (!_editValueMode) { // Edge case e.g. when edit mode was activated from inside callback (e.g. on another menu item)
+      drawEditValueCursor();
+      drawMenu();
+    }
+  } else {
+    exitEditValue();
   }
-  exitEditValue();
 }
 
 void GEM::cancelEditValue() {
   exitEditValue();
 }
 
-void GEM::exitEditValue() {
+void GEM::resetEditValueState() {
   memset(_valueString, '\0', GEM_STR_LEN - 1);
   _valueSelectNum = -1;
   _editValueMode = false;
+}
+
+void GEM::exitEditValue() {
+  resetEditValueState();
   drawEditValueCursor();
   drawMenu();
 }
