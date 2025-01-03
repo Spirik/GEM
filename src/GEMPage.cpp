@@ -133,6 +133,11 @@ byte GEMPage::getCurrentMenuItemIndex() {
   return currentItemNum;
 }
 
+GEMPage& GEMPage::setCurrentMenuItemIndex(byte index) {
+  currentItemNum = index;
+  return *this;
+}
+
 int GEMPage::getMenuItemNum(GEMItem& menuItem, bool total) {
   GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
   for (byte i=0; i<(total ? itemsCountTotal : itemsCount); i++) {

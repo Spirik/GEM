@@ -1357,6 +1357,11 @@ GEMPage menuPage(title[, parentMenuPage]);
   *Returns*: `byte`  
   Get index of currently focused menu item on this page.
 
+* *GEMPage&* **setCurrentMenuItemIndex(** _byte_ index **)**  
+  *Accepts*: `byte`  
+  *Returns*: `GEMPage&`  
+  Set index of currently focused menu item on this page (only visible items are counted).
+
 > **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
 
