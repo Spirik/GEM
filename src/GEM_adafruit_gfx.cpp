@@ -1216,7 +1216,11 @@ void GEM_adafruit_gfx::dispatchKeyPress() {
             prevEditValueSelect();
           #ifdef GEM_SUPPORT_SPINNER
           } else if (_editValueType == GEM_VAL_SPINNER) {
-            prevEditValueSpinner();
+            if (_invertKeysDuringEdit) {
+              prevEditValueSpinner();
+            } else {
+              nextEditValueSpinner();
+            }
           #endif
           } else if (_invertKeysDuringEdit) {
             prevEditValueDigit();
@@ -1234,7 +1238,11 @@ void GEM_adafruit_gfx::dispatchKeyPress() {
             nextEditValueSelect();
           #ifdef GEM_SUPPORT_SPINNER
           } else if (_editValueType == GEM_VAL_SPINNER) {
-            nextEditValueSpinner();
+            if (_invertKeysDuringEdit) {
+              nextEditValueSpinner();
+            } else {
+              prevEditValueSpinner();
+            }
           #endif
           } else if (_invertKeysDuringEdit) {
             nextEditValueDigit();
