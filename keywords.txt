@@ -67,6 +67,7 @@ getTitle	KEYWORD2
 getMenuItem	KEYWORD2
 getCurrentMenuItem	KEYWORD2
 getCurrentMenuItemIndex	KEYWORD2
+setCurrentMenuItemIndex	KEYWORD2
 getMenuItemNext	KEYWORD2
 setPrecision	KEYWORD2
 setAdjustedASCIIOrder	KEYWORD2
