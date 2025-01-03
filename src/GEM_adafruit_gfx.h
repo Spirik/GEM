@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -226,6 +226,7 @@ class GEM_adafruit_gfx {
     GEM_VIRTUAL void drawEditValueSelect();
     GEM_VIRTUAL void saveEditValue();
     GEM_VIRTUAL void cancelEditValue();
+    GEM_VIRTUAL void resetEditValueState();
     GEM_VIRTUAL void exitEditValue(bool redrawMenu = true);
     char* trimString(char* str);
 

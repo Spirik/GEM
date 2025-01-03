@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -742,12 +742,14 @@ void GEM_u8g2::checkboxToggle() {
   bool checkboxValue = *(bool*)menuItemTmp->linkedVariable;
   *(bool*)menuItemTmp->linkedVariable = !checkboxValue;
   if (menuItemTmp->callbackAction != nullptr) {
+    resetEditValueState(); // Explicitly reset edit value state to be more predictable before user-defined callback is called
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
     } else {
       menuItemTmp->callbackAction();
     }
-    exitEditValue();
+    drawEditValueCursor();
+    drawMenu();
   } else {
     _editValueMode = false;
   }
@@ -1032,23 +1034,31 @@ void GEM_u8g2::saveEditValue() {
     #endif
   }
   if (menuItemTmp->callbackAction != nullptr) {
+    resetEditValueState(); // Explicitly reset edit value state to be more predictable before user-defined callback is called
     if (menuItemTmp->callbackWithArgs) {
       menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
     } else {
       menuItemTmp->callbackAction();
     }
+    drawEditValueCursor();
+    drawMenu();
+  } else {
+    exitEditValue();
   }
-  exitEditValue();
 }
 
 void GEM_u8g2::cancelEditValue() {
   exitEditValue();
 }
 
-void GEM_u8g2::exitEditValue() {
+void GEM_u8g2::resetEditValueState() {
   memset(_valueString, '\0', GEM_STR_LEN - 1);
   _valueSelectNum = -1;
   _editValueMode = false;
+}
+
+void GEM_u8g2::exitEditValue() {
+  resetEditValueState();
   drawEditValueCursor();
   drawMenu();
 }
@@ -1120,7 +1130,11 @@ void GEM_u8g2::dispatchKeyPress() {
             prevEditValueSelect();
           #ifdef GEM_SUPPORT_SPINNER
           } else if (_editValueType == GEM_VAL_SPINNER) {
-            prevEditValueSpinner();
+            if (_invertKeysDuringEdit) {
+              prevEditValueSpinner();
+            } else {
+              nextEditValueSpinner();
+            }
           #endif
           } else if (_invertKeysDuringEdit) {
             prevEditValueDigit();
@@ -1138,7 +1152,11 @@ void GEM_u8g2::dispatchKeyPress() {
             nextEditValueSelect();
           #ifdef GEM_SUPPORT_SPINNER
           } else if (_editValueType == GEM_VAL_SPINNER) {
-            nextEditValueSpinner();
+            if (_invertKeysDuringEdit) {
+              nextEditValueSpinner();
+            } else {
+              prevEditValueSpinner();
+            }
           #endif
           } else if (_invertKeysDuringEdit) {
             nextEditValueDigit();

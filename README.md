@@ -1155,7 +1155,7 @@ For more details on customization see corresponding section of the [wiki](https:
 * *GEM&* **invertKeysDuringEdit(** _bool_ invert = true **)**  
   *Accepts*: `bool`  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
-  Turn inverted order of characters during edit mode on (`invertKeysDuringEdit()`) or off (`invertKeysDuringEdit(false)`). By default when in edit mode of a number or a `char[17]` variable, digits (and other characters) increment when `GEM_KEY_UP` key is pressed and decrement when `GEM_KEY_DOWN` key is pressed. Inverting this order may lead to more natural expected behavior when editing `char[17]` or number variables with certain input devices (e.g. rotary encoder, in which case rotating knob clock-wise is generally associated with `GEM_KEY_DOWN` action during navigation through menu items, but in edit mode it seems more natural to increment a digit rather than to decrement it when performing the same clock-wise rotation).
+  Turn inverted order of characters during edit mode on (`invertKeysDuringEdit()`) or off (`invertKeysDuringEdit(false)`). By default when in edit mode of a number, or a `char[17]` variable, or a spinner, digits (and other characters) increment when `GEM_KEY_UP` key is pressed and decrement when `GEM_KEY_DOWN` key is pressed. Inverting this order may lead to more natural expected behavior when editing `char[17]`, or number variables, or incremental spinners with certain input devices (e.g. rotary encoder, in which case rotating knob clock-wise is generally associated with `GEM_KEY_DOWN` action during navigation through menu items, but in edit mode it seems more natural to increment a digit rather than to decrement it when performing the same clock-wise rotation).
 
 * *GEM&* **init()**  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
@@ -1356,6 +1356,11 @@ GEMPage menuPage(title[, parentMenuPage]);
 * *byte* **getCurrentMenuItemIndex()**  
   *Returns*: `byte`  
   Get index of currently focused menu item on this page.
+
+* *GEMPage&* **setCurrentMenuItemIndex(** _byte_ index **)**  
+  *Accepts*: `byte`  
+  *Returns*: `GEMPage&`  
+  Set index of currently focused menu item on this page (only visible items are counted).
 
 > **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
