@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -136,6 +136,10 @@ byte GEMPage::getCurrentMenuItemIndex() {
 GEMPage& GEMPage::setCurrentMenuItemIndex(byte index) {
   currentItemNum = index;
   return *this;
+}
+
+byte GEMPage::getItemsCount(bool total) {
+  return total ? itemsCountTotal : itemsCount;
 }
 
 int GEMPage::getMenuItemNum(GEMItem& menuItem, bool total) {
