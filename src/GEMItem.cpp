@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -1767,6 +1767,14 @@ const char* GEMItem::getTitle() {
   return title;
 }
 
+byte GEMItem::getLinkedType() {
+  return linkedType;
+}
+
+byte GEMItem::getType() {
+  return type;
+}
+
 GEMItem& GEMItem::setPrecision(byte prec) {
   precision = prec;
   return *this;
@@ -1825,6 +1833,14 @@ GEMItem& GEMItem::remove() {
 
 void* GEMItem::getLinkedVariablePointer() {
   return linkedVariable;
+}
+
+GEMPage* GEMItem::getParentPage() {
+  return parentPage;
+}
+
+GEMPage* GEMItem::getLinkedPage() {
+  return linkedPage;
 }
 
 GEMItem* GEMItem::getMenuItemNext(bool total) {

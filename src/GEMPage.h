@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -74,6 +74,7 @@ class GEMPage {
     GEM_VIRTUAL GEMItem* getCurrentMenuItem();                              // Get pointer to current menu item
     GEM_VIRTUAL byte getCurrentMenuItemIndex();                             // Get index of current menu item
     GEMPage& setCurrentMenuItemIndex(byte index);                           // Set index of current menu item
+    GEM_VIRTUAL byte getItemsCount(bool total = false);                     // Get items count of the menu page (counting hidden ones if total set to true)
   protected:
     const char* title;
     byte currentItemNum = 0;                                                // Currently selected (focused) menu item of the page

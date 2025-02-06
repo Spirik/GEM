@@ -64,11 +64,8 @@ setCallbackVal	KEYWORD2
 getCallbackData	KEYWORD2
 setTitle	KEYWORD2
 getTitle	KEYWORD2
-getMenuItem	KEYWORD2
-getCurrentMenuItem	KEYWORD2
-getCurrentMenuItemIndex	KEYWORD2
-setCurrentMenuItemIndex	KEYWORD2
-getMenuItemNext	KEYWORD2
+getLinkedType	KEYWORD2
+getType	KEYWORD2
 setPrecision	KEYWORD2
 setAdjustedASCIIOrder	KEYWORD2
 setReadonly	KEYWORD2
@@ -78,8 +75,16 @@ show	KEYWORD2
 getHidden	KEYWORD2
 remove  KEYWORD2
 getLinkedVariablePointer	KEYWORD2
+getParentPage	KEYWORD2
+getLinkedPage	KEYWORD2
+getMenuItemNext	KEYWORD2
 addMenuItem	KEYWORD2
 setParentMenuPage	KEYWORD2
+getMenuItem	KEYWORD2
+getCurrentMenuItem	KEYWORD2
+getCurrentMenuItemIndex	KEYWORD2
+setCurrentMenuItemIndex	KEYWORD2
+getItemsCount	KEYWORD2
 
 ####################################################
 # Constants (LITERAL1)
