@@ -546,15 +546,21 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
       drawSprite(5 * _textSize + 2 * (_spriteSize > 1 ? 1 : 0), yDraw, arrowLeft, color);
       break;
     case GEM_ITEM_BUTTON:
-      byte variant = _spriteSize > 1 ? 1 : 0;
-      _agfx.setCursor((5 * _textSize + arrowBtn[variant].width + 2 * variant), yText);
-      if (menuItemTmp->readonly) {
-        printMenuItemFull(menuItemTmp->title, -1);
-        _agfx.print("^");
-      } else {
-        printMenuItemFull(menuItemTmp->title);
+      {
+        byte variant = _spriteSize > 1 ? 1 : 0;
+        _agfx.setCursor((5 * _textSize + arrowBtn[variant].width + 2 * variant), yText);
+        if (menuItemTmp->readonly) {
+          printMenuItemFull(menuItemTmp->title, -1);
+          _agfx.print("^");
+        } else {
+          printMenuItemFull(menuItemTmp->title);
+        }
+        drawSprite(5 * _textSize + 2 * variant, yDraw, arrowBtn, color);
+        break;
       }
-      drawSprite(5 * _textSize + 2 * variant, yDraw, arrowBtn, color);
+    case GEM_ITEM_LABEL:
+      _agfx.setCursor(5 * _textSize, yText);
+      printMenuItemFull(menuItemTmp->title);
       break;
   }
   memset(valueStringTmp, '\0', GEM_STR_LEN - 1);
@@ -587,7 +593,7 @@ void GEM_adafruit_gfx::drawMenuPointer(bool clear) {
     if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
       byte menuPageScreenTopOffset = getCurrentAppearance()->menuPageScreenTopOffset;
       _agfx.fillRect(0, menuPageScreenTopOffset, 2 * _spriteSize, _agfx.height() - menuPageScreenTopOffset, _menuBackgroundColor);
-      if (menuItemTmp->readonly) {
+      if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
         for (byte i = 0; i < (menuItemHeight - 1) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuForegroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 + 1, _menuForegroundColor);
@@ -610,7 +616,7 @@ void GEM_adafruit_gfx::drawMenuPointer(bool clear) {
       byte yDraw = pointerPosition + getMenuItemInsetOffset(true);
       _agfx.fillRect(0, pointerPosition - 1, _agfx.width() - 2, menuItemHeight + 1, clear ? _menuBackgroundColor : _menuForegroundColor);
       printMenuItem(menuItemTmp, yText, yDraw, clear ? _menuForegroundColor : _menuBackgroundColor);
-      if (menuItemTmp->readonly) {
+      if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
         for (byte i = 0; i < (menuItemHeight + 2) / 2; i++) {
           _agfx.drawPixel(0, pointerPosition + i * 2, _menuBackgroundColor);
           _agfx.drawPixel(1, pointerPosition + i * 2 - 1, _menuBackgroundColor);

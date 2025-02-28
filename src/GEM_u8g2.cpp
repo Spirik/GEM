@@ -576,6 +576,10 @@ void GEM_u8g2::printMenuItems() {
         }
         _u8g2.drawXBMP(5, yDraw, arrowBtn_width, arrowBtn_height, arrowBtn_bits);
         break;
+      case GEM_ITEM_LABEL:
+        _u8g2.setCursor(5, yText);
+        printMenuItemFull(menuItemTmp->title);
+        break;
     }
     menuItemTmp = menuItemTmp->getMenuItemNext();
     y += getCurrentAppearance()->menuItemHeight;
@@ -590,7 +594,7 @@ void GEM_u8g2::drawMenuPointer() {
     int pointerPosition = getCurrentItemTopOffset(false);
     byte menuItemHeight = getCurrentAppearance()->menuItemHeight;
     if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
-      if (menuItemTmp->readonly) {
+      if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
         for (byte i = 0; i < (menuItemHeight - 1) / 2; i++) {
           _u8g2.drawPixel(0, pointerPosition + i * 2);
           _u8g2.drawPixel(1, pointerPosition + i * 2 + 1);
@@ -602,7 +606,7 @@ void GEM_u8g2::drawMenuPointer() {
       _u8g2.setDrawColor(2);
       _u8g2.drawBox(0, pointerPosition - 1, _u8g2.getDisplayWidth() - 2, menuItemHeight + 1);
       _u8g2.setDrawColor(1);
-      if (menuItemTmp->readonly) {
+      if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
         _u8g2.setDrawColor(0);
         for (byte i = 0; i < (menuItemHeight + 2) / 2; i++) {
           _u8g2.drawPixel(0, pointerPosition + i * 2);

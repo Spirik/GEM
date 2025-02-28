@@ -38,6 +38,13 @@
 #include "GEMItem.h"
 #include "constants.h"
 
+GEMItem::GEMItem(const char* title_)
+  : title(title_)
+  , type(GEM_ITEM_LABEL)
+{ }
+
+//---
+
 GEMItem::GEMItem(const char* title_, byte& linkedVariable_, GEMSelect& select_, void (*callbackAction_)())
   : title(title_)
   , linkedVariable(&linkedVariable_)
