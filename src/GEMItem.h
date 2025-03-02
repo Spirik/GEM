@@ -46,6 +46,7 @@
 #define GEM_ITEM_LINK 1    // Menu item represents link to another menu page
 #define GEM_ITEM_BACK 2    // Menu item represents Back button (that links to parent level menu page)
 #define GEM_ITEM_BUTTON 3  // Menu item represents button (that leads to execution of user-defined routine in its own context)
+#define GEM_ITEM_LABEL 4   // Menu item represents non-interactive label
 
 // Macro constant (alias) for readonly modifier of associated with menu item variable
 #define GEM_READONLY true
@@ -83,6 +84,10 @@ class GEMItem {
   friend class GEM_adafruit_gfx;
   friend class GEMPage;
   public:
+    /* 
+      Constructor for menu item that represents non-interactive label
+    */
+    GEMItem(const char* title_);
     /* 
       Constructors for menu item that represents option select, w/ callback (optionally w/ user-defined callback argument)
       @param 'title_' - title of the menu item displayed on the screen
@@ -365,7 +370,7 @@ class GEMItem {
     const char* title;
     void* linkedVariable = nullptr;
     byte linkedType;                                    // GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_BOOL, GEM_VAL_SELECT, GEM_VAL_FLOAT, GEM_VAL_DOUBLE, GEM_VAL_SPINNER
-    byte type;                                          // GEM_ITEM_VAL, GEM_ITEM_LINK, GEM_ITEM_BACK, GEM_ITEM_BUTTON
+    byte type;                                          // GEM_ITEM_VAL, GEM_ITEM_LINK, GEM_ITEM_BACK, GEM_ITEM_BUTTON, GEM_ITEM_LABEL
     byte precision = GEM_FLOAT_PREC;
     bool adjustedAsciiOrder = false;
     bool readonly = false;

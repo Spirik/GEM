@@ -1,5 +1,5 @@
 
-![GEM](http://spirik.ru/downloads/misc/gem/gem-logo.svg)
+![GEM](http://spirik.ru/downloads/misc/gem/gem-logo-border-outline.svg)
 ===========
 
 GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-level menu with editable menu items, such as variables (supports `int`, `byte`, `float`, `double`, `bool`, `char[17]` data types) and option selects. User-defined callback function can be specified to invoke when menu item is saved.
@@ -7,7 +7,7 @@ GEM (a.k.a. *Good Enough Menu*) - Arduino library for creation of graphic multi-
 Supports buttons that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
 <p align="center">
-<img src="https://github.com/Spirik/GEM/wiki/images/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" height="360" alt="Party hard!" />
+<img src="https://github.com/Spirik/GEM/wiki/images/party-hard-lcd_full-demo_p12_640x360_256c_mask.gif" width="640" alt="Party hard!" />
 </p>
 
 Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0), [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) (since GEM ver. 1.3) graphics libraries.
@@ -1375,7 +1375,7 @@ GEMPage menuPage(title[, parentMenuPage]);
 
 ### GEMItem
 
-Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; incremental spinner of type `int`, `byte`, `float`, `double`; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
+Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; incremental spinner of type `int`, `byte`, `float`, `double`; non-interactive label; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
 
 > **Note:** support for editable variables (and spinner) of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
 
@@ -1492,6 +1492,16 @@ GEMItem menuItemSpinner(title, linkedVariable, spinner[, saveCallback[, callback
 
 > **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
 
+#### Label
+
+```cpp
+GEMItem menuItemLabel(title);
+```
+
+* **title**  
+  *Type*: `const char*`  
+  Title of the menu item displayed on the screen.
+
 #### Link to menu page
 
 ```cpp
@@ -1579,6 +1589,11 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Type*: macro `#define GEM_ITEM_BUTTON 3`  
   *Value*: `3`  
   Alias for menu item type that represents button.
+
+* **GEM_ITEM_LABEL**  
+  *Type*: macro `#define GEM_ITEM_LABEL 4`  
+  *Value*: `4`  
+  Alias for menu item type that represents non-interactive menu item.
 
 * **GEM_VAL_INTEGER**  
   *Type*: macro `#define GEM_VAL_INTEGER 0`  

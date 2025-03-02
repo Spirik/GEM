@@ -424,6 +424,10 @@ void GEM::printMenuItems() {
         }
         _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
         break;
+      case GEM_ITEM_LABEL:
+        _glcd.setX(5);
+        printMenuItemFull(menuItemTmp->title);
+        break;
     }
     menuItemTmp = menuItemTmp->getMenuItemNext();
     y += getCurrentAppearance()->menuItemHeight;
@@ -439,7 +443,7 @@ void GEM::drawMenuPointer() {
     byte menuItemHeight = getCurrentAppearance()->menuItemHeight;
     if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
       _glcd.eraseBox(0, getCurrentAppearance()->menuPageScreenTopOffset, 1, _glcd.ydim-1);
-      if (menuItemTmp->readonly) {
+      if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
         for (byte i = 0; i < (menuItemHeight - 1) / 2; i++) {
           _glcd.drawPixel(0, pointerPosition + i * 2, GLCD_MODE_NORMAL);
           _glcd.drawPixel(1, pointerPosition + i * 2 + 1, GLCD_MODE_NORMAL);
@@ -451,7 +455,7 @@ void GEM::drawMenuPointer() {
       _glcd.drawMode(GLCD_MODE_XOR);
       _glcd.fillBox(0, pointerPosition-1, _glcd.xdim-3, pointerPosition + menuItemHeight - 1);
       _glcd.drawMode(GLCD_MODE_NORMAL);
-      if (menuItemTmp->readonly) {
+      if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
         for (byte i = 0; i < (menuItemHeight + 2) / 2; i++) {
           _glcd.drawPixel(0, pointerPosition + i * 2, GLCD_MODE_REVERSE);
           _glcd.drawPixel(1, pointerPosition + i * 2 - 1, GLCD_MODE_REVERSE);
