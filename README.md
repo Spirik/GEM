@@ -69,7 +69,7 @@ Library format is compatible with Arduino IDE 1.5.x+ and PlatformIO. There are n
 - Using Library Manager (since Arduino IDE 1.6.2): navigate to `Sketch > Include Library > Manage Libraries` inside your Arduino IDE and search for GEM library, then click `Install`. (Alternatively you can add previously downloaded ZIP through `Sketch > Include Library > Add .ZIP Library` menu).
 - Using Library Manager in Arduino IDE 2: see [documentation](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-installing-a-library) for details.
 
-Whichever option you choose you may need to reload IDE afterwards.
+Whichever option you choose you may need to reload the Arduino IDE afterwards.
 
 For PlatformIO, add the [GEM library](https://registry.platformio.org/libraries/spirik/GEM) to the `lib_deps` option in your project `platformio.ini`:
 
