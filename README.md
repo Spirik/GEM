@@ -71,7 +71,7 @@ Library format is compatible with Arduino IDE 1.5.x+ and PlatformIO. There are n
 
 Whichever option you choose you may need to reload IDE afterwards.
 
-For PlatformIO, add the library to the `lib_deps` option in your project `platformio.ini`:
+For PlatformIO, add the [GEM library](https://registry.platformio.org/libraries/spirik/GEM) to the `lib_deps` option in your project `platformio.ini`:
 
 ```
 lib_deps =
