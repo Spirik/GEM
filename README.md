@@ -63,13 +63,20 @@ Menu created with GEM library comprises of three base elements:
 Installation
 ------------
 
-Library format is compatible with Arduino IDE 1.5.x+. There are number of ways to install the library:
+Library format is compatible with Arduino IDE 1.5.x+ and PlatformIO. There are number of ways to install the library in the Arduino IDE:
 
 - Download ZIP-archive directly from [Releases](https://github.com/Spirik/GEM/releases) section (or Master branch) and extract it into GEM folder inside your Library folder.
 - Using Library Manager (since Arduino IDE 1.6.2): navigate to `Sketch > Include Library > Manage Libraries` inside your Arduino IDE and search for GEM library, then click `Install`. (Alternatively you can add previously downloaded ZIP through `Sketch > Include Library > Add .ZIP Library` menu).
 - Using Library Manager in Arduino IDE 2: see [documentation](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-installing-a-library) for details.
 
 Whichever option you choose you may need to reload IDE afterwards.
+
+For PlatformIO, add the library to the `lib_deps` option in your project `platformio.ini`:
+
+```
+lib_deps =
+  spirik/GEM
+```
 
 [U8g2](https://github.com/olikraus/U8g2_Arduino) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) libraries are required to be installed by default as well. Support for [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) is disabled by default since GEM ver. 1.5 (so it is not required to be installed). However, it is possible to exclude support for not used libraries (since GEM ver. 1.2.2), and/or enable support for `AltSerialGraphicLCD` (since GEM ver 1.5). See [Configuration](#configuration) section for details.
 
