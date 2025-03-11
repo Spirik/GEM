@@ -1281,14 +1281,14 @@ For more details on customization see corresponding section of the [wiki](https:
 Menu page holds menu items `GEMItem` and represents menu level. Menu can have multiple menu pages (linked to each other) with multiple menu items each. Object of class `GEMPage` defines as follows:
 
 ```cpp
-GEMPage menuPage(title[, exitAction]);
+GEMPage menuPage([title[, exitAction]]);
 ```
 or
 ```cpp
-GEMPage menuPage(title[, parentMenuPage]);
+GEMPage menuPage([title[, parentMenuPage]]);
 ```
 
-* **title**  
+* **title** [*optional*]  
   *Type*: `const char*`  
   Title of the menu page displayed at top of the screen.
   
