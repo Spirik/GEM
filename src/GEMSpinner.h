@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -102,17 +102,22 @@ class GEMSpinner {
   public:
     /* 
       @param 'boundaries_' - boundaries of the spinner of corresponding type
+      @param 'loop_' (optional) - whether iteration over options should be looped
+      values GEM_LOOP (alias for true)
     */
-    GEMSpinner(GEMSpinnerBoundariesByte boundaries_);
-    GEMSpinner(GEMSpinnerBoundariesInt boundaries_);
+    GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_ = false);
+    GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_ = false);
     #ifdef GEM_SUPPORT_FLOAT_EDIT
-    GEMSpinner(GEMSpinnerBoundariesFloat boundaries_);
-    GEMSpinner(GEMSpinnerBoundariesDouble boundaries_);
+    GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_ = false);
+    GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_ = false);
     #endif
+    GEMSpinner& setLoop(bool mode = true);  // Explicitly set or unset loop mode
+    bool getLoop();                         // Get current value of loop mode
   protected:
     GEMSpinnerBoundaries _boundaries;
     byte _type;
     int _length;
+    bool _loop = false;
     byte getType();
     int getLength();
     GEM_VIRTUAL int getSelectedOptionNum(void* variable);

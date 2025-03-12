@@ -1018,13 +1018,19 @@ void GEM_adafruit_gfx::nextEditValueSelect() {
   GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum+1 < select->getLength()) {
     _valueSelectNum++;
+  } else if (select->getLoop()) {
+    _valueSelectNum = 0;
   }
   drawEditValueSelect();
 }
 
 void GEM_adafruit_gfx::prevEditValueSelect() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+  GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
+  } else if (select->getLoop()) {
+    _valueSelectNum = select->getLength() - 1;
   }
   drawEditValueSelect();
 }
@@ -1035,12 +1041,21 @@ void GEM_adafruit_gfx::nextEditValueSpinner() {
   GEMSpinner* spinner = menuItemTmp->spinner;
   if (_valueSelectNum+1 < spinner->getLength()) {
     _valueSelectNum++;
+  } else if (spinner->getLoop()) {
+    _valueSelectNum = 0;
   }
   drawEditValueSelect();
 }
 
 void GEM_adafruit_gfx::prevEditValueSpinner() {
-  prevEditValueSelect();
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+  GEMSpinner* spinner = menuItemTmp->spinner;
+  if (_valueSelectNum > 0) {
+    _valueSelectNum--;
+  } else if (spinner->getLoop()) {
+    _valueSelectNum = spinner->getLength() - 1;
+  }
+  drawEditValueSelect();
 }
 #endif
 

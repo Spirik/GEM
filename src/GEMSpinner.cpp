@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2024 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -38,31 +38,44 @@
 #include "GEMSpinner.h"
 #include "constants.h"
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_)
   : _boundaries{ { .boundariesByte = { .step = boundaries_.step, .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_BYTE)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
+  , _loop(loop_)
 { }
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesInt boundaries_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_)
   : _boundaries{ { .boundariesInt = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_INTEGER)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
+  , _loop(loop_)
 { }
 
 #ifdef GEM_SUPPORT_FLOAT_EDIT
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesFloat boundaries_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_)
   : _boundaries{ { .boundariesFloat = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_FLOAT)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
+  , _loop(loop_)
 { }
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesDouble boundaries_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_)
   : _boundaries{ { .boundariesDouble = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_DOUBLE)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
+  , _loop(loop_)
 { }
 #endif
+
+GEMSpinner& GEMSpinner::setLoop(bool mode) {
+  _loop = mode;
+  return *this;
+}
+
+bool GEMSpinner::getLoop() {
+  return _loop;
+}
 
 byte GEMSpinner::getType() {
   return _type;

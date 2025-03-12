@@ -976,13 +976,19 @@ void GEM_u8g2::nextEditValueSelect() {
   GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum+1 < select->getLength()) {
     _valueSelectNum++;
+  } else if (select->getLoop()) {
+    _valueSelectNum = 0;
   }
   drawMenu();
 }
 
 void GEM_u8g2::prevEditValueSelect() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+  GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
+  } else if (select->getLoop()) {
+    _valueSelectNum = select->getLength() - 1;
   }
   drawMenu();
 }
@@ -993,12 +999,21 @@ void GEM_u8g2::nextEditValueSpinner() {
   GEMSpinner* spinner = menuItemTmp->spinner;
   if (_valueSelectNum+1 < spinner->getLength()) {
     _valueSelectNum++;
+  } else if (spinner->getLoop()) {
+    _valueSelectNum = 0;
   }
   drawMenu();
 }
 
 void GEM_u8g2::prevEditValueSpinner() {
-  prevEditValueSelect();
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+  GEMSpinner* spinner = menuItemTmp->spinner;
+  if (_valueSelectNum > 0) {
+    _valueSelectNum--;
+  } else if (spinner->getLoop()) {
+    _valueSelectNum = spinner->getLength() - 1;
+  }
+  drawMenu();
 }
 #endif
 
