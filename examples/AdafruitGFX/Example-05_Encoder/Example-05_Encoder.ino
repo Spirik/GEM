@@ -8,10 +8,10 @@
 
   Adafruit GFX library is used to draw menu.
   KeyDetector library (version 1.2.0 or later) is used to detect rotary encoder operation.
-  
+
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 */
 
@@ -91,7 +91,7 @@ GEMSelect selectInvert(sizeof(selectInvertOptions)/sizeof(SelectOptionByte), sel
 void applyInvert(); // Forward declaration
 GEMItem menuItemInvert("Chars order:", invert, selectInvert, applyInvert);
 
-// Create two menu item objects of class GEMItem, linked to number and enablePrint variables 
+// Create two menu item objects of class GEMItem, linked to number and enablePrint variables
 GEMItem menuItemInt("Number:", number);
 GEMItem menuItemBool("Enable print:", enablePrint);
 
@@ -128,7 +128,7 @@ void setup() {
   // internally, this will display the splashscreen.
   delay(250);                       // Wait for the OLED to power up
   display.begin(i2c_Address, true); // Address 0x3C default
-  
+
   display.display();
   delay(2000);
 
@@ -141,17 +141,17 @@ void setup() {
 
   // Disable GEM splash (it won't be visible on the screen of buffer-equiped displays such as this one any way)
   menu.setSplashDelay(0);
-  
+
   // Turn inverted order of characters during edit mode on (feels more natural when using encoder)
   menu.invertKeysDuringEdit(invert);
-  
+
   // Menu init, setup and draw
   menu.init();
   setupMenu();
   menu.drawMenu();
 
   display.display();
-  
+
   Serial.println("Initialized");
 }
 
@@ -182,7 +182,7 @@ void loop() {
     // ...detect key press using KeyDetector library
     // and pass pressed button to menu
     myKeyDetector.detect();
-  
+
     switch (myKeyDetector.trigger) {
       case KEY_A:
         // Signal from Channel A of encoder was detected
@@ -251,7 +251,7 @@ void loop() {
           break;
       }
     }
-    
+
     // Necessary to actually draw current state of the menu on screen
     display.display();
   }

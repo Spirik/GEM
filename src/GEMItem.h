@@ -4,7 +4,7 @@
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
   editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
-  
+
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
@@ -24,12 +24,12 @@
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
   version 3 of the License, or (at your option) any later version.
-  
+
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public License
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -84,11 +84,11 @@ class GEMItem {
   friend class GEM_adafruit_gfx;
   friend class GEMPage;
   public:
-    /* 
+    /*
       Constructor for menu item that represents non-interactive label
     */
     GEMItem(const char* title_);
-    /* 
+    /*
       Constructors for menu item that represents option select, w/ callback (optionally w/ user-defined callback argument)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, float, or double)
@@ -146,7 +146,7 @@ class GEMItem {
     GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
     GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
     GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
-    /* 
+    /*
       Constructors for menu item that represents option select, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, float, or double)
@@ -161,7 +161,7 @@ class GEMItem {
     GEMItem(const char* title_, float& linkedVariable_, GEMSelect& select_, bool readonly_ = false);
     GEMItem(const char* title_, double& linkedVariable_, GEMSelect& select_, bool readonly_ = false);
     #ifdef GEM_SUPPORT_SPINNER
-    /* 
+    /*
       Constructors for menu item that represents spinner, w/ callback (optionally w/ user-defined callback argument)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, float, or double)
@@ -209,7 +209,7 @@ class GEMItem {
     GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
     GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
     GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
-    /* 
+    /*
       Constructors for menu item that represents spinner, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, float, or double)
@@ -223,7 +223,7 @@ class GEMItem {
     GEMItem(const char* title_, float& linkedVariable_, GEMSpinner& spinner_, bool readonly_ = false);
     GEMItem(const char* title_, double& linkedVariable_, GEMSpinner& spinner_, bool readonly_ = false);
     #endif
-    /* 
+    /*
       Constructors for menu item that represents variable, w/ callback (optionally w/ user-defined callback argument)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, bool, float, or double)
@@ -290,7 +290,7 @@ class GEMItem {
     GEMItem(const char* title_, double& linkedVariable_, void (*callbackAction_)(GEMCallbackData), bool callbackVal_);
     GEMItem(const char* title_, double& linkedVariable_, void (*callbackAction_)(GEMCallbackData), const char* callbackVal_);
     GEMItem(const char* title_, double& linkedVariable_, void (*callbackAction_)(GEMCallbackData), void* callbackVal_);
-    /* 
+    /*
       Constructors for menu item that represents variable, w/o callback
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedVariable_' - reference to variable that menu item is associated with (either byte, int, char*, bool, float, or double)
@@ -304,7 +304,7 @@ class GEMItem {
     GEMItem(const char* title_, bool& linkedVariable_, bool readonly_ = false);
     GEMItem(const char* title_, float& linkedVariable_, bool readonly_ = false);
     GEMItem(const char* title_, double& linkedVariable_, bool readonly_ = false);
-    /* 
+    /*
       Constructor for menu item that represents link to another menu page (via reference)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedPage_' - reference to GEMPage menu page that menu item is associated with
@@ -312,7 +312,7 @@ class GEMItem {
       values GEM_READONLY (alias for true)
     */
     GEMItem(const char* title_, GEMPage& linkedPage_, bool readonly_ = false);
-    /* 
+    /*
       Constructor for menu item that represents link to another menu page (via pointer)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'linkedPage_' - pointer to GEMPage menu page that menu item is associated with
@@ -320,7 +320,7 @@ class GEMItem {
       values GEM_READONLY (alias for true)
     */
     GEMItem(const char* title_, GEMPage* linkedPage_, bool readonly_ = false);
-    /* 
+    /*
       Constructor for menu item that represents button w/ callback (optionally w/ user-defined callback argument)
       @param 'title_' - title of the menu item displayed on the screen
       @param 'callbackAction_' - pointer to function that will be executed when menu item is activated
@@ -389,5 +389,5 @@ class GEMItem {
     bool callbackWithArgs = false;
     GEMCallbackData callbackData;
 };
-  
+
 #endif

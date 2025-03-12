@@ -5,7 +5,7 @@
   https://gist.github.com/skelliam/322d421f028545f16f6d
 
   Distributed with the same copyright as original font:
-  
+
   COPYRIGHT "Public domain font.  Share and enjoy."
 
   Jul 28, 2021: Zero (0x30 '0') character alteration

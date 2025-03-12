@@ -5,10 +5,10 @@
   and a button, pressing of which will result in int variable value printed to Serial monitor if bool variable is set to true.
 
   U8g2lib library is used to draw menu and to detect push-buttons presses.
-  
+
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 */
 
@@ -25,7 +25,7 @@ U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0,
 int number = -512;
 bool enablePrint = false;
 
-// Create two menu item objects of class GEMItem, linked to number and enablePrint variables 
+// Create two menu item objects of class GEMItem, linked to number and enablePrint variables
 GEMItem menuItemInt("Number:", number);
 GEMItem menuItemBool("Enable print:", enablePrint);
 

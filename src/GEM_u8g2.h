@@ -2,7 +2,7 @@
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
   editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
-  
+
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
@@ -22,12 +22,12 @@
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
   version 3 of the License, or (at your option) any later version.
-  
+
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public License
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -89,7 +89,7 @@ class GEMItem;
 // Declaration of GEM_u8g2 class
 class GEM_u8g2 {
   public:
-    /* 
+    /*
       @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
       values GEM_POINTER_ROW, GEM_POINTER_DASH
@@ -115,7 +115,7 @@ class GEM_u8g2 {
 
     GEM_u8g2& setAppearance(GEMAppearance appearance);          // Set appearance of the menu (can be overridden in GEMPage on per page basis)
     GEMAppearance* getCurrentAppearance();                      // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
-    
+
     /* INIT OPERATIONS */
 
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().

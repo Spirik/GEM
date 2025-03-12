@@ -6,10 +6,10 @@
 
   Adafruit GFX library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
-  
+
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 */
 
@@ -53,7 +53,7 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 int number = -512;
 bool enablePrint = false;
 
-// Create two menu item objects of class GEMItem, linked to number and enablePrint variables 
+// Create two menu item objects of class GEMItem, linked to number and enablePrint variables
 GEMItem menuItemInt("Number:", number);
 GEMItem menuItemBool("Enable print:", enablePrint);
 

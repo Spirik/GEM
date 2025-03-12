@@ -7,10 +7,10 @@
   Note, there might be some problems with displaying Cyrillic characters in Serial monitor, in which case adjusting baud rate may help.
 
   U8g2lib library is used to draw menu and to detect push-buttons presses.
-  
+
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 
   ======================
@@ -44,7 +44,7 @@ U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0,
 int number = -512;
 bool enablePrint = false;
 
-// Create two menu item objects of class GEMItem, linked to number and enablePrint variables 
+// Create two menu item objects of class GEMItem, linked to number and enablePrint variables
 GEMItem menuItemInt("Число:", number);
 GEMItem menuItemBool("Вкл. печать:", enablePrint);
 
@@ -73,7 +73,7 @@ void setup() {
 
   // Enable Cyrillic typeset
   menu.enableCyrillic();
-  
+
   // Menu init, setup and draw
   menu.init();
   setupMenu();

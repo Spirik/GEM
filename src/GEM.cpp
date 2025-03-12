@@ -2,7 +2,7 @@
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
   editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
-  
+
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
@@ -13,7 +13,7 @@
 
   For documentation visit:
   https://github.com/Spirik/GEM
-  
+
   Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
@@ -22,12 +22,12 @@
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
   version 3 of the License, or (at your option) any later version.
-  
+
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public License
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -191,13 +191,13 @@ GEM& GEM::init() {
   _glcd.loadSprite_P(GEM_SPR_CHECKBOX_UNCHECKED, checkboxUnchecked);
   _glcd.loadSprite_P(GEM_SPR_CHECKBOX_CHECKED, checkboxChecked);
   _glcd.loadSprite_P(GEM_SPR_SELECT_ARROWS, selectArrows);
-  
+
   _glcd.drawMode(GLCD_MODE_NORMAL);
   _glcd.fontMode(GLCD_MODE_NORMAL);
   _glcd.set(GLCD_ID_CRLF, 0);
   _glcd.set(GLCD_ID_SCROLL, 0);
   _glcd.clearScreen();
-  
+
   if (_splashDelay > 0) {
 
     _glcd.bitblt_P(_glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, _glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, GLCD_MODE_NORMAL, _splash);
@@ -550,7 +550,7 @@ void GEM::menuItemSelect() {
 
 void GEM::enterEditValueMode() {
   _editValueMode = true;
-  
+
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   if (getCurrentAppearance()->menuPointerType != GEM_POINTER_DASH) {
     drawMenuPointer();
@@ -874,7 +874,7 @@ void GEM::prevEditValueSpinner() {
 void GEM::drawEditValueSelect() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
   clearValueVisibleRange();
-  
+
   switch (menuItemTmp->linkedType) {
     case GEM_VAL_SELECT:
       {
@@ -1002,7 +1002,7 @@ char* GEM::trimString(char* str) {
 
   // Write new null terminator
   *(end+1) = 0;
-  
+
   return str;
 }
 
@@ -1040,7 +1040,7 @@ void GEM::dispatchKeyPress() {
       context.loop();
     }
   } else {
-  
+
     if (_editValueMode) {
       switch (_currentKey) {
         case GEM_KEY_UP:
