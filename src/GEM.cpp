@@ -32,7 +32,7 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Arduino.h>
+#include "Framework.h"
 #include "GEM.h"
 
 #ifdef GEM_ENABLE_GLCD_VERSION

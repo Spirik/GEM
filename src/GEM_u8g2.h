@@ -83,6 +83,21 @@ struct FontFamiliesU8g2 {
   const uint8_t *small;  // Small font family (i.e., 4x6)
 };
 
+#ifndef ARDUINO
+class PrintableU8G2 : public U8G2 {
+public:
+  size_t print(const char str[]) {
+    return write(reinterpret_cast<const uint8_t*>(str), strlen(str));
+  }
+
+  size_t print(char c) {
+    return write(static_cast<uint8_t>(c));
+  }
+};
+#else
+typedef U8G2 PrintableU8G2;
+#endif
+
 // Forward declaration of necessary classes
 class GEMItem;
 
@@ -104,12 +119,12 @@ class GEM_u8g2 {
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
     */
-    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_u8g2(PrintableU8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
     /*
       @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'appearance_' - object of type GEMAppearance
     */
-    GEM_u8g2(U8G2& u8g2_, GEMAppearance appearance_);
+    GEM_u8g2(PrintableU8G2& u8g2_, GEMAppearance appearance_);
 
     /* APPEARANCE OPERATIONS */
 
@@ -154,7 +169,7 @@ class GEM_u8g2 {
     GEM_u8g2& registerKeyPress(byte keyCode);                   // Register the key press and trigger corresponding action
                                                                 // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   protected:
-    U8G2& _u8g2;
+    PrintableU8G2& _u8g2;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
     byte getMenuItemsPerScreen();

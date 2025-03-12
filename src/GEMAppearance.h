@@ -37,6 +37,8 @@
 #ifndef HEADER_GEMAPPEARANCE
 #define HEADER_GEMAPPEARANCE
 
+#include "Framework.h"
+
 // Declaration of GEMAppearance type
 struct GEMAppearance {
   byte menuPointerType;

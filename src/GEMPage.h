@@ -37,7 +37,7 @@
 #ifndef HEADER_GEMPAGE
 #define HEADER_GEMPAGE
 
-#include <Arduino.h>
+#include "Framework.h"
 #include "GEMAppearance.h"
 #include "GEMItem.h"
 

@@ -32,7 +32,7 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Arduino.h>
+#include "Framework.h"
 #include "GEM_u8g2.h"
 
 #ifdef GEM_ENABLE_U8G2_VERSION
@@ -122,7 +122,7 @@ static const unsigned char selectArrows_bits [] U8X8_PROGMEM = {
    0xc0,0xc4,0xce,0xc0,0xce,0xc4,0xc0,0xc0
 };
 
-GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
+GEM_u8g2::GEM_u8g2(PrintableU8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
   : _u8g2(u8g2_)
 {
   _appearance.menuPointerType = menuPointerType_;
@@ -139,7 +139,7 @@ GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_,
   _valueSelectNum = -1;
 }
 
-GEM_u8g2::GEM_u8g2(U8G2& u8g2_, GEMAppearance appearance_)
+GEM_u8g2::GEM_u8g2(PrintableU8G2& u8g2_, GEMAppearance appearance_)
   : _u8g2(u8g2_)
   , _appearance(appearance_)
 {

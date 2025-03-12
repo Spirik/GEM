@@ -34,7 +34,7 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Arduino.h>
+#include "Framework.h"
 #include "GEMSelect.h"
 #include "constants.h"
 
