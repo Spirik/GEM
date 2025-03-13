@@ -285,7 +285,7 @@ GEM_adafruit_gfx& GEM_adafruit_gfx::setTextSize(uint8_t size) {
 }
 
 GEM_adafruit_gfx& GEM_adafruit_gfx::setSpriteSize(uint8_t size) {
-  _spriteSize = size > 0 ? size : 1;
+  _spriteSize = size > 1 ? 2 : 1;
   if (_splash.image == logo[0].image || _splash.image == logo[1].image) {
     _splash = logo[_spriteSize > 1 ? 1 : 0];
   }
@@ -415,7 +415,7 @@ void GEM_adafruit_gfx::drawTitleBar() {
 }
 
 void GEM_adafruit_gfx::drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color) {
-  byte variant = _spriteSize > 1 ? 1 : 0;
+  byte variant = _spriteSize - 1;
   _agfx.drawBitmap(x, y, sprite[variant].image, sprite[variant].width, sprite[variant].height, color);
 }
 
@@ -448,6 +448,10 @@ byte GEM_adafruit_gfx::getMenuItemInsetOffset(bool forSprite) {
 
 byte GEM_adafruit_gfx::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {
   return (_menuPageCurrent->currentItemNum % getMenuItemsPerScreen()) * getCurrentAppearance()->menuItemHeight + getCurrentAppearance()->menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
+}
+
+byte GEM_adafruit_gfx::calculateSpriteOverlap(const Splash sprite[]) {
+  return ((sprite[_spriteSize - 1].width - 3 * _textSize) / _menuItemFont[getMenuItemFontSize()].width * _textSize);
 }
 
 void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color) {
@@ -488,7 +492,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
           case GEM_VAL_SELECT:
             {
               GEMSelect* select = menuItemTmp->select;
-              printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
+              printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable), -1 * calculateSpriteOverlap(selectArrows));
               drawSprite(_agfx.width() - 7 * _spriteSize, yDraw, selectArrows, color);
             }
             break;
@@ -512,7 +516,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
                   break;
                 #endif
               }
-              printMenuItemValue(valueStringTmp);
+              printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(selectArrows));
               drawSprite(_agfx.width() - 7 * _spriteSize, yDraw, selectArrows, color);
             }
             break;
@@ -538,7 +542,7 @@ void GEM_adafruit_gfx::printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDra
         printMenuItemFull(menuItemTmp->title, -1);
         _agfx.print("^");
       } else {
-        printMenuItemFull(menuItemTmp->title);
+        printMenuItemFull(menuItemTmp->title, -1 * calculateSpriteOverlap(arrowRight));
       }
       drawSprite(_agfx.width() - 8 * _spriteSize, yDraw, arrowRight, color);
       break;
@@ -1014,13 +1018,19 @@ void GEM_adafruit_gfx::nextEditValueSelect() {
   GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum+1 < select->getLength()) {
     _valueSelectNum++;
+  } else if (select->getLoop()) {
+    _valueSelectNum = 0;
   }
   drawEditValueSelect();
 }
 
 void GEM_adafruit_gfx::prevEditValueSelect() {
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+  GEMSelect* select = menuItemTmp->select;
   if (_valueSelectNum > 0) {
     _valueSelectNum--;
+  } else if (select->getLoop()) {
+    _valueSelectNum = select->getLength() - 1;
   }
   drawEditValueSelect();
 }
@@ -1031,12 +1041,21 @@ void GEM_adafruit_gfx::nextEditValueSpinner() {
   GEMSpinner* spinner = menuItemTmp->spinner;
   if (_valueSelectNum+1 < spinner->getLength()) {
     _valueSelectNum++;
+  } else if (spinner->getLoop()) {
+    _valueSelectNum = 0;
   }
   drawEditValueSelect();
 }
 
 void GEM_adafruit_gfx::prevEditValueSpinner() {
-  prevEditValueSelect();
+  GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
+  GEMSpinner* spinner = menuItemTmp->spinner;
+  if (_valueSelectNum > 0) {
+    _valueSelectNum--;
+  } else if (spinner->getLoop()) {
+    _valueSelectNum = spinner->getLength() - 1;
+  }
+  drawEditValueSelect();
 }
 #endif
 
@@ -1053,7 +1072,7 @@ void GEM_adafruit_gfx::drawEditValueSelect() {
     case GEM_VAL_SELECT:
       {
         GEMSelect* select = menuItemTmp->select;
-        printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
+        printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum), -1 * calculateSpriteOverlap(selectArrows));
       }
       break;
     #ifdef GEM_SUPPORT_SPINNER
@@ -1078,7 +1097,7 @@ void GEM_adafruit_gfx::drawEditValueSelect() {
             break;
           #endif
         }
-        printMenuItemValue(valueStringTmp);
+        printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(selectArrows));
       }
       break;
     #endif

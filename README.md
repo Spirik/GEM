@@ -1099,6 +1099,11 @@ For more details on customization see corresponding section of the [wiki](https:
 
   Alias for the keys (buttons) used to navigate and interact with menu. Submitted to `GEM::registerKeyPress()`, `GEM_u8g2::registerKeyPress()` and `GEM_adafruit_gfx::registerKeyPress()` methods. Indicates that Ok/Apply key is pressed (toggle `bool` menu item, enter edit mode of the associated non-`bool` variable, exit edit mode with saving the variable, execute code associated with button).
 
+* **GEM_LOOP**  
+  *Type*: macro `#define GEM_LOOP true`  
+  *Value*: `true`  
+  Alias for loop modifier of selects and range spinners. Submitted as **loop** setting to `GEMSelect` and `GEMSpinner` constructors.
+
 #### Methods
 
 * *GEM&* **setAppearance(** _GEMAppearance_ appearance **)**  
@@ -1281,14 +1286,14 @@ For more details on customization see corresponding section of the [wiki](https:
 Menu page holds menu items `GEMItem` and represents menu level. Menu can have multiple menu pages (linked to each other) with multiple menu items each. Object of class `GEMPage` defines as follows:
 
 ```cpp
-GEMPage menuPage(title[, exitAction]);
+GEMPage menuPage([title[, exitAction]]);
 ```
 or
 ```cpp
-GEMPage menuPage(title[, parentMenuPage]);
+GEMPage menuPage([title[, parentMenuPage]]);
 ```
 
-* **title**  
+* **title** [*optional*]  
   *Type*: `const char*`  
   Title of the menu page displayed at top of the screen.
   
@@ -1727,7 +1732,7 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 List of values available for option select. Supplied to `GEMItem` constructor. Object of class `GEMSelect` defines as follows:
 
 ```cpp
-GEMSelect mySelect(length, optionsArray);
+GEMSelect mySelect(length, optionsArray[, loop]);
 ```
 
 * **length**  
@@ -1738,6 +1743,12 @@ GEMSelect mySelect(length, optionsArray);
   *Type*: `void*` (pointer to array of type either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar`)  
   Array of the available options. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar` depending on the kind of data options are selected from. See the following section for definition of these custom types.
 
+* **loop** [*optional*]  
+  *Type*: `bool`  
+  *Values*: `GEM_LOOP` (alias for `true`), `false`  
+  *Default*: `false`  
+  Sets loop mode for select which defines whether iteration over options should be looped.
+
 Example of use:
 
 ```cpp
@@ -1746,6 +1757,8 @@ Example of use:
 SelectOptionInt optionsArray[] = {{"Opt 1", 10}, {"Opt 2", -12}, {"Opt 3", 13}};
 // 2) Supply array of options to GEMSelect constructor:
 GEMSelect mySelect(sizeof(optionsArray)/sizeof(SelectOptionInt), optionsArray);
+// 3) Optionally enable loop mode:
+GEMSelect mySelect(sizeof(optionsArray)/sizeof(SelectOptionInt), GEM_LOOP);
 ```
 or
 ```cpp
@@ -1753,6 +1766,17 @@ or
 // GEMSelect constructor with anonymous options array (length of array (3) can't be calculated in this case and should be explicitly supplied):
 GEMSelect mySelect(3, (SelectOptionInt[]){{"Opt 1", 10}, {"Opt 2", -12}, {"Opt 3", 13}});
 ```
+
+#### Methods
+
+* *GEMSelect&* **setLoop(** _bool_ mode = true **)**  
+  *Accepts*: `bool`  
+  *Returns*: `GEMSelect&`  
+  Explicitly set (`setLoop(true)`, or `setLoop(GEM_LOOP)`, or `setLoop()`) or unset (`setLoop(false)`) loop mode for select which defines whether iteration over options should be looped.
+
+* *bool* **getLoop()**  
+  *Returns*: `bool`  
+  Get loop state of the select: `true` when looping is enabled, `false` otherwise.
 
 
 ----------
@@ -1849,12 +1873,18 @@ Spinner is similar to option select, but instead of specifying available options
 `GEMSpinner` represents range of values available for incremental spinner. Supplied to `GEMItem` constructor. Object of class `GEMSpinner` defines as follows:
 
 ```cpp
-GEMSpinner mySpinner(boundaries);
+GEMSpinner mySpinner(boundaries[, loop]);
 ```
 
 * **boundaries**  
   *Type*: `GEMSpinnerBoundariesInt`, or `GEMSpinnerBoundariesByte`, or `GEMSpinnerBoundariesFloat`, or `GEMSpinnerBoundariesDouble`  
   Settings of the incremental spinner, such as minimum and maximum boundaries of available values in range, and step with which increment/decrement of value is performed. Type of boundaries object is either `GEMSpinnerBoundariesInt`, or `GEMSpinnerBoundariesByte`, or `GEMSpinnerBoundariesFloat`, or `GEMSpinnerBoundariesDouble` depending on the type of variable the spinner is associated with. See the following section for definition of these custom types.
+
+* **loop** [*optional*]  
+  *Type*: `bool`  
+  *Values*: `GEM_LOOP` (alias for `true`), `false`  
+  *Default*: `false`  
+  Sets loop mode for spinner which defines whether iteration over options should be looped.
 
 Example of use:
 
@@ -1864,6 +1894,8 @@ Example of use:
 GEMSpinnerBoundariesInt mySpinnerBoundaries = { .step = 50, .min = -150, .max = 150 };
 // 2) Supply settings to GEMSpinner constructor:
 GEMSpinner mySpinner(mySpinnerBoundaries);
+// 3) Optionally enable loop mode:
+GEMSpinner mySpinner(mySpinnerBoundaries, GEM_LOOP);
 ```
 
 It is possible to exclude support for spinner menu items to save some space on your chip. For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
@@ -1887,6 +1919,17 @@ build_flags =
     ; Disable support for increment/decrement spinner menu items
     -D GEM_DISABLE_SPINNER
 ```
+
+#### Methods
+
+* *GEMSpinner&* **setLoop(** _bool_ mode = true **)**  
+  *Accepts*: `bool`  
+  *Returns*: `GEMSpinner&`  
+  Explicitly set (`setLoop(true)`, or `setLoop(GEM_LOOP)`, or `setLoop()`) or unset (`setLoop(false)`) loop mode for range spinner which defines whether iteration over options should be looped.
+
+* *bool* **getLoop()**  
+  *Returns*: `bool`  
+  Get loop state of the spinner: `true` when looping is enabled, `false` otherwise.
 
 
 ----------

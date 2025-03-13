@@ -61,6 +61,9 @@
 #define GEM_VAL_DOUBLE 6   // Associated variable is of type double
 #define GEM_VAL_SPINNER 7  // Associated variable is either of type int, byte, float or double with spinner to increment or decrement value with given step
 
+// Macro constant (alias) for loop modifier of selects (GEMSelect) and range spinners (GEMSpinner)
+#define GEM_LOOP true
+
 // Macro used internally to mark virtual functions in Advanced Mode
 #ifdef GEM_ENABLE_ADVANCED_MODE
 #define GEM_VIRTUAL virtual

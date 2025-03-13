@@ -85,6 +85,8 @@ getCurrentMenuItem	KEYWORD2
 getCurrentMenuItemIndex	KEYWORD2
 setCurrentMenuItemIndex	KEYWORD2
 getItemsCount	KEYWORD2
+setLoop	KEYWORD2
+getLoop	KEYWORD2
 
 ####################################################
 # Constants (LITERAL1)
@@ -144,6 +146,8 @@ GEM_ITEM_LABEL	LITERAL1
 
 GEM_READONLY	LITERAL1
 GEM_HIDDEN	LITERAL1
+
+GEM_LOOP	LITERAL1
 
 GEM_LAST_POS	LITERAL1
 GEM_ITEMS_TOTAL	LITERAL1

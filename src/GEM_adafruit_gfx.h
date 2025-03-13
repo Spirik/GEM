@@ -187,6 +187,7 @@ class GEM_adafruit_gfx {
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
     GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
     GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL byte calculateSpriteOverlap(const Splash sprite[]);
     GEM_VIRTUAL void printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer(bool clear = false);

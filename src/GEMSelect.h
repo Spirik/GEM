@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -43,7 +43,7 @@
 // Declaration of SelectOptionInt type
 struct SelectOptionInt {
   const char* name;    // Text label of the option as displayed in select
-  int val_int;   // Value of the option that is assigned to linked variable upon option selection
+  int val_int;         // Value of the option that is assigned to linked variable upon option selection
 };
 
 // Declaration of SelectOptionByte type
@@ -79,16 +79,21 @@ class GEMSelect {
     /* 
       @param 'length_' - length of the 'options_' array
       @param 'options_' - array of the available options
+      @param 'loop_' (optional) - whether iteration over options should be looped
+      values GEM_LOOP (alias for true)
     */
-    GEMSelect(byte length_, SelectOptionInt* options_);
-    GEMSelect(byte length_, SelectOptionByte* options_);
-    GEMSelect(byte length_, SelectOptionChar* options_);
-    GEMSelect(byte length_, SelectOptionFloat* options_);
-    GEMSelect(byte length_, SelectOptionDouble* options_);
+    GEMSelect(byte length_, SelectOptionInt* options_, bool loop_ = false);
+    GEMSelect(byte length_, SelectOptionByte* options_, bool loop_ = false);
+    GEMSelect(byte length_, SelectOptionChar* options_, bool loop_ = false);
+    GEMSelect(byte length_, SelectOptionFloat* options_, bool loop_ = false);
+    GEMSelect(byte length_, SelectOptionDouble* options_, bool loop_ = false);
+    GEMSelect& setLoop(bool mode = true);  // Explicitly set or unset loop mode
+    bool getLoop();                        // Get current value of loop mode
   protected:
     byte _type;
     byte _length;
     void* _options;
+    bool _loop = false;
     byte getType();
     byte getLength();
     GEM_VIRTUAL int getSelectedOptionNum(void* variable);
