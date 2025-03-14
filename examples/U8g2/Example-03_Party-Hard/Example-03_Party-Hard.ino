@@ -9,10 +9,10 @@
   navigation push-buttons.
 
   U8g2lib library is used to draw menu and to detect push-buttons presses.
-  
+
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 */
 

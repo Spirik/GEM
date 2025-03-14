@@ -17,12 +17,12 @@
   - Add button to Uncheck all and/or Check all Todo items
   - Use external storage (e.g. SD Card) to store data
   - Make portable by adding battery
-  
+
   This example uses the same schematics/breadboard as Example-05_Encoder (supplied with GEM).
 
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 */
 
@@ -43,7 +43,7 @@
 // Class representing Todo item
 class TodoItem {
   public:
-    /* 
+    /*
       @param 'title_' - title of Todo item
     */
     TodoItem(char* title_){
@@ -63,7 +63,7 @@ class TodoItem {
 /* #define splashWidth  27
 #define splashHeight 8
 static const unsigned char splashBits [] PROGMEM = {
-  0xf8, 0xe3, 0xc3, 0x80, 0x01, 0x10, 0x24, 0x40, 0x21, 0x12, 0x24, 0x40, 0x21, 0x12, 0x24, 0x40, 
+  0xf8, 0xe3, 0xc3, 0x80, 0x01, 0x10, 0x24, 0x40, 0x21, 0x12, 0x24, 0x40, 0x21, 0x12, 0x24, 0x40,
 	0x21, 0x12, 0x24, 0x40, 0x21, 0x12, 0x24, 0x40, 0x20, 0xe3, 0xc3, 0x80, 0x00, 0x00, 0x00, 0x00
 }; */
 
@@ -253,7 +253,7 @@ void setup() {
   // internally, this will display the splashscreen.
   delay(250);                       // Wait for the OLED to power up
   display.begin(i2c_Address, true); // Address 0x3C default
-  
+
   display.display();
   delay(2000);
 
@@ -300,24 +300,24 @@ void setupMenu() {
   menuPageList
     .setAppearance(&appearanceList)
     .addMenuItem(menuItemLinkAdd);
-  
+
   // Turn on adjusted order of ASCII characters when editing title
   menuItemTitle.setAdjustedASCIIOrder();
-  
+
   appearanceAdd.menuValuesLeftOffset = 46;
-  
+
   // Add menu items to Add menu page
   menuPageAdd
     .setAppearance(&appearanceAdd)
     .addMenuItem(menuItemTitle)
     .addMenuItem(menuItemButtonAdd);
-  
+
   // Add menu items to Manage menu page
   menuPageManage
     .addMenuItem(menuItemRam)
     .addMenuItem(menuItemButtonClear)
     .addMenuItem(menuItemButtonClearAll);
- 
+
   // Add menu items to Settings menu page
   menuPageSettings
     .addMenuItem(menuItemInvert)
@@ -345,7 +345,7 @@ void loop() {
 
     // Calculate RAM each loop iteration
     calculateFreeRam();
-  
+
     switch (myKeyDetector.trigger) {
       case KEY_A:
         // Signal from Channel A of encoder was detected
@@ -454,7 +454,7 @@ void addItem() {
   if (newItemTitle[0] != '\0') {
     Serial.print(F("Add Item: "));
     Serial.println(newItemTitle);
-    
+
     // Creating new TodoItem object and adding corresponding menu item to menu page
     menuItemLinkAdd.hide(); // Temporarily hide Add button to add new item at the end of the list (but before hidden button)
     TodoItem* tempItem = new TodoItem(newItemTitle);
@@ -480,7 +480,7 @@ void clearItems(bool onlyCompleted = true) {
     GEMItem* nextItem = menuItemTmp->getMenuItemNext(); // Save pointer to a next item
     bool completed = *(bool*)menuItemTmp->getLinkedVariablePointer(); // Save completed status
     if (completed || !onlyCompleted) {
-      // If linked boolean variable is true, then consider Todo item completed and ready to be removed 
+      // If linked boolean variable is true, then consider Todo item completed and ready to be removed
       // (and remove it anyway in case if onlyCompleted set to false)
       Serial.print(completed ? "[x]" : "[ ]");
       Serial.println(menuItemTmp->getTitle());

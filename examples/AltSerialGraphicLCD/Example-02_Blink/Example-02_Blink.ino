@@ -11,10 +11,10 @@
 
   AltSerialGraphicLCD library is used to draw menu.
   KeyDetector library is used to detect push-buttons presses.
-  
+
   Additional info (including the breadboard view) available on GitHub:
   https://github.com/Spirik/GEM
-  
+
   This example code is in the public domain.
 */
 
@@ -129,7 +129,7 @@ void setupMenu() {
 
   // Specify parent menu page for the Settings menu page
   menuPageSettings.setParentMenuPage(menuPageMain);
-  
+
   // Add Main Menu page to menu and set it as current
   menu.setMenuPageCurrent(menuPageMain);
 }
@@ -216,7 +216,7 @@ void blinkDelayContextLoop() {
 void blinkDelayContextExit() {
   // Reset variables
   ledOn = false;
-  
+
   // Draw menu back on screen and clear context
   menu.reInit();
   menu.drawMenu();
@@ -268,7 +268,7 @@ void blinkMillisContextExit() {
   // Reset variables
   previousMillis = 0;
   ledOn = false;
-  
+
   // Draw menu back on screen and clear context
   menu.reInit();
   menu.drawMenu();

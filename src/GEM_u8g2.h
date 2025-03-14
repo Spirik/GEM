@@ -2,7 +2,7 @@
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
   editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
   and option selects. User-defined callback function can be specified to invoke when menu item is saved.
-  
+
   Supports buttons that can invoke user-defined actions and create action-specific
   context, which can have its own enter (setup) and exit callbacks as well as loop function.
 
@@ -22,12 +22,12 @@
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
   version 3 of the License, or (at your option) any later version.
-  
+
   This library is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
   Lesser General Public License for more details.
-  
+
   You should have received a copy of the GNU Lesser General Public License
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -83,13 +83,28 @@ struct FontFamiliesU8g2 {
   const uint8_t *small;  // Small font family (i.e., 4x6)
 };
 
+#ifndef ARDUINO
+class PrintableU8G2 : public U8G2 {
+public:
+  size_t print(const char str[]) {
+    return write(reinterpret_cast<const uint8_t*>(str), strlen(str));
+  }
+
+  size_t print(char c) {
+    return write(static_cast<uint8_t>(c));
+  }
+};
+#else
+typedef U8G2 PrintableU8G2;
+#endif
+
 // Forward declaration of necessary classes
 class GEMItem;
 
 // Declaration of GEM_u8g2 class
 class GEM_u8g2 {
   public:
-    /* 
+    /*
       @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'menuPointerType_' (optional) - type of menu pointer visual appearance
       values GEM_POINTER_ROW, GEM_POINTER_DASH
@@ -104,18 +119,18 @@ class GEM_u8g2 {
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
     */
-    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_u8g2(PrintableU8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
     /*
       @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'appearance_' - object of type GEMAppearance
     */
-    GEM_u8g2(U8G2& u8g2_, GEMAppearance appearance_);
+    GEM_u8g2(PrintableU8G2& u8g2_, GEMAppearance appearance_);
 
     /* APPEARANCE OPERATIONS */
 
     GEM_u8g2& setAppearance(GEMAppearance appearance);          // Set appearance of the menu (can be overridden in GEMPage on per page basis)
     GEMAppearance* getCurrentAppearance();                      // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
-    
+
     /* INIT OPERATIONS */
 
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
@@ -154,7 +169,7 @@ class GEM_u8g2 {
     GEM_u8g2& registerKeyPress(byte keyCode);                   // Register the key press and trigger corresponding action
                                                                 // Accepts GEM_KEY_NONE, GEM_KEY_UP, GEM_KEY_RIGHT, GEM_KEY_DOWN, GEM_KEY_LEFT, GEM_KEY_CANCEL, GEM_KEY_OK values
   protected:
-    U8G2& _u8g2;
+    PrintableU8G2& _u8g2;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
     byte getMenuItemsPerScreen();
