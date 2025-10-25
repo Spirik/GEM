@@ -115,14 +115,17 @@ GEMPage& GEMPage::setAppearance(GEMAppearance* appearance) {
 }
 
 GEMItem* GEMPage::getMenuItem(byte index, bool total) {
-  GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
-  for (byte i=0; i<index; i++) {
-    menuItemTmp = menuItemTmp->getMenuItemNext(total);
-    if (menuItemTmp == nullptr) {
-      return nullptr;
+  if (_menuItem != nullptr) {
+    GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
+    for (byte i=0; i<index; i++) {
+      menuItemTmp = menuItemTmp->getMenuItemNext(total);
+      if (menuItemTmp == nullptr) {
+        return nullptr;
+      }
     }
+    return menuItemTmp;
   }
-  return menuItemTmp;
+  return nullptr;
 }
 
 GEMItem* GEMPage::getCurrentMenuItem() {
@@ -143,12 +146,14 @@ byte GEMPage::getItemsCount(bool total) {
 }
 
 int GEMPage::getMenuItemNum(GEMItem& menuItem, bool total) {
-  GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
-  for (byte i=0; i<(total ? itemsCountTotal : itemsCount); i++) {
-    if (menuItemTmp == &menuItem) {
-      return i;
+  if (_menuItem != nullptr) {
+    GEMItem* menuItemTmp = (!total && _menuItem->hidden) ? _menuItem->getMenuItemNext() : _menuItem;
+    for (byte i=0; i<(total ? itemsCountTotal : itemsCount); i++) {
+      if (menuItemTmp == &menuItem) {
+        return i;
+      }
+      menuItemTmp = menuItemTmp->getMenuItemNext(total);
     }
-    menuItemTmp = menuItemTmp->getMenuItemNext(total);
   }
   return -1;
 }

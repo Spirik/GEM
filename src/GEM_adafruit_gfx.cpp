@@ -649,69 +649,75 @@ void GEM_adafruit_gfx::drawScrollbar() {
 //====================== MENU ITEMS NAVIGATION
 
 void GEM_adafruit_gfx::nextMenuItem() {
-  if (getCurrentAppearance()->menuPointerType != GEM_POINTER_DASH) {
-    drawMenuPointer(true);
-  }
-  if (_menuPageCurrent->currentItemNum == _menuPageCurrent->itemsCount-1) {
-    _menuPageCurrent->currentItemNum = 0;
-  } else {
-    _menuPageCurrent->currentItemNum++;
-  }
-  byte menuItemsPerScreen = getMenuItemsPerScreen();
-  bool redrawMenu = (_menuPageCurrent->itemsCount > menuItemsPerScreen && _menuPageCurrent->currentItemNum % menuItemsPerScreen == 0);
-  if (redrawMenu) {
-    drawMenu();
-  } else {
-    drawMenuPointer();
+  if (_menuPageCurrent->itemsCount > 0) {
+    if (getCurrentAppearance()->menuPointerType != GEM_POINTER_DASH) {
+      drawMenuPointer(true);
+    }
+    if (_menuPageCurrent->currentItemNum == _menuPageCurrent->itemsCount-1) {
+      _menuPageCurrent->currentItemNum = 0;
+    } else {
+      _menuPageCurrent->currentItemNum++;
+    }
+    byte menuItemsPerScreen = getMenuItemsPerScreen();
+    bool redrawMenu = (_menuPageCurrent->itemsCount > menuItemsPerScreen && _menuPageCurrent->currentItemNum % menuItemsPerScreen == 0);
+    if (redrawMenu) {
+      drawMenu();
+    } else {
+      drawMenuPointer();
+    }
   }
 }
 
 void GEM_adafruit_gfx::prevMenuItem() {
-  if (getCurrentAppearance()->menuPointerType != GEM_POINTER_DASH) {
-    drawMenuPointer(true);
-  }
-  byte menuItemsPerScreen = getMenuItemsPerScreen();
-  bool redrawMenu = (_menuPageCurrent->itemsCount > menuItemsPerScreen && _menuPageCurrent->currentItemNum % menuItemsPerScreen == 0);
-  if (_menuPageCurrent->currentItemNum == 0) {
-    _menuPageCurrent->currentItemNum = _menuPageCurrent->itemsCount-1;
-  } else {
-    _menuPageCurrent->currentItemNum--;
-  }
-  if (redrawMenu) {
-    drawMenu();
-  } else {
-    drawMenuPointer();
+  if (_menuPageCurrent->itemsCount > 0) {
+    if (getCurrentAppearance()->menuPointerType != GEM_POINTER_DASH) {
+      drawMenuPointer(true);
+    }
+    byte menuItemsPerScreen = getMenuItemsPerScreen();
+    bool redrawMenu = (_menuPageCurrent->itemsCount > menuItemsPerScreen && _menuPageCurrent->currentItemNum % menuItemsPerScreen == 0);
+    if (_menuPageCurrent->currentItemNum == 0) {
+      _menuPageCurrent->currentItemNum = _menuPageCurrent->itemsCount-1;
+    } else {
+      _menuPageCurrent->currentItemNum--;
+    }
+    if (redrawMenu) {
+      drawMenu();
+    } else {
+      drawMenuPointer();
+    }
   }
 }
 
 void GEM_adafruit_gfx::menuItemSelect() {
   GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-  switch (menuItemTmp->type) {
-    case GEM_ITEM_VAL:
-      if (!menuItemTmp->readonly) {
-        enterEditValueMode();
-      }
-      break;
-    case GEM_ITEM_LINK:
-      if (!menuItemTmp->readonly) {
+  if (menuItemTmp != nullptr) {
+    switch (menuItemTmp->type) {
+      case GEM_ITEM_VAL:
+        if (!menuItemTmp->readonly) {
+          enterEditValueMode();
+        }
+        break;
+      case GEM_ITEM_LINK:
+        if (!menuItemTmp->readonly) {
+          _menuPageCurrent = menuItemTmp->linkedPage;
+          drawMenu();
+        }
+        break;
+      case GEM_ITEM_BACK:
+        _menuPageCurrent->currentItemNum = (_menuPageCurrent->itemsCount > 1) ? 1 : 0;
         _menuPageCurrent = menuItemTmp->linkedPage;
         drawMenu();
-      }
-      break;
-    case GEM_ITEM_BACK:
-      _menuPageCurrent->currentItemNum = (_menuPageCurrent->itemsCount > 1) ? 1 : 0;
-      _menuPageCurrent = menuItemTmp->linkedPage;
-      drawMenu();
-      break;
-    case GEM_ITEM_BUTTON:
-      if (!menuItemTmp->readonly) {
-        if (menuItemTmp->callbackWithArgs) {
-          menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
-        } else {
-          menuItemTmp->callbackAction();
+        break;
+      case GEM_ITEM_BUTTON:
+        if (!menuItemTmp->readonly) {
+          if (menuItemTmp->callbackWithArgs) {
+            menuItemTmp->callbackActionArg(menuItemTmp->callbackData);
+          } else {
+            menuItemTmp->callbackAction();
+          }
         }
-      }
-      break;
+        break;
+    }
   }
 }
 
@@ -1296,8 +1302,9 @@ void GEM_adafruit_gfx::dispatchKeyPress() {
           prevMenuItem();
           break;
         case GEM_KEY_RIGHT:
-          if (_menuPageCurrent->getCurrentMenuItem()->type == GEM_ITEM_LINK ||
-              _menuPageCurrent->getCurrentMenuItem()->type == GEM_ITEM_BUTTON) {
+          if (_menuPageCurrent->getCurrentMenuItem() != nullptr && (
+              _menuPageCurrent->getCurrentMenuItem()->type == GEM_ITEM_LINK ||
+              _menuPageCurrent->getCurrentMenuItem()->type == GEM_ITEM_BUTTON)) {
             menuItemSelect();
           }
           break;
@@ -1305,12 +1312,14 @@ void GEM_adafruit_gfx::dispatchKeyPress() {
           nextMenuItem();
           break;
         case GEM_KEY_LEFT:
-          if (_menuPageCurrent->getCurrentMenuItem()->type == GEM_ITEM_BACK) {
+          if (_menuPageCurrent->getCurrentMenuItem() != nullptr &&
+              _menuPageCurrent->getCurrentMenuItem()->type == GEM_ITEM_BACK) {
             menuItemSelect();
           }
           break;
         case GEM_KEY_CANCEL:
-          if (_menuPageCurrent->getMenuItem(0)->type == GEM_ITEM_BACK) {
+          if (_menuPageCurrent->getMenuItem(0) != nullptr &&
+              _menuPageCurrent->getMenuItem(0)->type == GEM_ITEM_BACK) {
             _menuPageCurrent->currentItemNum = 0;
             menuItemSelect();
           } else if (_menuPageCurrent->exitAction != nullptr) {
