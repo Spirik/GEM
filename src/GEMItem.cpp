@@ -1763,6 +1763,18 @@ GEMCallbackData GEMItem::getCallbackData() {
   return callbackData;
 }
 
+#ifdef GEM_SUPPORT_PREVIEW_CALLBACKS
+GEMItem& GEMItem::setPreviewCallback(void (*previewCallbackAction_)(GEMPreviewCallbackData)) {
+  previewCallbackAction = previewCallbackAction_;
+  return *this;
+}
+
+GEMItem& GEMItem::removePreviewCallback() {
+  previewCallbackAction = nullptr;
+  return *this;
+}
+#endif
+
 //---
 
 GEMItem& GEMItem::setTitle(const char* title_) {
@@ -1841,6 +1853,12 @@ GEMItem& GEMItem::remove() {
 void* GEMItem::getLinkedVariablePointer() {
   return linkedVariable;
 }
+
+#ifdef GEM_SUPPORT_SPINNER
+GEMSpinner* GEMItem::getSpinner() {
+  return spinner;
+}
+#endif
 
 GEMPage* GEMItem::getParentPage() {
   return parentPage;

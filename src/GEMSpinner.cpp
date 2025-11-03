@@ -176,8 +176,9 @@ GEMSpinnerValue GEMSpinner::getOptionNameByIndex(void* variable, int index) {
   return value;
 }
 
-void GEMSpinner::setValue(void* variable, int index) {
-  GEMSpinnerValue value = getOptionNameByIndex(variable, index);
+void GEMSpinner::setValue(void* variable, int index, void* referenceVariable) {
+  void* reference = referenceVariable == nullptr ? variable : referenceVariable;
+  GEMSpinnerValue value = getOptionNameByIndex(reference, index);
   switch (_type) {
     case GEM_VAL_BYTE:
       *(byte*)variable = value.valByte;
