@@ -217,6 +217,9 @@ class GEM_adafruit_gfx {
     GEM_VIRTUAL void drawEditValueCursor(bool clear = false);
     GEM_VIRTUAL void nextEditValueDigit();
     GEM_VIRTUAL void prevEditValueDigit();
+    #ifdef GEM_SUPPORT_PREVIEW_CALLBACKS
+    GEM_VIRTUAL void callPreviewCallback(bool reset = false);
+    #endif
     GEM_VIRTUAL void drawEditValueDigit(byte code, bool clear = false);
     GEM_VIRTUAL void nextEditValueSelect();
     GEM_VIRTUAL void prevEditValueSelect();

@@ -13,6 +13,7 @@ GEMItem	KEYWORD1
 GEMPage	KEYWORD1
 GEMSelect	KEYWORD1
 GEMCallbackData	KEYWORD1
+GEMPreviewCallbackData	KEYWORD1
 GEMAppearance	KEYWORD1
 GEMContext	KEYWORD1
 AppContext	KEYWORD1
@@ -62,6 +63,8 @@ registerKeyPress	KEYWORD2
 clearContext	KEYWORD2
 setCallbackVal	KEYWORD2
 getCallbackData	KEYWORD2
+setPreviewCallback	KEYWORD2
+removePreviewCallback	KEYWORD2
 setTitle	KEYWORD2
 getTitle	KEYWORD2
 getLinkedType	KEYWORD2
@@ -75,6 +78,7 @@ show	KEYWORD2
 getHidden	KEYWORD2
 remove  KEYWORD2
 getLinkedVariablePointer	KEYWORD2
+getSpinner	KEYWORD2
 getParentPage	KEYWORD2
 getLinkedPage	KEYWORD2
 getMenuItemNext	KEYWORD2
@@ -87,6 +91,7 @@ setCurrentMenuItemIndex	KEYWORD2
 getItemsCount	KEYWORD2
 setLoop	KEYWORD2
 getLoop	KEYWORD2
+getOptionNameByIndex	KEYWORD2
 
 ####################################################
 # Constants (LITERAL1)

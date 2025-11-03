@@ -85,10 +85,10 @@ struct GEMSpinnerBoundaries {
 // Declaration of GEMSpinnerValue type
 struct GEMSpinnerValue {
   union {
-    int valByte;
+    byte valByte;
     int valInt;
     #ifdef GEM_SUPPORT_FLOAT_EDIT
-    double valFloat;
+    float valFloat;
     double valDouble;
     #endif
   };
@@ -113,6 +113,7 @@ class GEMSpinner {
     #endif
     GEMSpinner& setLoop(bool mode = true);  // Explicitly set or unset loop mode
     bool getLoop();                         // Get current value of loop mode
+    GEM_VIRTUAL GEMSpinnerValue getOptionNameByIndex(void* variable, int index);  // Get option by its index
   protected:
     GEMSpinnerBoundaries _boundaries;
     byte _type;
@@ -121,8 +122,7 @@ class GEMSpinner {
     byte getType();
     int getLength();
     GEM_VIRTUAL int getSelectedOptionNum(void* variable);
-    GEM_VIRTUAL GEMSpinnerValue getOptionNameByIndex(void* variable, int index);
-    GEM_VIRTUAL void setValue(void* variable, int index);  // Assign value of the selected option to supplied variable
+    GEM_VIRTUAL void setValue(void* variable, int index, void* referenceVariable = nullptr);  // Assign value of the selected option to supplied variable, optionally setting reference variable for counting options
 };
   
 #endif

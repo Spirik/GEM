@@ -29,6 +29,12 @@
 #include "config/support-spinner.h"         // Support for increment/decrement spinner menu items
 #endif
 
+// Support for preview callbacks enabled by default.
+// Can be disabled either by defining GEM_DISABLE_PREVIEW_CALLBACKS (via compiler flag or define) or manual edition here.
+#if !defined(GEM_DISABLE_PREVIEW_CALLBACKS)
+#include "config/support-preview-callbacks.h"   // Support for preview callbacks that will be called in edit mode when intermediate values of variable is changed
+#endif
+
 // Support for Advanced Mode is disabled by default.
 // Advanced Mode provides additional means to modify, customize and extend functionality of GEM.
 // Can be enabled either by defining GEM_ENABLE_ADVANCED_MODE (via compiler flag or define) or manual edition here.

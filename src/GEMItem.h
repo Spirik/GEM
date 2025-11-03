@@ -37,6 +37,7 @@
 #include "config.h"
 #include "constants.h"
 #include "GEMPage.h"
+#include "GEMSpinner.h"
 
 #ifndef HEADER_GEMITEM
 #define HEADER_GEMITEM
@@ -76,6 +77,23 @@ struct GEMCallbackData {
     void* valPointer;
   };
 };
+
+#ifdef GEM_SUPPORT_PREVIEW_CALLBACKS
+// Declaration of GEMPreviewCallbackData type
+struct GEMPreviewCallbackData {
+  GEMCallbackData callbackData;         // Struct of GEMCallbackData type (see declaration above), the same one that is passed to save callback
+  const char* previewString = nullptr;  // char* representation of editable variable (populated when editable variable is of type GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_FLOAT, GEM_VAL_DOUBLE)
+  int previewSelectNum = -1;            // Index of currently previewed option (populated when editable variable is of type GEM_VAL_SELECT, GEM_VAL_SPINNER)
+  byte type;                            // Type of the preview value placed in the following anonymous union (GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_FLOAT, GEM_VAL_DOUBLE)
+  union {                               // Preview value casted to corresponding data type stored in uinion
+    byte previewValByte;
+    int previewValInt;
+    float previewValFloat;
+    double previewValDouble;
+    const char* previewValChar;
+  };
+};
+#endif
 
 // Declaration of GEMItem class
 class GEMItem {
@@ -346,6 +364,10 @@ class GEMItem {
     GEMItem& setCallbackVal(const char* callbackVal_);
     GEMItem& setCallbackVal(void* callbackVal_);
     GEMCallbackData getCallbackData();                  // Get GEMCallbackData struct associated with menu item
+    #ifdef GEM_SUPPORT_PREVIEW_CALLBACKS
+    GEM_VIRTUAL GEMItem& setPreviewCallback(void (*previewCallbackAction_)(GEMPreviewCallbackData));  // Set preview callback that will be called in edit mode when intermediate values of associated variable is changed
+    GEM_VIRTUAL GEMItem& removePreviewCallback();       // Remove preview callback that was called in edit mode when intermediate values of associated variable is changed
+    #endif
     GEM_VIRTUAL GEMItem& setTitle(const char* title_);  // Set title of the menu item
     GEM_VIRTUAL const char* getTitle();                 // Get title of the menu item
     byte getLinkedType();                               // Get type of linked variable (see linkedType field description below for possible values)
@@ -363,6 +385,9 @@ class GEMItem {
     bool getHidden();                                   // Get hidden state of the menu item
     GEMItem& remove();                                  // Remove menu item from parent menu page
     GEM_VIRTUAL void* getLinkedVariablePointer();       // Get pointer to a linked variable (relevant for menu items that represent variable)
+    #ifdef GEM_SUPPORT_SPINNER
+    GEM_VIRTUAL GEMSpinner* getSpinner();               // Get pointer to a spinner object associated with menu item
+    #endif
     GEM_VIRTUAL GEMPage* getParentPage();               // Get pointer to menu page that holds this menu item
     GEM_VIRTUAL GEMPage* getLinkedPage();               // Get pointer to menu page that menu link GEM_ITEM_LINK or back button GEM_ITEM_BACK links to
     GEM_VIRTUAL GEMItem* getMenuItemNext(bool total = false); // Get next menu item (including hidden ones if total set to true)
@@ -387,7 +412,10 @@ class GEMItem {
       void (*callbackActionArg)(GEMCallbackData);
     };
     bool callbackWithArgs = false;
-    GEMCallbackData callbackData;
+    #ifdef GEM_SUPPORT_PREVIEW_CALLBACKS
+    void (*previewCallbackAction)(GEMPreviewCallbackData) = nullptr;
+    #endif
+    GEMCallbackData callbackData = { this, { 0 } };
 };
   
 #endif

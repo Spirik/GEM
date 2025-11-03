@@ -35,7 +35,9 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMItem](#gemitem)
   * [GEMSelect](#gemselect)
   * [GEMSpinner](#gemspinner)
+  * [GEMSpinnerValue](#gemspinnervalue)
   * [GEMCallbackData](#gemcallbackdata)
+  * [GEMPreviewCallbackData](#gempreviewcallbackdata)
   * [GEMAppearance](#gemappearance)
   * [GEMContext](#gemcontext)
 * [Floating-point variables](#floating-point-variables)
@@ -1657,6 +1659,14 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: `GEMCallbackData`  
   Get [`GEMCallbackData`](#gemcallbackdata) struct associated with menu item. It contains pointer to menu item and optionally user-defined value.
 
+* *GEMItem&* **setPreviewCallback(** _void_ (*previewCallbackAction_)(GEMPreviewCallbackData)**)**  
+  *Returns*: `GEMItem&`  
+  Specify preview callback function that will be called in edit mode when intermediate values of associated variable is changed. Callback function should expect argument of type [`GEMPreviewCallbackData`](#gempreviewcallbackdata) to be passed to it when it is executed.
+
+* *GEMItem&* **removePreviewCallback()**  
+  *Returns*: `GEMItem&`  
+  Disable preview callback that was called in edit mode when intermediate values of associated variable is changed.
+
 * *GEMItem&* **setTitle(** _const char*_ title **)**  
   *Returns*: `GEMItem&`  
   Set title of the menu item. Can be used to update menu item title dynamically.
@@ -1714,6 +1724,10 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 * *void** **getLinkedVariablePointer()**  
   *Returns*: `void*`  
   Get pointer to a linked variable (relevant for menu items that represent variable). Note that user is reponsible for casting `void*` pointer to a correct pointer type.
+
+* *GEMSpinner** **getSpinner()**  
+  *Returns*: `GEMSpinner*`  
+  Get pointer to a range spinner object associated with menu item.
 
 * *GEMPage** **getParentPage()**  
   *Returns*: `GEMPage*`  
@@ -1938,6 +1952,10 @@ build_flags =
   *Returns*: `bool`  
   Get loop state of the spinner: `true` when looping is enabled, `false` otherwise.
 
+* *GEMSpinnerValue* **getOptionNameByIndex(** _void*_ variable, _int_ index **)**  
+  *Accepts*: `void*`, `int`  
+  *Returns*: `GEMSpinnerValue`  
+  Get option by supplying pointer to a variable and its **index**. Returned value is of type [`GEMSpinnerValue`](#gemspinnervalue).
 
 ----------
 
@@ -2027,10 +2045,48 @@ GEMSpinnerBoundariesDouble boundaries = {step, min, max};
 
 ----------
 
+### GEMSpinnerValue
+
+Data structure that represents a value of a range spinner. The value is stored as an anonymous union, so choose carefully which property to use to access it (as it will access the same portion of memory).
+
+Declaration of `GEMSpinnerValue` type:
+
+```cpp
+struct GEMSpinnerValue {
+  union {
+    byte valByte;
+    int valInt;
+    float valFloat;
+    double valDouble;
+  };
+};
+```
+
+Object of type `GEMSpinnerValue` contains the following properties:
+
+* **valByte** (part of a union)  
+  *Type*: `byte`  
+  Value of type `byte` as a part of an anonymous union.
+
+* **valInt** (part of a union)  
+  *Type*: `int`  
+  Value of type `int` as a part of an anonymous union.
+
+* **valFloat** (part of a union)  
+  *Type*: `float`  
+  Value of type `float` as a part of an anonymous union.
+
+* **valDouble** (part of a union)  
+  *Type*: `double`  
+  Value of type `double` as a part of an anonymous union.
+
+
+----------
+
 
 ### GEMCallbackData
 
-Data structure that represents an argument that optionally can be passed to callback function associated with menu item. It contains pointer to menu item itself and a user-defined value, which can be one of the following types: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`. The value is stored as an anonymous union, so choose carefully which property to use to access it (as it is will access the same portion of memory).
+Data structure that represents an argument that optionally can be passed to callback function associated with menu item. It contains pointer to menu item itself and a user-defined value, which can be one of the following types: `int`, `byte`, `float`, `double`, `bool`, `const char*`, `void*`. The value is stored as an anonymous union, so choose carefully which property to use to access it (as it will access the same portion of memory).
 
 Declaration of `GEMCallbackData` type:
 
@@ -2109,6 +2165,146 @@ void buttonAction(GEMCallbackData callbackData) {
 ```
 
 For more details and examples of using user-defined callback arguments see corresponding sections of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+
+----------
+
+
+### GEMPreviewCallbackData
+
+Data structure that represents an argument that is passed to preview callback function associated with menu item. Preview callback is called when menu item is in edit mode with each change of intermediate value of associated variable. It contains `GEMCallbackData` structure (the same one that is passed to save callback, see description above); string (`char[]`) representation of intermediate value of the editable variable; index of currently previewed option (in case of selects or range spinners); preview value casted to corresponding data type stored as an anonymous union; type of the preview value placed in the anonymous union. See detailed description of each property below.
+
+Declaration of `GEMPreviewCallbackData` type:
+
+```cpp
+struct GEMPreviewCallbackData {
+  GEMCallbackData callbackData;         // Struct of GEMCallbackData type (see declaration above), the same one that is passed to save callback
+  const char* previewString = nullptr;  // char* representation of editable variable (populated when editable variable is of type GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_FLOAT, GEM_VAL_DOUBLE)
+  int previewSelectNum = -1;            // Index of currently previewed option (populated when editable variable is of type GEM_VAL_SELECT, GEM_VAL_SPINNER)
+  byte type;                            // Type of the preview value placed in the following anonymous union (GEM_VAL_INTEGER, GEM_VAL_BYTE, GEM_VAL_CHAR, GEM_VAL_FLOAT, GEM_VAL_DOUBLE)
+  union {                               // Preview value casted to corresponding data type stored in uinion
+    byte previewValByte;
+    int previewValInt;
+    float previewValFloat;
+    double previewValDouble;
+    const char* previewValChar;
+  };
+};
+```
+
+Object of type `GEMPreviewCallbackData` contains the following properties:
+
+* **callbackData**  
+  *Type*: `GEMCallbackData`  
+  Data structure that contains pointer to menu item and user-defined value (if any); see previous section.
+
+* **previewString**  
+  *Type*: `const cahr*`  
+  String representation of intermediate value of the variable (populated when editable variable is of type `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_CHAR`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`, otherwise contains `nullptr`).
+
+* **previewSelectNum**  
+  *Type*: `int`  
+  Index of currently previewed option (populated when editable variable is of type `GEM_VAL_SELECT`, `GEM_VAL_SPINNER`, otherwise contains `-1`).
+
+* **type**  
+  *Type*: `byte`  
+  Type of the preview value placed in the following anonymous union (either `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_CHAR`, `GEM_VAL_FLOAT`, or `GEM_VAL_DOUBLE`).
+
+* **previewValByte** (part of a union)  
+  *Type*: `byte`  
+  Preview value of type `byte` as a part of an anonymous union.
+
+* **previewValInt** (part of a union)  
+  *Type*: `int`  
+  Preview value of type `int` as a part of an anonymous union.
+
+* **previewValFloat** (part of a union)  
+  *Type*: `float`  
+  Preview value of type `float` as a part of an anonymous union.
+
+* **previewValDouble** (part of a union)  
+  *Type*: `double`  
+  Preview value of type `double` as a part of an anonymous union.
+
+* **previewValChar** (part of a union)  
+  *Type*: `const char*`  
+  Preview value of type `const char*` as a part of an anonymous union.
+
+If edition of variable is cancelled (i.e. user exits edit mode without saving), then preview callback will be called once again with `previewString` property set to `nullptr` and `previewSelectNum` set to `-1` (`type` and value placed in a union are undefined in that case).
+
+Basic example of use:
+
+```cpp
+...
+
+// byte spinner
+byte byteNumber = 50;
+GEMSpinnerBoundariesByte spinnerByteBoundaries = { .step = 10, .min = 0, .max = 150 };
+GEMSpinner spinnerByte(spinnerByteBoundaries, GEM_LOOP);
+
+// Spinner menu item
+void saveCallback(GEMCallbackData callbackData); // Forward declaration of optional save callback
+const char* varId = "my_byte_var"; // User-defined string that will be passed as a part of callback argument
+GEMItem menuItemByteNumber("Byte:", byteNumber, spinnerByte, saveCallback, varId);
+
+...
+
+void setupMenu() {
+  menuItemByteNumber.setPreviewCallback(previewSpinner);
+}
+
+...
+
+// Save callback
+void saveCallback(GEMCallbackData callbackData) {
+  Serial.print("Selected value: ");
+  Serial.print(byteNumber);
+  Serial.print(" | User-defined callback data: ");
+  Serial.println(callbackData.valChar);  // Get user-defined variable as a part of previewData.callbackData property
+}
+
+// Preview callback
+void previewSpinner(GEMPreviewCallbackData previewData) {
+  const int selectedIndex = previewData.previewSelectNum;
+  if (selectedIndex != -1) {
+    Serial.print(selectedIndex);
+    Serial.print(" | ");
+    Serial.print(previewData.previewValByte);
+    Serial.print(" | Type: ");
+    Serial.print(previewData.type);
+    Serial.print(" | User-defined callback data: ");
+    Serial.println(previewData.callbackData.valChar); // Get user-defined variable as a part of previewData.callbackData property
+  } else {
+    Serial.print("Cancel. Original value remains: ");
+    Serial.println(byteNumber);
+  }
+}
+
+```
+
+It is possible to exclude support for preview callbacks to save some space on your chip. For that, locate file [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) that comes with the library, open it and comment out corresponding inclusion, i.e. change this line:
+
+```cpp
+#include "config/support-preview-callbacks.h"
+```
+
+to
+
+```cpp
+// #include "config/support-preview-callbacks.h"
+```
+
+> Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
+
+Or, alternatively, define `GEM_DISABLE_PREVIEW_CALLBACKS` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
+
+```ini
+build_flags =
+    ; Disable support for preview callbacks
+    -D GEM_DISABLE_PREVIEW_CALLBACKS
+```
+
+For more examples see corresponding sections of the [wiki](https://github.com/Spirik/GEM/wiki).
 
 
 ----------
