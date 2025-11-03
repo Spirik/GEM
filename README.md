@@ -37,6 +37,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMSpinner](#gemspinner)
   * [GEMSpinnerValue](#gemspinnervalue)
   * [GEMCallbackData](#gemcallbackdata)
+  * [GEMPreviewCallbackData](#gempreviewcallbackdata)
   * [GEMAppearance](#gemappearance)
   * [GEMContext](#gemcontext)
 * [Floating-point variables](#floating-point-variables)
