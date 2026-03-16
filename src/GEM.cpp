@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -282,6 +282,10 @@ void GEM::drawTitleBar() {
   _glcd.fontFace(getMenuItemFontSize());
 }
 
+void GEM::drawSprite(uint8_t x, uint8_t y, uint8_t spriteId, uint8_t mode) {
+  _glcd.drawSprite(x, y, spriteId, mode);
+}
+
 void GEM::printMenuItemString(const char* str, byte num, byte startPos) {
   byte i = startPos;
   while (i < num + startPos && str[i] != '\0') {
@@ -349,16 +353,16 @@ void GEM::printMenuItems() {
               break;
             case GEM_VAL_BOOL:
               if (*(bool*)menuItemTmp->linkedVariable) {
-                _glcd.drawSprite(menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+                drawSprite(menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
               } else {
-                _glcd.drawSprite(menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+                drawSprite(menuValuesLeftOffset, yDraw, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
               }
               break;
             case GEM_VAL_SELECT:
               {
                 GEMSelect* select = menuItemTmp->select;
                 printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-                _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+                drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
               }
               break;
             #ifdef GEM_SUPPORT_SPINNER
@@ -382,7 +386,7 @@ void GEM::printMenuItems() {
                   #endif
                 }
                 printMenuItemValue(valueStringTmp);
-                _glcd.drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+                drawSprite(_glcd.xdim-7, yDraw, GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
               }
               break;
             #endif
@@ -409,10 +413,10 @@ void GEM::printMenuItems() {
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        _glcd.drawSprite(_glcd.xdim-8, yDraw, GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
+        drawSprite(_glcd.xdim-8, yDraw, GEM_SPR_ARROW_RIGHT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BACK:
-        _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
+        drawSprite(5, yDraw, GEM_SPR_ARROW_LEFT, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_BUTTON:
         _glcd.setX(11);
@@ -422,7 +426,7 @@ void GEM::printMenuItems() {
         } else {
           printMenuItemFull(menuItemTmp->title);
         }
-        _glcd.drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
+        drawSprite(5, yDraw, GEM_SPR_ARROW_BTN, GLCD_MODE_NORMAL);
         break;
       case GEM_ITEM_LABEL:
         _glcd.setX(5);
@@ -632,9 +636,9 @@ void GEM::checkboxToggle() {
     }
   } else {
     if (!checkboxValue) {
-      _glcd.drawSprite(getCurrentAppearance()->menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
+      drawSprite(getCurrentAppearance()->menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_CHECKED, GLCD_MODE_NORMAL);
     } else {
-      _glcd.drawSprite(getCurrentAppearance()->menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
+      drawSprite(getCurrentAppearance()->menuValuesLeftOffset, topOffset, GEM_SPR_CHECKBOX_UNCHECKED, GLCD_MODE_NORMAL);
     }
     if (getCurrentAppearance()->menuPointerType != GEM_POINTER_DASH) {
       drawMenuPointer();
@@ -1005,7 +1009,7 @@ void GEM::drawEditValueSelect() {
     #endif
   }
 
-  _glcd.drawSprite(_glcd.xdim - 7, getCurrentItemTopOffset(true, true), GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
+  drawSprite(_glcd.xdim - 7, getCurrentItemTopOffset(true, true), GEM_SPR_SELECT_ARROWS, GLCD_MODE_NORMAL);
   drawEditValueCursor();
 }
 

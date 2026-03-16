@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -64,12 +64,14 @@
 #define GEM_KEY_CANCEL  U8X8_MSG_GPIO_MENU_HOME   // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK      U8X8_MSG_GPIO_MENU_SELECT // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
 
-// Declaration of Splash type
-struct Splash {
-  byte width;                         // Width of the splash lmage
-  byte height;                        // Height of the splash image
-  const uint8_t *image;  // Pointer to XBM image to be shown as splash
+// Declaration of GEMSprite type
+struct GEMSprite {
+  byte width;             // Width of the image
+  byte height;            // Height of the image
+  const uint8_t *image;   // Pointer to XBM image
 };
+
+#define Splash GEMSprite
 
 // Declaration of FontSize type
 struct FontSize {
@@ -165,7 +167,7 @@ class GEM_u8g2 {
     bool _invertKeysDuringEdit = false;
     GEM_VIRTUAL byte getMenuItemTitleLength();
     GEM_VIRTUAL byte getMenuItemValueLength();
-    Splash _splash;
+    GEMSprite _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
 
@@ -174,6 +176,7 @@ class GEM_u8g2 {
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
     GEM_VIRTUAL void drawTitleBar();
+    GEM_VIRTUAL void drawSprite(u8g2_uint_t x, u8g2_uint_t y, const GEMSprite sprite);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);

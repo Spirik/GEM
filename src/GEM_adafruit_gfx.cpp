@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -84,7 +84,7 @@ static const uint8_t logo_bits_scaled [] PROGMEM = {
   0x0c, 0xff, 0xc3, 0xff, 0x0c, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-const Splash logo[] = {
+const GEMSprite logo[] = {
   {logo_width, logo_height, logo_bits},
   {logo_width_scaled, logo_height_scaled, logo_bits_scaled}
 };
@@ -173,32 +173,32 @@ static const uint8_t selectArrows_bits_scaled [] PROGMEM = {
   0x3f, 0x00, 0x3f, 0x00, 0x1e, 0x00, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-const Splash arrowRight[] = {
+const GEMSprite arrowRight[] = {
   {arrowRight_width, arrowRight_height, arrowRight_bits},
   {arrowRight_width_scaled, arrowRight_height_scaled, arrowRight_bits_scaled}
 };
 
-const Splash arrowLeft[] = {
+const GEMSprite arrowLeft[] = {
   {arrowLeft_width, arrowLeft_height, arrowLeft_bits},
   {arrowLeft_width_scaled, arrowLeft_height_scaled, arrowLeft_bits_scaled}
 };
 
-const Splash arrowBtn[] = {
+const GEMSprite arrowBtn[] = {
   {arrowBtn_width, arrowBtn_height, arrowBtn_bits},
   {arrowBtn_width_scaled, arrowBtn_height_scaled, arrowBtn_bits_scaled}
 };
 
-const Splash checkboxUnchecked[] = {
+const GEMSprite checkboxUnchecked[] = {
   {checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits},
   {checkboxUnchecked_width_scaled, checkboxUnchecked_height_scaled, checkboxUnchecked_bits_scaled}
 };
 
-const Splash checkboxChecked[] = {
+const GEMSprite checkboxChecked[] = {
   {checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits},
   {checkboxChecked_width_scaled, checkboxChecked_height_scaled, checkboxChecked_bits_scaled}
 };
 
-const Splash selectArrows[] = {
+const GEMSprite selectArrows[] = {
   {selectArrows_width, selectArrows_height, selectArrows_bits},
   {selectArrows_width_scaled, selectArrows_height_scaled, selectArrows_bits_scaled}
 };
@@ -414,7 +414,7 @@ void GEM_adafruit_gfx::drawTitleBar() {
   _agfx.setFont(getMenuItemFontSize() ? _fontFamilies.small : _fontFamilies.big);
 }
 
-void GEM_adafruit_gfx::drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color) {
+void GEM_adafruit_gfx::drawSprite(int16_t x, int16_t y, const GEMSprite sprite[], uint16_t color) {
   byte variant = _spriteSize - 1;
   _agfx.drawBitmap(x, y, sprite[variant].image, sprite[variant].width, sprite[variant].height, color);
 }
@@ -450,7 +450,7 @@ byte GEM_adafruit_gfx::getCurrentItemTopOffset(bool withInsetOffset, bool forSpr
   return (_menuPageCurrent->currentItemNum % getMenuItemsPerScreen()) * getCurrentAppearance()->menuItemHeight + getCurrentAppearance()->menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
 }
 
-byte GEM_adafruit_gfx::calculateSpriteOverlap(const Splash sprite[]) {
+byte GEM_adafruit_gfx::calculateSpriteOverlap(const GEMSprite sprite[]) {
   return ((sprite[_spriteSize - 1].width - 3 * _textSize) / _menuItemFont[getMenuItemFontSize()].width * _textSize);
 }
 
