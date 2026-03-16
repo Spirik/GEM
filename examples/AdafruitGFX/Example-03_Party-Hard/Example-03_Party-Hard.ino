@@ -186,7 +186,7 @@ void applyTempo() {
 // --- Animation draw routines
 
 // Draw sprite on screen
-// (note that GEMSprite is the custom type used internally in GEM library for convenient way of storing bitmap graphics of variuos sprites)
+// (note that GEMSprite is the custom type used internally in GEM library for convenient way of storing bitmap graphics of various sprites)
 void drawSprite(GEMSprite _splash, byte _mode) {
   tft.fillScreen(_mode == 1 ? 0x0000 : 0xFFFF);
   tft.drawBitmap((tft.width() - _splash.width) / 2, (tft.height() - _splash.height) / 2, _splash.image, _splash.width, _splash.height, _mode == 1 ? 0xFFFF : 0x0000);
