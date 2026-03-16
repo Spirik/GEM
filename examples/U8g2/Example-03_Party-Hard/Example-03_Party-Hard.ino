@@ -143,8 +143,8 @@ void applyTempo() {
 // --- Animation draw routines
 
 // Draw sprite on screen
-// (note that Splash is the custom type used internally in GEM library for convenient way of storing XBM graphics of Splash screen)
-void drawSprite(Splash _splash) {
+// (note that GEMSprite is the custom type used internally in GEM library for convenient way of storing XBM graphics of various sprites)
+void drawSprite(GEMSprite _splash) {
   u8g2.drawXBMP((u8g2.getDisplayWidth() - _splash.width) / 2, (u8g2.getDisplayHeight() - _splash.height) / 2, _splash.width, _splash.height, _splash.image);
 }
 

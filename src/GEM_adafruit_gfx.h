@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -64,12 +64,14 @@
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
 
-// Declaration of Splash type
-struct Splash {
-  byte width;             // Width of the splash lmage
-  byte height;            // Height of the splash image
-  const uint8_t *image;   // Pointer to bitmap image to be shown as splash
+// Declaration of GEMSprite type
+struct GEMSprite {
+  byte width;             // Width of the image
+  byte height;            // Height of the image
+  const uint8_t *image;   // Pointer to bitmap image
 };
+
+#define Splash GEMSprite
 
 // Declaration of FontSizeAGFX type
 struct FontSizeAGFX {
@@ -169,7 +171,7 @@ class GEM_adafruit_gfx {
     bool _invertKeysDuringEdit = false;
     GEM_VIRTUAL byte getMenuItemTitleLength();
     GEM_VIRTUAL byte getMenuItemValueLength();
-    Splash _splash;
+    GEMSprite _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
     uint16_t _menuForegroundColor = 0xFFFF;
@@ -180,14 +182,14 @@ class GEM_adafruit_gfx {
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
     GEM_VIRTUAL void drawTitleBar();
-    GEM_VIRTUAL void drawSprite(int16_t x, int16_t y, const Splash sprite[], uint16_t color);
+    GEM_VIRTUAL void drawSprite(int16_t x, int16_t y, const GEMSprite sprite[], uint16_t color);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
     GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
     GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
-    GEM_VIRTUAL byte calculateSpriteOverlap(const Splash sprite[]);
+    GEM_VIRTUAL byte calculateSpriteOverlap(const GEMSprite sprite[]);
     GEM_VIRTUAL void printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer(bool clear = false);

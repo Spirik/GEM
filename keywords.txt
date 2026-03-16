@@ -17,6 +17,7 @@ GEMPreviewCallbackData	KEYWORD1
 GEMAppearance	KEYWORD1
 GEMContext	KEYWORD1
 AppContext	KEYWORD1
+GEMSprite	KEYWORD1
 Splash	KEYWORD1
 FontSize	KEYWORD1
 FontFamilies	KEYWORD1
