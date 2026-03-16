@@ -12,14 +12,19 @@ Supports buttons that can invoke user-defined actions and create action-specific
 
 Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM ver. 1.0), [U8g2](https://github.com/olikraus/U8g2_Arduino) (since GEM ver. 1.1) and [Adafruit GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library) (since GEM ver. 1.3) graphics libraries.
 
+> [!IMPORTANT]
 > Note that U8g2 and Adafruit GFX libraries are required by default, regardless of which one of them is actually used to drive display (although the ones that are not used shouldn't affect compiled sketch size much). However, it is possible (since GEM ver. 1.2.2) to exclude support for not used ones. Support for `AltSerialGraphicLCD` is disabled by default since GEM ver. 1.5 (it is still possible to enable it). See [Configuration](#configuration) section for details.
 
-> For use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://www.sparkfun.com/products/9352) and properly set up to operate using firmware provided with aforementioned library.
+> [!IMPORTANT]
+> To use with AltSerialGraphicLCD library (by Jon Green) LCD screen must be equipped with [SparkFun Graphic LCD Serial Backpack](https://learn.sparkfun.com/tutorials/serial-graphic-lcd-hookup) and properly set up to operate using firmware provided with aforementioned library.
 
+> [!NOTE]
 > Cyrillic is partially supported in U8g2 version of GEM (since 1.1). Can be used in menu title, menu item labels (including variables, buttons, and menu page links), and select options. Editable strings with Cyrillic characters are not supported.
 
+> [!NOTE]
 > Optional support for editable variables of `float` and `double` data types was added since version 1.2 of GEM. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library or by defining `GEM_DISABLE_FLOAT_EDIT` flag before build. Disabling this feature may save considerable amount of program storage space. See [Floating-point variables](#floating-point-variables) section for details.
 
+> [!NOTE]
 > User-defined arguments can be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct (specified for menu items that represent editable variables and buttons) since version 1.4 of GEM.
 
 * [When to use](#when-to-use)
@@ -109,6 +114,7 @@ In order to communicate with your SparkFun Graphic LCD Serial Backpack, AltSeria
 ```cpp
 #include <SoftwareSerial.h>
 ```
+> __TIP__  
 > Note that it is possible to use hardware serial instead (e.g. if you're planning to use it with Arduino Leonardo's `Serial1` class), however some modifications of AltSerialGraphicLCD library would be required in that case.
 
 One more additional library that may come in handy (although is not necessary) is [KeyDetector](https://github.com/Spirik/KeyDetector) - it is small and lightweight library for key press events detection. It is used in some of the supplied examples (as well as the following one) to detect button presses for navigation through menu. To include KeyDetector library, install it first and then add the following line:
@@ -127,6 +133,7 @@ Assume you have a simple setup as follows:
 
 Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `bool` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `bool` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
+> __TIP__  
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
 #### Navigation buttons initial setup (via KeyDetector library)
@@ -148,7 +155,8 @@ Create an array of `Key` objects. It will hold information about which button pr
 Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, downPin}, {GEM_KEY_LEFT, leftPin}, {GEM_KEY_CANCEL, cancelPin}, {GEM_KEY_OK, okPin}};
 ```
 
-> **Note:** aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending to menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
+> __NOTE__  
+> Aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending to menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
 
 Create `KeyDetector` object called `myKeyDetector` and supply its constructor with `keys` array created at the previous step and explicitly pass the size of the array:
 
@@ -216,7 +224,8 @@ And finally, create menu object of class `GEM`. Supply its constructor with a re
 GEM menu(glcd);
 ```
 
-> **Note:** `GEM` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+> __NOTE__  
+> `GEM` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
 
 We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
 
@@ -371,6 +380,7 @@ void printData() {
 }
 ```
 
+> __TIP__  
 > This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#gemcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
 #### Sketch
@@ -420,6 +430,7 @@ Assume you have a simple setup as follows:
 
 Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `bool` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `bool` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). We will use U8g2 library to detect single button presses.
 
+> __TIP__  
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
 #### LCD initial setup (via U8g2 library)
@@ -432,7 +443,8 @@ In our case create an instance of the `U8G2_KS0108_128X64_1` class named `u8g2`.
 U8G2_KS0108_128X64_1 u8g2(U8G2_R0, 8, 9, 10, 11, 12, 13, 18, 19, /*enable=*/ A0, /*dc=*/ A1, /*cs0=*/ A3, /*cs1=*/ A2, /*cs2=*/ U8X8_PIN_NONE, /* reset=*/ U8X8_PIN_NONE);
 ```
 
-> **Note:** GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
+> __NOTE__  
+> GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
 
 LCD initial setup is now complete.
 
@@ -471,7 +483,8 @@ And finally, create menu object of class `GEM_u8g2`. Supply its constructor with
 GEM_u8g2 menu(u8g2);
 ```
 
-> **Note:** `GEM_u8g2` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+> __NOTE__  
+> `GEM_u8g2` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
 
 We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
 
@@ -587,6 +600,7 @@ void printData() {
 }
 ```
 
+> __TIP__  
 > This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#gemcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
 #### Sketch
@@ -647,6 +661,7 @@ Assume you have a simple setup as follows:
 
 Let's create a simple one page menu with one editable menu item associated with `int` variable, one with `bool` variable, and a button, pressing of which will result in `int` variable value being printed to Serial monitor if `bool` variable is set to `true`. To navigate through menu we will use 6 push-buttons connected to the Arduino (for four directional controls, one Cancel, and one Ok). For the sake of simplicity we will use KeyDetector library to detect single button presses (as we need a way to prevent continuously pressed button from triggering press event multiple times in a row).
 
+> __TIP__  
 > For more detailed examples and tutorials please visit GEM [wiki](https://github.com/Spirik/GEM/wiki).
 
 #### Navigation buttons initial setup (via KeyDetector library)
@@ -668,7 +683,8 @@ Create an array of `Key` objects. It will hold information about which button pr
 Key keys[] = {{GEM_KEY_UP, upPin}, {GEM_KEY_RIGHT, rightPin}, {GEM_KEY_DOWN, downPin}, {GEM_KEY_LEFT, leftPin}, {GEM_KEY_CANCEL, cancelPin}, {GEM_KEY_OK, okPin}};
 ```
 
-> **Note:** aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending to menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
+> __NOTE__  
+> Aliases `GEM_KEY_UP`, `GEM_KEY_RIGHT`, `GEM_KEY_DOWN`, `GEM_KEY_LEFT`, `GEM_KEY_CANCEL`, and `GEM_KEY_OK` are predefined and come with the GEM library. They represent identifiers of buttons that menu listens and responds to. E.g. sending to menu `GEM_KEY_DOWN` will trigger it to move cursor down and highlight the next menu item, etc.
 
 Create `KeyDetector` object called `myKeyDetector` and supply its constructor with `keys` array created at the previous step and explicitly pass the size of the array:
 
@@ -729,7 +745,8 @@ And finally, create menu object of class `GEM_adafruit_gfx`. Supply its construc
 GEM_adafruit_gfx menu(tft, GEM_POINTER_ROW, GEM_ITEMS_COUNT_AUTO);
 ```
 
-> **Note:** `GEM_POINTER_ROW` option defines the look of the menu item pointer, `GEM_ITEMS_COUNT_AUTO` turns on automatic calculation of number of items that will fit on the screen based on screen's height. `GEM_adafruit_gfx` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
+> __NOTE__  
+> `GEM_POINTER_ROW` option defines the look of the menu item pointer, `GEM_ITEMS_COUNT_AUTO` turns on automatic calculation of number of items that will fit on the screen based on screen's height. `GEM_adafruit_gfx` constructor supports additional optional parameters that can customize look of the menu. See [Reference](#reference) and [wiki](https://github.com/Spirik/GEM/wiki) for details.
 
 We will link menu items to menu pages to menu in `setup()` function. For now, menu initial setup is complete.
 
@@ -877,6 +894,7 @@ void printData() {
 }
 ```
 
+> __TIP__  
 > This is the simplest action that menu item button can have. More elaborate versions make use of custom "[context](#gemcontext)" that can be created when button is pressed. In that case, button action can have its own setup and loop functions (named `context.enter()` and `context.loop()`) that run similarly to how sketch operates. It allows you to initialize variables and e.g. prepare screen (if needed for the task that function performs), and then run through loop function, waiting for user input, or sensor reading, or command to terminate and exit back to the menu eventually. In the latter case additional `context.exit()` function will be called, that can be used to clean up your context and e.g. to free some memory and draw menu back to screen.
 
 #### Sketch
@@ -932,7 +950,8 @@ GEM_adafruit_gfx menu(tft[, appearance]);
   *Type*: `U8G2`  
   Holds the reference to an object created with U8g2 library and used for communication with LCD. Choose a matching constructor for the correct initialization of the display. See available constructors and supported controllers in the [documentation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp) for U8g2 library.
 
-  > **Note:** GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
+  > __NOTE__  
+  > GEM library is compatible with all [buffer size](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#buffer-size) options (namely `_1`, `_2`, `_F`) and screen [rotation](https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#rotation) options supported by U8g2.
 
 * **tft**  `Adafruit GFX version`  
   *Type*: `Adafruit_GFX`  
@@ -988,11 +1007,14 @@ GEM_u8g2 menu(u8g2, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScree
 GEM_adafruit_gfx menu(tft, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
 ```
 
-> **Note:** carefully choose values of `menuItemsPerScreen`, `menuItemHeight`, `menuPageScreenTopOffset`, `menuValuesLeftOffset` in accordance to the actual size of your display. Default values of these options are suitable for 128x64 screens. But that is not the only possible option: the other combination of values you set may also be suitable - just calculate them correctly and see what works best for you.
+> [!IMPORTANT]
+> Carefully choose values of `menuItemsPerScreen`, `menuItemHeight`, `menuPageScreenTopOffset`, `menuValuesLeftOffset` in accordance to the actual size of your display. Default values of these options are suitable for 128x64 screens. But that is not the only possible option: the other combination of values you set may also be suitable - just calculate them correctly and see what works best for you.
 
-> **Note:** long title of the menu page `GEMPage` won't overflow to the new line in U8g2 version and will be truncated at the edge of the screen.
+> [!NOTE]
+> Long title of the menu page `GEMPage` won't overflow to the new line in U8g2 version and will be truncated at the edge of the screen.
 
-> **Note:** it is possible to customize appearance of each menu page individually (since GEM ver. 1.5) by using [`GEMAppearance`](#gemappearance) object.
+> [!TIP]
+> It is possible to customize appearance of each menu page individually (since GEM ver. 1.5) by using [`GEMAppearance`](#gemappearance) object.
 
 For more details on customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki) and description of [`GEMAppearance`](#gemappearance) struct.
 
@@ -1149,7 +1171,8 @@ For more details on customization see corresponding section of the [wiki](https:
   *Accepts*: `uint16_t`  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Set splash screen delay (in ms). By default splash screen will be visible for 1000ms. Maximum supported value is 65535ms. Setting to 0 will disable splash screen. Should be called before `init()`.
-  > **Note:** internally splash screen delay is implemented via `delay()` function. This is the only place in library where `delay()` is utilized (aside of example sketches).
+  > __NOTE__  
+  > Internally splash screen delay is implemented via `delay()` function. This is the only place in library where `delay()` is utilized (aside of example sketches).
 
 * *GEM&* **hideVersion(** _bool_ flag = true **)**  
   *Accepts*: `bool`  
@@ -1174,6 +1197,7 @@ For more details on customization see corresponding section of the [wiki](https:
 * *GEM&* **init()**  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Init the menu: load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack (for AltSerialGraphicLCD version), display GEM splash screen, etc.
+  > __NOTE__  
   > The following `GLCD` object settings will be applied during `init()`: 
   > * `glcd.drawMode(GLCD_MODE_NORMAL)`;
   > * `glcd.fontMode(GLCD_MODE_NORMAL)`;
@@ -1182,12 +1206,14 @@ For more details on customization see corresponding section of the [wiki](https:
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
   
+  > __NOTE__  
   > The following `U8G2` object settings will be applied during `init()`: 
   > * `u8g2.setDrawColor(1)`;
   > * `u8g2.setFontPosTop()`.
   > 
   > Keep this in mind if you are planning to use the same object in your own routines.
   
+  > __NOTE__  
   > The following `Adafruit_GFX` object settings will be applied during `init()`: 
   > * `tft.setTextSize(_textSize)` (sets text magnification size to default value 1 or value set through `setTextSize()` previously);
   > * `tft.setTextWrap(false)`;
@@ -1278,7 +1304,8 @@ For more details on customization see corresponding section of the [wiki](https:
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Clear context. Assigns `nullptr` values to function pointers of the `context` property and sets `allowExit` flag of the `context` to `true`.
 
-> **Note:** calls to methods that return a reference to the owning `GEM`, or `GEM_u8g2`, or `GEM_adafruit_gfx` object can be chained, e.g. `menu.hideVersion().invertKeysDuringEdit().init();` (since GEM ver. 1.4.6).
+> [!TIP]
+> Calls to methods that return a reference to the owning `GEM`, or `GEM_u8g2`, or `GEM_adafruit_gfx` object can be chained, e.g. `menu.hideVersion().invertKeysDuringEdit().init();` (since GEM ver. 1.4.6).
 
 #### Properties
 
@@ -1306,7 +1333,8 @@ GEMPage menuPage([title[, parentMenuPage]]);
   *Type*: `const char*`  
   Title of the menu page displayed at top of the screen.
   
-  > **Note:** there is no explicit restriction on the length of the title. However, AltSerialGraphicLCD, U8g2 and Adafruit GFX vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD and Adafruit GFX versions, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD and Adafruit GFX versions it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
+  > __IMPORTANT__  
+  > There is no explicit restriction on the length of the title. However, AltSerialGraphicLCD, U8g2 and Adafruit GFX vesrions handle long titles differently. If title won't fit on a single line, it will overflow to the next line in AltSerialGraphicLCD and Adafruit GFX versions, but will be cropped at the edge of the screen in U8g2 version. In case of AltSerialGraphicLCD and Adafruit GFX versions it is possible to accommodate multiline menu titles by enlarging `menuPageScreenTopOffset` when initializing `GEM` object.
 
 * **exitAction** [*optional*]  
   *Type*: `pointer to function`  
@@ -1381,7 +1409,8 @@ GEMPage menuPage([title[, parentMenuPage]]);
   *Returns*: `byte`  
   Get items count of the menu page, counting hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
 
-> **Note:** calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
+> [!TIP]
+> Calls to methods that return a reference to the owning `GEMPage` object can be chained, e.g. `menuPageSettings.addMenuItem(menuItemInterval).addMenuItem(menuItemTempo).setParentMenuPage(menuPageMain);` (since GEM ver. 1.4.6).
 
 
 ----------
@@ -1391,7 +1420,8 @@ GEMPage menuPage([title[, parentMenuPage]]);
 
 Menu item of the menu. Can represent editable or read-only variable of type `int`, `byte`, `float`, `double`, `bool`, `char[17]` (or `char[GEM_STR_LEN]`, to be exact); option select of type `int`, `byte`, `float`, `double`, `char[n]`; incremental spinner of type `int`, `byte`, `float`, `double`; non-interactive label; link to another menu page; or button that can invoke user-defined actions and create action-specific context, which can have its own enter (setup) and exit callbacks as well as loop function. User-defined callback function can be specified to invoke when editable menu item is saved or option is selected. Exact definition of `GEMItem` object depends on its type.
 
-> **Note:** support for editable variables (and spinner) of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
+> [!TIP]
+> Support for editable variables (and spinner) of types `float` and `double` is optional. It is enabled by default, but can be disabled by editing [config.h](https://github.com/Spirik/GEM/blob/master/src/config.h) file that ships with the library. Disabling this feature may save considerable amount of program storage space (up to 10% on Arduino UNO R3). See [Floating-point variables](#floating-point-variables) for more details.
 
 #### Variable
 
@@ -1426,7 +1456,8 @@ GEMItem menuItemVar(title, linkedVariable[, saveCallback[, callbackVal]]);
   *Default*: `0`  
   Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
-> **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
+> [!IMPORTANT]
+> It is not possible to specify both readonly mode and callback in the same constructor. However, it is possible to set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
 
 #### Option select
 
@@ -1465,7 +1496,8 @@ GEMItem menuItemSelect(title, linkedVariable, select[, saveCallback[, callbackVa
   *Default*: `0`  
   Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
-> **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
+> [!IMPORTANT]
+> It is not possible to specify both readonly mode and callback in the same constructor. However, it is possible to set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
 
 #### Spinner
 
@@ -1504,7 +1536,8 @@ GEMItem menuItemSpinner(title, linkedVariable, spinner[, saveCallback[, callback
   *Default*: `0`  
   Sets user-defined value of an argument that will be passed to callback function as a part of [`GEMCallbackData`](#gemcallbackdata) struct.
 
-> **Note:** you cannot specify both readonly mode and callback in the same constructor. However, you can set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
+> [!IMPORTANT]
+> It is not possible to specify both readonly mode and callback in the same constructor. However, it is possible to set readonly mode for menu item with callback explicitly later using `GEMItem::setReadonly()` method.
 
 #### Label
 
@@ -1565,7 +1598,8 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Default*: `false`  
   Sets readonly mode for the button (user won't be able to call action associated with it).
 
-> **Note:** you cannot specify both readonly mode and callback with *uninitialized* `GEMCallbackData` argument in the same constructor. However, you can set readonly mode later using `GEMItem::setReadonly()` method.
+> [!IMPORTANT]
+> It is not possble to specify both readonly mode and callback with *uninitialized* `GEMCallbackData` argument in the same constructor. However, it is possible to set readonly mode later using `GEMItem::setReadonly()` method.
 
 #### Constants
 
@@ -1742,7 +1776,8 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: `GEMItem*`  
   Get pointer to next menu item, i.e. menu item that follows this one on the menu page, including hidden ones (if **total** set to `true`, or `GEM_ITEMS_TOTAL`) or only visible (if **total** set to `false`, or `GEM_ITEMS_VISIBLE`).
 
-> **Note:** calls to methods that return a reference to the owning `GEMItem` object can be chained, e.g. `menuItemInterval.setReadonly().show();` (since GEM ver. 1.4.6).
+> [!TIP]
+> Calls to methods that return a reference to the owning `GEMItem` object can be chained, e.g. `menuItemInterval.setReadonly().show();` (since GEM ver. 1.4.6).
 
 
 ----------
@@ -1931,6 +1966,7 @@ to
 // #include "config/support-spinner.h"
 ```
 
+> [!IMPORTANT]
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 Or, alternatively, define `GEM_DISABLE_SPINNER` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
@@ -2040,7 +2076,8 @@ GEMSpinnerBoundariesDouble boundaries = {step, min, max};
   *Type*: `double`  
   Maximum boundary of the spinner range.
 
-> **Note:** It is up to author of the sketch to make sure that initial value of the associated variable is within allowable range of spinner, and that type of variable and types of step and min/max boundaries match (and their values don't exceed capacity of their data type). Increment/decrement of variable will stop closest to the corresponding min/max boundary of allowable range, and result variable value may not always reach said boundaries exactly, if initial value and step combination won't allow it. If initial value is not within min/max boundaries interaction with spinner won't affect it (it will be possible to enter edit mode but won't be possible to increment/decrement value). If step is supplied as a negative value, the absolute value will be taken instead. If supplied value of min is greater than max, min/max values will be swapped. So `{ .step = -50, .min = 150, .max = 49 }` is equivalent to `{ .step = 50, .min = 49, .max = 150 }`.
+> [!IMPORTANT]
+> It is up to author of the sketch to make sure that initial value of the associated variable is within allowable range of spinner, and that type of variable and types of step and min/max boundaries match (and their values don't exceed capacity of their data type). Increment/decrement of variable will stop closest to the corresponding min/max boundary of allowable range, and result variable value may not always reach said boundaries exactly, if initial value and step combination won't allow it. If initial value is not within min/max boundaries interaction with spinner won't affect it (it will be possible to enter edit mode but won't be possible to increment/decrement value). If step is supplied as a negative value, the absolute value will be taken instead. If supplied value of min is greater than max, min/max values will be swapped. So `{ .step = -50, .min = 150, .max = 49 }` is equivalent to `{ .step = 50, .min = 49, .max = 150 }`.
 
 
 ----------
@@ -2294,6 +2331,7 @@ to
 // #include "config/support-preview-callbacks.h"
 ```
 
+> [!IMPORTANT]
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 Or, alternatively, define `GEM_DISABLE_PREVIEW_CALLBACKS` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
@@ -2516,6 +2554,7 @@ to
 // #include "config/support-float-edit.h"
 ```
 
+> [!IMPORTANT]
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 Or, alternatively, define `GEM_DISABLE_FLOAT_EDIT` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
@@ -2548,6 +2587,7 @@ to
 // #define GEM_DISABLE_ADVANCED_MODE
 ```
 
+> [!IMPORTANT]
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 Or, alternatively, define `GEM_ENABLE_ADVANCED_MODE` flag before build. E.g. in [PlatformIO](https://platformio.org/) environment via `platformio.ini`:
@@ -2592,6 +2632,7 @@ To _disable_ `Adafruit GFX` support comment out the following line:
 
 More configuration options may be added in the future.
 
+> [!IMPORTANT]
 > Keep in mind that contents of the `config.h` file most likely will be reset to its default state after installing library update.
 
 ### Defining build flags
@@ -2614,7 +2655,8 @@ Some boards (e.g. ESP32, ESP8266, RP2040, nRF52840, etc. based boards) are not s
 
 When support for [Floating-point variables](#floating-point-variables) is enabled, GEM relies on `dtostrf()` function to handle conversion to a string, which may not be available for all of the architectures supported by Arduino by default. You may have to manually include support for it, e.g., via explicit inclusion of suitable version of `dtostrf.h` header file in `GEM.cpp`, `GEM_u8g2.cpp` or `GEM_adafruit_gfx.cpp` source files. It is available for AVR-based boards by default and currently it is explicitly included for SAMD boards (e.g. with M0 chips), RP2040 and nRF52840 based boards. ESP32 based boards should be fine as well.
 
-> **Note:** there are reports of possible compatibility issues with some ESP32 based boards resulting in `flash read err, 1000` message after flashing compiled sketch (some users find it is possible to reflash the board afterwards to restore its functionality, some don't). Check this [thread](https://github.com/Spirik/GEM/issues/55) for more details.
+> [!WARNING]
+> There are reports of possible compatibility issues with some ESP32 based boards resulting in `flash read err, 1000` message after flashing compiled sketch (some users find it is possible to reflash the board afterwards to restore its functionality, some don't). Check this [thread](https://github.com/Spirik/GEM/issues/55) for more details.
 
 Examples
 -----------
