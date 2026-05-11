@@ -44,6 +44,7 @@ Supports [AltSerialGraphicLCD](http://www.jasspa.com/serialGLCD.html) (since GEM
   * [GEMCallbackData](#gemcallbackdata)
   * [GEMPreviewCallbackData](#gempreviewcallbackdata)
   * [GEMAppearance](#gemappearance)
+  * [GEMSprite](#gemsprite)
   * [GEMContext](#gemcontext)
 * [Floating-point variables](#floating-point-variables)
 * [Advanced Mode](#advanced-mode)
@@ -921,7 +922,7 @@ Primary class of the library. Responsible for general appearance of the menu, co
 AltSerialGraphicLCD version:
 
 ```cpp
-GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+GEM menu(glcd[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset[, sprites]]]]]]);
 // or
 GEM menu(glcd[, appearance]);
 ```
@@ -929,7 +930,7 @@ GEM menu(glcd[, appearance]);
 U8g2 version:
 
 ```cpp
-GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+GEM_u8g2 menu(u8g2[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset[, sprites]]]]]]);
 // or
 GEM_u8g2 menu(u8g2[, appearance]);
 ```
@@ -937,7 +938,7 @@ GEM_u8g2 menu(u8g2[, appearance]);
 Adafruit GFX version:
 
 ```cpp
-GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset]]]]]);
+GEM_adafruit_gfx menu(tft[, menuPointerType[, menuItemsPerScreen[, menuItemHeight[, menuPageScreenTopOffset[, menuValuesLeftOffset[, sprites]]]]]]);
 // or
 GEM_adafruit_gfx menu(tft[, appearance]);
 ```
@@ -987,6 +988,11 @@ GEM_adafruit_gfx menu(tft[, appearance]);
   *Default*: `86`  
   Offset from the left of the screen to the value of variable associated with the menu item (effectively the space left for the title of the menu item to be printed on screen). Default value is suitable for 128x64 screen with other parameters at their default values; 86 - recommended value for 128x64 screen.
 
+* **sprites** [*optional*]  
+  *Type*: `void*`  
+  *Default*: `nullptr`  
+  Pointer to an array of custom sprites (icons associated with different menu items). If set to `nullptr`, default sprites are used. Default sprites are stored in [sprites/sprites-glcd-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-glcd-default.h), [sprites/sprites-u8g2-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-u8g2-default.h) and [sprites/sprites-adafruit-gfx-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-adafruit-gfx-default.h) source files that ship with the library. Array of custom sprites always should have exactly 7 icons (or 6 in case of AltSerialGraphicLCD version of GEM) in a specific order determined by values of `GEM_ICON_` macro constants (see Constants section of the [GEM class](#gem-gem_u8g2-gem_adafruit_gfx) documentation).
+
 * **appearance** [*optional*]  
   *Type*: `GEMAppearance`  
   Object of type `GEMAppearance` that holds values of appearance settings that define how menu is rendered on screen. Essentially allows to pass appearance as a single object instead of specifying each option as a separate argument.
@@ -996,15 +1002,15 @@ GEM_adafruit_gfx menu(tft[, appearance]);
 Calls to `GEM`, `GEM_u8g2` or `GEM_adafruit_gfx` constructors `GEM(glcd)`, `GEM_u8g2(u8g2)`, `GEM_adafruit_gfx(tft)` without specifying additional custom parameters are equivalent to the following calls:
 
 ```cpp
-GEM menu(glcd, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
+GEM menu(glcd, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86, /* sprites= */ nullptr);
 ```
 
 ```cpp
-GEM_u8g2 menu(u8g2, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
+GEM_u8g2 menu(u8g2, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86, /* sprites= */ nullptr);
 ```
 
 ```cpp
-GEM_adafruit_gfx menu(tft, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86);
+GEM_adafruit_gfx menu(tft, /* menuPointerType= */ GEM_POINTER_ROW, /* menuItemsPerScreen= */ 5, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86, /* sprites= */ nullptr);
 ```
 
 > [!IMPORTANT]
@@ -1134,6 +1140,41 @@ For more details on customization see corresponding section of the [wiki](https:
   *Type*: macro `#define GEM_LOOP true`  
   *Value*: `true`  
   Alias for loop modifier of selects and range spinners. Submitted as **loop** setting to `GEMSelect` and `GEMSpinner` constructors.
+
+* **GEM_ICON_ARROW_RIGHT**  
+  *Type*: macro `#define GEM_ICON_ARROW_RIGHT 0`  
+  *Value*: `0`  
+  Alias for sprite used to draw right arrow icon for menu item that represents link to another menu page (`GEM_ITEM_LINK`).
+
+* **GEM_ICON_ARROW_LEFT**  
+  *Type*: macro `#define GEM_ICON_ARROW_LEFT 1`  
+  *Value*: `1`  
+  Alias for sprite used to draw left arrow icon for menu item that represents back button that links to parent level menu page (`GEM_ITEM_BACK`).
+
+* **GEM_ICON_ARROW_BTN**  
+  *Type*: macro `#define GEM_ICON_ARROW_BTN 2`  
+  *Value*: `2`  
+  Alias for sprite used to draw arrow icon for menu item that represents button (`GEM_ITEM_BUTTON`).
+
+* **GEM_ICON_CHECKBOX_UNCHECKED**  
+  *Type*: macro `#define GEM_ICON_CHECKBOX_UNCHECKED 3`  
+  *Value*: `3`  
+  Alias for sprite used to draw unchecked checkbox icon for menu item that is associated with boolean variable (`GEM_ITEM_VAL`, `GEM_VAL_BOOL`).
+
+* **GEM_ICON_CHECKBOX_CHECKED**  
+  *Type*: macro `#define GEM_ICON_CHECKBOX_CHECKED 4`  
+  *Value*: `4`  
+  Alias for sprite used to draw checked checkbox icon for menu item that is associated with boolean variable (`GEM_ITEM_VAL`, `GEM_VAL_BOOL`).
+
+* **GEM_ICON_SELECT_ARROWS**  
+  *Type*: macro `#define GEM_ICON_SELECT_ARROWS 5`  
+  *Value*: `5`  
+  Alias for sprite used to draw up/down arrows icon for menu item that represents option select (`GEM_ITEM_VAL`, `GEM_VAL_SELECT`).
+
+* **GEM_ICON_SPINNER_ARROWS**  
+  *Type*: macro `#define GEM_ICON_SPINNER_ARROWS 6`  
+  *Value*: `6`  
+  Alias for sprite used to draw up/down arrows icon for menu item that represents spinner (`GEM_ITEM_VAL`, `GEM_VAL_SPINNER`). Note, that AltSerialGraphicLCD version of GEM has `GEM_ICON_SELECT_ARROWS` associated with spinners as well as option selects due to limited space available for storage of custom sprites in RAM of the SparkFun Graphic LCD Serial Backpack.
 
 #### Methods
 
@@ -1286,6 +1327,37 @@ For more details on customization see corresponding section of the [wiki](https:
 * *GEM&* **removeDrawMenuCallback()**  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
   Disable callback that was called at the end of `drawMenu()`.
+
+* *GEM&* **setDrawSpriteCallback(** _bool_ (\*drawSpriteCallback)(_uint8_t_ x, _uint8_t_ y, _byte_ spriteId, _uint8_t_ mode, _GEMItem*_ menuItem) **)**  `AltSerialGraphicLCD version`  
+  *Accepts*: `pointer to function`  
+  *Returns*: `GEM&`  
+  Specify callback function that will be called at the start of `drawSprite()`. Potentially can be used to skip drawing of a certain icon (if `false` is returned from the callback function) and/or draw a custom icon for a specific menu item in place of a default one (however note, that size and offsets reserved on the screen for the icon will remain the same as for original icon). Callback function should expect the following arguments to be passed to it when it is executed:  
+    * `x`, `y` - coordinates the sprite is expected to be drawn at;  
+    * `spritedId` - alias of the icon being drawn (see Constants section of the [GEM class](#gem-gem_u8g2-gem_adafruit_gfx) documentation);
+    * `mode` - drawing mode passed internally to the AltSerialGraphicLCD `drawSprite()` method: when set to `GLCD_MODE_NORMAL` the sprite
+is drawn on the screenn as-is, when set to `GLCD_MODE_REVERSE` the sprite is inverted first; 
+    * `menuItem` - pointer to `GEMItem` object for which sprite is being drawn.
+
+* *GEM_u8g2&* **setDrawSpriteCallback(** _bool_ (\*drawSpriteCallback)(_u8g2_uint_t_ x, _u8g2_uint_t_ y, _byte_ spriteId, _GEMItem*_ menuItem) **)**  `U8g2 version`  
+  *Accepts*: `pointer to function`  
+  *Returns*: `GEM_u8g2&`  
+  Specify callback function that will be called at the start of `drawSprite()`. Potentially can be used to skip drawing of a certain icon (if `false` is returned from the callback function) and/or draw a custom icon for a specific menu item in place of a default one (however note, that size and offsets reserved on the screen for the icon will remain the same as for original icon). Callback function should expect the following arguments to be passed to it when it is executed:  
+    * `x`, `y` - coordinates the sprite is expected to be drawn at;  
+    * `spritedId` - alias of the icon being drawn (see Constants section of the [GEM_u8g2 class](#gem-gem_u8g2-gem_adafruit_gfx) documentation);
+    * `menuItem` - pointer to `GEMItem` object for which sprite is being drawn.
+
+* *GEM_adafruit_gfx&* **setDrawSpriteCallback(** _bool_ (\*drawSpriteCallback)(_int16_t_ x, _int16_t_ y, _byte_ spriteId, _uint16_t_ color, _GEMItem*_ menuItem) **)**  `Adafruit GFX version`  
+  *Accepts*: `pointer to function`  
+  *Returns*: `GEM_adafruit_gfx&`  
+  Specify callback function that will be called at the start of `drawSprite()`. Potentially can be used to skip drawing of a certain icon (if `false` is returned from the callback function) and/or draw a custom icon for a specific menu item in place of a default one (however note, that size and offsets reserved on the screen for the icon will remain the same as for original icon). Callback function should expect the following arguments to be passed to it when it is executed:  
+    * `x`, `y` - coordinates the sprite is expected to be drawn at;  
+    * `spritedId` - alias of the icon being drawn (see Constants section of the [GEM_adafruit_gfx class](#gem-gem_u8g2-gem_adafruit_gfx) documentation);
+    * `color` - color of the sprite being drawn (refer to Adafruit documentation for detailed description of a format);
+    * `menuItem` - pointer to `GEMItem` object for which sprite is being drawn.
+
+* *GEM&* **removeDrawSpriteCallback()**  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
+  Disable callback that was called at the start of `drawSprite()`.
 
 * *bool* **isEditMode()**  
   *Returns*: `bool`  
@@ -1693,7 +1765,7 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
   *Returns*: `GEMCallbackData`  
   Get [`GEMCallbackData`](#gemcallbackdata) struct associated with menu item. It contains pointer to menu item and optionally user-defined value.
 
-* *GEMItem&* **setPreviewCallback(** _void_ (*previewCallbackAction_)(GEMPreviewCallbackData)**)**  
+* *GEMItem&* **setPreviewCallback(** _void_ (*previewCallbackAction_)(_GEMPreviewCallbackData_ previewData)**)**  
   *Returns*: `GEMItem&`  
   Specify preview callback function that will be called in edit mode when intermediate values of associated variable is changed. Callback function should expect argument of type [`GEMPreviewCallbackData`](#gempreviewcallbackdata) to be passed to it when it is executed.
 
@@ -2383,6 +2455,11 @@ GEMAppearance appearanceGeneral = {menuPointerType, menuItemsPerScreen, menuItem
   *Units*: dots  
   Offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen). Suitable for 128x64 screen with other variables at their default values; 86 - recommended value for 128x64 screen.
 
+* **sprites**  
+  *Type*: `void*`  
+  *Default*: `nullptr`  
+  Pointer to an array of custom sprites (icons associated with different menu items). If set to `nullptr`, default sprites are used. Default sprites are stored in [sprites/sprites-glcd-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-glcd-default.h), [sprites/sprites-u8g2-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-u8g2-default.h) and [sprites/sprites-adafruit-gfx-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-adafruit-gfx-default.h) source files that ship with the library. Array of custom sprites always should have exactly 7 icons (or 6 in case of AltSerialGraphicLCD version of GEM) in a specific order determined by values of `GEM_ICON_` macro constants (see Constants section of the [GEM class](#gem-gem_u8g2-gem_adafruit_gfx) documentation).
+
 Basic example of use:
 
 ```cpp
@@ -2406,7 +2483,7 @@ void setupMenu() {
 }
 ```
 
-Alternatively:
+However this way of initialization may lead to a compilation error in some environments (notably AVR and SAMD architectures in Arduino IDE). So the following alternative way of initialization can be used instead:
 
 ```cpp
 // Create empty GEMAppearance object (its values can be populated later in sketch).
@@ -2443,6 +2520,77 @@ void setupMenu() {
 Passing `GEMAppearance` object to `GEMPage::setAppearance()` method as a pointer allows to change appearance of the _individual menu page_ dynamically by changing values stored in object (and making sure that `menu.drawMenu();` is called afterwards) without need for additional call to `GEMPage::setAppearance()`. In contrast, to change _general appearance_ of the menu (and not individual page) `menu.setAppearance(appearanceGeneral);` method should be called with new or updated `GEMAppearance` object supplied as an argument (and `menu.drawMenu();` should be called afterwards as well).
 
 For more details about appearance customization see corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
+
+
+----------
+
+
+### GEMSprite
+
+Data structure that represents sprite (icon). Default sprites are stored in [sprites/sprites-glcd-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-glcd-default.h), [sprites/sprites-u8g2-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-u8g2-default.h) and [sprites/sprites-adafruit-gfx-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-adafruit-gfx-default.h) source files that ship with the library.
+
+Object of type `GEMSprite` defines as follows:
+
+```cpp
+GEMSprite customSprite = {width, height, image}
+```
+
+* **width**  
+  *Type*: `byte`  
+  Width of an icon.
+
+* **height**  
+  *Type*: `byte`  
+  Height of an icon.
+
+* **image**  
+  *Type*: `const uint8_t *`  
+  Pointer to an image (usually an array in a format supported by current graphics library).
+
+Format of data `image` points to is determined by graphics library used to draw menu.
+
+#### AltSerialGraphicLCD library (`GEM`)
+
+Example of an icon in a bitmap format supported by AltSerialGraphicLCD library:
+
+```cpp
+#define arrowRight_width  6
+#define arrowRight_height 8
+static const uint8_t arrowRight_bits [] PROGMEM = {
+  arrowRight_width, arrowRight_height,
+  0,0,62,28,8,0
+};
+
+const GEMSprite arrowRight = {arrowRight_width, arrowRight_height, arrowRight_bits};
+```
+
+#### U8g2 library (`GEM_u8g2`)
+
+Example of an icon in XBM format supported by U8g2 library:
+
+```cpp
+#define arrowRight_width  6
+#define arrowRight_height 8
+static const unsigned char arrowRight_bits [] U8X8_PROGMEM = {
+  0xc0,0xc4,0xcc,0xdc,0xcc,0xc4,0xc0,0xc0
+};
+
+const GEMSprite arrowRight = {arrowRight_width, arrowRight_height, arrowRight_bits};
+```
+
+#### Adafruit GFX library (`GEM_adafruit_gfx`)
+
+Example of an icon in a bitmap format supported by Adafruit GFX library:
+
+```cpp
+#define arrowRight_width  6
+#define arrowRight_height 8
+static const uint8_t arrowRight_bits [] PROGMEM = {
+  0x00, 0x20, 0x30, 0x38, 0x30, 0x20, 0x00, 0x00
+};
+
+const GEMSprite arrowRight = {arrowRight_width, arrowRight_height, arrowRight_bits};
+```
 
 
 ----------

@@ -105,8 +105,10 @@ class GEM_u8g2 {
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
+      @param 'sprites_' (optional) - pointer to an array of custom sprites (i.e. icons), see sprites/sprites-u8g2-default.h for more info
+      default nullptr (default set of sprites used when set to nullptr)
     */
-    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86, void* sprites_ = nullptr);
     /*
       @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'appearance_' - object of type GEMAppearance
@@ -145,6 +147,8 @@ class GEM_u8g2 {
     GEM_VIRTUAL GEM_u8g2& drawMenu();                           // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
     GEM_u8g2& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_u8g2::drawMenu()
     GEM_u8g2& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_u8g2::drawMenu()
+    GEM_u8g2& setDrawSpriteCallback(bool (*drawSpriteCallback_)(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem));  // Set callback that will be called at the start of GEM_u8g2::drawSprite()
+    GEM_u8g2& removeDrawSpriteCallback();                       // Remove callback that was called at the start of GEM_u8g2::drawSprite()
 
     /* VALUE EDIT */
 
@@ -175,14 +179,17 @@ class GEM_u8g2 {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
+    bool (*drawSpriteCallback)(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem) = nullptr;
     GEM_VIRTUAL void drawTitleBar();
-    GEM_VIRTUAL void drawSprite(u8g2_uint_t x, u8g2_uint_t y, const GEMSprite sprite);
+    GEM_VIRTUAL GEMSprite* getSprite(byte spriteId);
+    GEM_VIRTUAL void drawSprite(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem = nullptr, bool withInsetOffset = true);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
-    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
-    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL byte getMenuItemInsetOffset();
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = false);
+    GEM_VIRTUAL byte calculateSpriteOverlap(byte spriteId);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer();
     GEM_VIRTUAL void drawScrollbar();

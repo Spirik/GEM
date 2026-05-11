@@ -58,6 +58,15 @@
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
 
+// Declaration of GEMSprite type
+struct GEMSprite {
+  byte width;             // Width of the image
+  byte height;            // Height of the image
+  const uint8_t *image;   // Pointer to bitmap image
+};
+
+#define Splash GEMSprite
+
 // Declaration of FontSize type
 struct FontSize {
   byte width;   // Width of the character
@@ -84,8 +93,10 @@ class GEM {
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
+      @param 'sprites_' (optional) - pointer to an array of custom sprites (i.e. icons), see sprites/sprites-glcd-default.h for more info
+      default nullptr (default set of sprites used when set to nullptr)
     */
-    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86, void* sprites_ = nullptr);
     /*
       @param 'glcd_' - reference to the instance of the GLCD class created with AltSerialGraphicLCD library
       @param 'appearance_' - object of type GEMAppearance
@@ -126,6 +137,8 @@ class GEM {
     GEM_VIRTUAL GEM& drawMenu();                            // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
     GEM& setDrawMenuCallback(void (*drawMenuCallback_)());  // Set callback that will be called at the end of GEM::drawMenu()
     GEM& removeDrawMenuCallback();                          // Remove callback that was called at the end of GEM::drawMenu()
+    GEM& setDrawSpriteCallback(bool (*drawSpriteCallback_)(uint8_t x, uint8_t y, byte spriteId, uint8_t mode, GEMItem* menuItem));  // Set callback that will be called at the start of GEM::drawSprite()
+    GEM& removeDrawSpriteCallback();                        // Remove callback that was called at the start of GEM::drawSprite()
 
     /* VALUE EDIT */
 
@@ -140,6 +153,7 @@ class GEM {
     GLCD& _glcd;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
+    GEM_VIRTUAL void uploadSprites();
     byte getMenuItemsPerScreen();
     byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
@@ -154,14 +168,17 @@ class GEM {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
+    bool (*drawSpriteCallback)(uint8_t x, uint8_t y, byte spriteId, uint8_t mode, GEMItem* menuItem) = nullptr;
     GEM_VIRTUAL void drawTitleBar();
-    GEM_VIRTUAL void drawSprite(uint8_t x, uint8_t y, uint8_t spriteId, uint8_t mode);
+    GEM_VIRTUAL GEMSprite* getSprite(byte spriteId);
+    GEM_VIRTUAL void drawSprite(uint8_t x, uint8_t y, byte spriteId, uint8_t mode, GEMItem* menuItem = nullptr, bool withInsetOffset = true);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
-    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
-    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL byte getMenuItemInsetOffset();
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = false);
+    GEM_VIRTUAL byte calculateSpriteOverlap(byte spriteId);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer();
     GEM_VIRTUAL void drawScrollbar();

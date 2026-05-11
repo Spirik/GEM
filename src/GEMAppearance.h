@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2023 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -44,6 +44,10 @@ struct GEMAppearance {
   byte menuItemHeight;
   byte menuPageScreenTopOffset;
   byte menuValuesLeftOffset;
+  void* sprites = nullptr;
+  // Note that some boards (notably AVR and SAMD based) may not support in-class member initialization
+  // alongside brace-enclosed initizilzer list due to lack of the full C++ Standard Library (STL),
+  // so explicit initalization of sprites member is recommended when creating instance of GEMAppearance object
 };
   
 #endif

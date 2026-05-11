@@ -14,7 +14,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
   
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -33,7 +33,7 @@
 */
 
 // Macro constant (alias) for current version of GEM library, printed on splash screen
-#define GEM_VER "1.7"
+#define GEM_VER "1.8"
 
 // Macro constant (alias) for supported length of the string (character sequence) variable of type char[GEM_STR_LEN]
 #define GEM_STR_LEN 17
@@ -63,6 +63,15 @@
 
 // Macro constant (alias) for loop modifier of selects (GEMSelect) and range spinners (GEMSpinner)
 #define GEM_LOOP true
+
+// Macro constants (aliases) for icons
+#define GEM_ICON_ARROW_RIGHT 0
+#define GEM_ICON_ARROW_LEFT 1
+#define GEM_ICON_ARROW_BTN 2
+#define GEM_ICON_CHECKBOX_UNCHECKED 3
+#define GEM_ICON_CHECKBOX_CHECKED 4
+#define GEM_ICON_SELECT_ARROWS 5
+#define GEM_ICON_SPINNER_ARROWS 6
 
 // Macro used internally to mark virtual functions in Advanced Mode
 #ifdef GEM_ENABLE_ADVANCED_MODE
