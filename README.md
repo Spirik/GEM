@@ -2552,7 +2552,7 @@ GEMSprite customSprite = {width, height, image}
   *Type*: `const uint8_t *`  
   Pointer to an image (usually an array in a format supported by current graphics library).
 
-Format of data `image` points to is determined by graphics library used to draw menu.
+Format of data `image` points to is determined by graphics library used to draw menu. Refer to corresponding documentation of said libraries for details.
 
 #### AltSerialGraphicLCD library (`GEM`)
 
