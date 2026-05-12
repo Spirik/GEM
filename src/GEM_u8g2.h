@@ -40,6 +40,7 @@
 #ifdef GEM_ENABLE_U8G2_VERSION
 
 #include <U8g2lib.h>
+#include "GEMSprite.h"
 #include "GEMAppearance.h"
 #include "GEMContext.h"
 #include "GEMPage.h"
@@ -63,15 +64,6 @@
 #define GEM_KEY_LEFT    U8X8_MSG_GPIO_MENU_PREV   // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
 #define GEM_KEY_CANCEL  U8X8_MSG_GPIO_MENU_HOME   // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK      U8X8_MSG_GPIO_MENU_SELECT // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
-
-// Declaration of GEMSprite type
-struct GEMSprite {
-  byte width;             // Width of the image
-  byte height;            // Height of the image
-  const uint8_t *image;   // Pointer to XBM image
-};
-
-#define Splash GEMSprite
 
 // Declaration of FontSize type
 struct FontSize {
@@ -123,6 +115,7 @@ class GEM_u8g2 {
     /* INIT OPERATIONS */
 
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    GEM_u8g2& setSplash(GEMSprite splash);                                    // Set custom splash wrapped in GEMSprite struct
     GEM_u8g2& setSplashDelay(uint16_t value);                   // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
     GEM_u8g2& hideVersion(bool flag = true);                    // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
     GEM_u8g2& enableUTF8(bool flag = true);                     // Enable UTF8 fonts support. Generally should be called before GEM_u8g2::init(). To disable UTF8 fonts support pass false: enableUTF8(false).

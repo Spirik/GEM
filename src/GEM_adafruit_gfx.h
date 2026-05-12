@@ -42,6 +42,7 @@
 #include <Adafruit_GFX.h>
 #include "fonts/TomThumbMono.h"
 #include "fonts/Fixed6x12.h"
+#include "GEMSprite.h"
 #include "GEMAppearance.h"
 #include "GEMContext.h"
 #include "GEMPage.h"
@@ -63,15 +64,6 @@
 #define GEM_KEY_LEFT 4    // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
-
-// Declaration of GEMSprite type
-struct GEMSprite {
-  byte width;             // Width of the image
-  byte height;            // Height of the image
-  const uint8_t *image;   // Pointer to bitmap image
-};
-
-#define Splash GEMSprite
 
 // Declaration of FontSizeAGFX type
 struct FontSizeAGFX {
@@ -126,6 +118,7 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& setSplash(byte width, byte height, const uint8_t *image); // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
                                                                                 // The following is the format of the bitmap as described in Adafruit GFX library documentation.
                                                                                 // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
+    GEM_adafruit_gfx& setSplash(GEMSprite splash);                              // Set custom splash wrapped in GEMSprite struct
     GEM_adafruit_gfx& setSplashDelay(uint16_t value);                   // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_adafruit_gfx::init().
     GEM_adafruit_gfx& hideVersion(bool flag = true);                    // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_adafruit_gfx::init().
     GEM_adafruit_gfx& setTextSize(uint8_t size);                        // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)

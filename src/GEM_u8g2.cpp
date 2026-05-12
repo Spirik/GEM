@@ -151,6 +151,11 @@ GEM_u8g2& GEM_u8g2::setSplash(byte width, byte height, const unsigned char *imag
   return *this;
 }
 
+GEM_u8g2& GEM_u8g2::setSplash(GEMSprite splash) {
+  _splash = splash;
+  return *this;
+}
+
 GEM_u8g2&  GEM_u8g2::setSplashDelay(uint16_t value) {
   _splashDelay = value;
   return *this;

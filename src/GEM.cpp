@@ -60,18 +60,24 @@
 
 // Sprite of the default GEM _splash screen (GEM logo v1)
 /*
-static const uint8_t logo [] PROGMEM = {
-  15, 15,
+#define logo_width  15
+#define logo_height 15
+static const uint8_t logo_bits [] PROGMEM = {
+  logo_width, logo_height,
   0,0,0,128,192,96,48,24,140,196,228,252,252,248,0,0,
   0,31,57,56,60,62,59,59,51,55,39,63,31,0,0,0
 };
 */
 
 // Sprite of the default GEM _splash screen (GEM logo v2)
-static const uint8_t logo [] PROGMEM = {
-  20, 8,
+#define logo_width  20
+#define logo_height 8
+static const uint8_t logo_bits [] PROGMEM = {
+  logo_width, logo_height,
   0, 65,65,65,73,72,0, 0, 73,73,73,73,65,0, 0, 127,0,12,0,127,0
 };
+
+const GEMSprite logo = {logo_width, logo_height, logo_bits};
 
 GEM::GEM(GLCD& glcd_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_, void* sprites_)
   : _glcd(glcd_)
@@ -145,8 +151,13 @@ byte GEM::getMenuItemValueLength() {
 
 //====================== INIT OPERATIONS
 
-GEM& GEM::setSplash(const uint8_t *sprite) {
-  _splash = sprite;
+GEM& GEM::setSplash(const uint8_t *image) {
+  _splash = {pgm_read_byte(image), pgm_read_byte(image + 1), image};
+  return *this;
+}
+
+GEM& GEM::setSplash(GEMSprite splash) {
+  _splash = splash;
   return *this;
 }
 
@@ -176,17 +187,17 @@ GEM& GEM::init() {
 
   if (_splashDelay > 0) {
 
-    _glcd.bitblt_P(_glcd.xdim/2-(pgm_read_byte(_splash)+1)/2, _glcd.ydim/2-(pgm_read_byte(_splash+1)+1)/2, GLCD_MODE_NORMAL, _splash);
+    _glcd.bitblt_P(_glcd.xdim / 2 - (pgm_read_byte(_splash.image) + 1) / 2, _glcd.ydim/2 - (pgm_read_byte(_splash.image + 1) + 1) / 2, GLCD_MODE_NORMAL, _splash.image);
 
     if (_enableVersion) {
       delay(_splashDelay / 2);
       _glcd.fontFace(1);
       _glcd.setY(_glcd.ydim - 6);
-      if (_splash != logo) {
-        _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4 - 12);
+      if (_splash.image != logo_bits) {
+        _glcd.setX(_glcd.xdim - strlen(GEM_VER) * 4 - 12);
         _glcd.putstr((char*)"GEM");
       } else {
-        _glcd.setX(_glcd.xdim - strlen(GEM_VER)*4);
+        _glcd.setX(_glcd.xdim - strlen(GEM_VER) * 4);
       }
       _glcd.putstr((char*)GEM_VER);
       delay(_splashDelay / 2);

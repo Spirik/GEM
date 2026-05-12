@@ -1208,6 +1208,11 @@ For more details on customization see corresponding section of the [wiki](https:
 
   Bitmap must be presented as a byte array and located in program memory using the PROGMEM directive, width and height of the bitmap must be supplied as a first and second argument to the function respectively. Should be called before `GEM_adafruit_gfx::init()`. See [Bitmaps](https://learn.adafruit.com/adafruit-gfx-graphics-library/graphics-primitives#bitmaps-2002806-39) section of Adafruit GFX documentation for more details and [image2cpp](http://javl.github.io/image2cpp/) webtool for online bitmap conversion. For more details on splash customization and example refer to corresponding section of the [wiki](https://github.com/Spirik/GEM/wiki).
 
+* *GEM&* **setSplash(** _GEMSprite_ splash **)**  
+  *Accepts*: `GEMSprite`  
+  *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
+  Set custom sprite (prsented as a [GEMSprite](#gemsprite) object) displayed as the splash screen when GEM is being initialized. Should be called before `init()`.
+
 * *GEM&* **setSplashDelay(** _uint16_t_ value **)**  
   *Accepts*: `uint16_t`  
   *Returns*: `GEM&`, or `GEM_u8g2&`, or `GEM_adafruit_gfx&`  
@@ -2527,7 +2532,7 @@ For more details about appearance customization see corresponding section of the
 
 ### GEMSprite
 
-Data structure that represents sprite (icon). Default sprites are stored in [sprites/sprites-glcd-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-glcd-default.h), [sprites/sprites-u8g2-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-u8g2-default.h) and [sprites/sprites-adafruit-gfx-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-adafruit-gfx-default.h) source files that ship with the library.
+Data structure that represents sprite (icon). Default sprites of the UI elements are stored in [sprites/sprites-glcd-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-glcd-default.h), [sprites/sprites-u8g2-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-u8g2-default.h) and [sprites/sprites-adafruit-gfx-default.h](https://github.com/Spirik/GEM/blob/master/src/sprites/sprites-adafruit-gfx-default.h) source files that ship with the library. Splash screen logo (displayed when GEM is being initialized) can also be presented as a `GEMSprite` object.
 
 Object of type `GEMSprite` defines as follows:
 

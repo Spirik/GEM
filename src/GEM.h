@@ -40,6 +40,7 @@
 #ifdef GEM_ENABLE_GLCD_VERSION
 
 #include <AltSerialGraphicLCD.h>
+#include "GEMSprite.h"
 #include "GEMAppearance.h"
 #include "GEMContext.h"
 #include "GEMPage.h"
@@ -57,15 +58,6 @@
 #define GEM_KEY_LEFT 4    // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
-
-// Declaration of GEMSprite type
-struct GEMSprite {
-  byte width;             // Width of the image
-  byte height;            // Height of the image
-  const uint8_t *image;   // Pointer to bitmap image
-};
-
-#define Splash GEMSprite
 
 // Declaration of FontSize type
 struct FontSize {
@@ -110,7 +102,7 @@ class GEM {
 
     /* INIT OPERATIONS */
 
-    GEM& setSplash(const uint8_t *sprite);                  // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+    GEM& setSplash(const uint8_t *image);                   // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                             // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                             // The sprite commences with two bytes which are the width and height of the image in pixels.
                                                             // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
@@ -119,6 +111,7 @@ class GEM {
                                                             // by the next row of 8 vertical pixels and so on.
                                                             // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
                                                             // (although this does not matter).
+    GEM& setSplash(GEMSprite splash);                       // Set custom splash wrapped in GEMSprite struct
     GEM& setSplashDelay(uint16_t value);                    // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     GEM& hideVersion(bool flag = true);                     // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     GEM& invertKeysDuringEdit(bool invert = true);          // Turn inverted order of characters during edit mode on or off
@@ -160,7 +153,7 @@ class GEM {
     bool _invertKeysDuringEdit = false;
     GEM_VIRTUAL byte getMenuItemTitleLength();
     GEM_VIRTUAL byte getMenuItemValueLength();
-    const uint8_t *_splash;
+    GEMSprite _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
 

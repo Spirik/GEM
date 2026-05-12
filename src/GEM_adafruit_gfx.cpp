@@ -101,7 +101,7 @@ GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_, b
   _appearance.menuValuesLeftOffset = menuValuesLeftOffset_;
   _appearance.sprites = sprites_;
   _appearanceCurrent = &_appearance;
-  _splash = logo[_textSize > 1 ? 1 : 0];
+  _splash = logo[_spriteSize > 1 ? 1 : 0];
   clearContext();
   _editValueMode = false;
   _editValueCursorPosition = 0;
@@ -114,7 +114,7 @@ GEM_adafruit_gfx::GEM_adafruit_gfx(Adafruit_GFX& agfx_, GEMAppearance appearance
   , _appearance(appearance_)
 {
   _appearanceCurrent = &_appearance;
-  _splash = logo[_textSize > 1 ? 1 : 0];
+  _splash = logo[_spriteSize > 1 ? 1 : 0];
   clearContext();
   _editValueMode = false;
   _editValueCursorPosition = 0;
@@ -154,6 +154,11 @@ byte GEM_adafruit_gfx::getMenuItemValueLength() {
 
 GEM_adafruit_gfx& GEM_adafruit_gfx::setSplash(byte width, byte height, const uint8_t *image) {
   _splash = {width, height, image};
+  return *this;
+}
+
+GEM_adafruit_gfx& GEM_adafruit_gfx::setSplash(GEMSprite splash) {
+  _splash = splash;
   return *this;
 }
 
