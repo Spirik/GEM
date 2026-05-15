@@ -2432,7 +2432,7 @@ Data structure that holds values of appearance settings that define how menu is 
 Object of type `GEMAppearance` defines as follows:
 
 ```cpp
-GEMAppearance appearanceGeneral = {menuPointerType, menuItemsPerScreen, menuItemHeight, menuPageScreenTopOffset, menuValuesLeftOffset}
+GEMAppearance appearanceGeneral = {menuPointerType, menuItemsPerScreen, menuItemHeight, menuPageScreenTopOffset, menuValuesLeftOffset, sprites}
 ```
 
 * **menuPointerType**  
