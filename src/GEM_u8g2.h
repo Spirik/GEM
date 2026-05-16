@@ -40,6 +40,7 @@
 #ifdef GEM_ENABLE_U8G2_VERSION
 
 #include <U8g2lib.h>
+#include "GEMSprite.h"
 #include "GEMAppearance.h"
 #include "GEMContext.h"
 #include "GEMPage.h"
@@ -63,15 +64,6 @@
 #define GEM_KEY_LEFT    U8X8_MSG_GPIO_MENU_PREV   // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
 #define GEM_KEY_CANCEL  U8X8_MSG_GPIO_MENU_HOME   // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK      U8X8_MSG_GPIO_MENU_SELECT // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
-
-// Declaration of GEMSprite type
-struct GEMSprite {
-  byte width;             // Width of the image
-  byte height;            // Height of the image
-  const uint8_t *image;   // Pointer to XBM image
-};
-
-#define Splash GEMSprite
 
 // Declaration of FontSize type
 struct FontSize {
@@ -105,8 +97,10 @@ class GEM_u8g2 {
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
+      @param 'sprites_' (optional) - pointer to an array of custom sprites (i.e. icons), see sprites/sprites-u8g2-default.h for more info
+      default nullptr (default set of sprites used when set to nullptr)
     */
-    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_u8g2(U8G2& u8g2_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86, void* sprites_ = nullptr);
     /*
       @param 'u8g2_' - reference to an object created with U8g2 library and used for communication with LCD
       @param 'appearance_' - object of type GEMAppearance
@@ -121,6 +115,7 @@ class GEM_u8g2 {
     /* INIT OPERATIONS */
 
     GEM_u8g2& setSplash(byte width, byte height, const unsigned char *image); // Set custom XBM image displayed as the splash screen when GEM is being initialized. Should be called before GEM_u8g2::init().
+    GEM_u8g2& setSplash(GEMSprite splash);                                    // Set custom splash wrapped in GEMSprite struct
     GEM_u8g2& setSplashDelay(uint16_t value);                   // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_u8g2::init().
     GEM_u8g2& hideVersion(bool flag = true);                    // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_u8g2::init().
     GEM_u8g2& enableUTF8(bool flag = true);                     // Enable UTF8 fonts support. Generally should be called before GEM_u8g2::init(). To disable UTF8 fonts support pass false: enableUTF8(false).
@@ -145,6 +140,8 @@ class GEM_u8g2 {
     GEM_VIRTUAL GEM_u8g2& drawMenu();                           // Draw menu on screen, with menu page set earlier in GEM_u8g2::setMenuPageCurrent()
     GEM_u8g2& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_u8g2::drawMenu()
     GEM_u8g2& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_u8g2::drawMenu()
+    GEM_u8g2& setDrawSpriteCallback(bool (*drawSpriteCallback_)(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem));  // Set callback that will be called at the start of GEM_u8g2::drawSprite()
+    GEM_u8g2& removeDrawSpriteCallback();                       // Remove callback that was called at the start of GEM_u8g2::drawSprite()
 
     /* VALUE EDIT */
 
@@ -175,14 +172,17 @@ class GEM_u8g2 {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
+    bool (*drawSpriteCallback)(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem) = nullptr;
     GEM_VIRTUAL void drawTitleBar();
-    GEM_VIRTUAL void drawSprite(u8g2_uint_t x, u8g2_uint_t y, const GEMSprite sprite);
+    GEM_VIRTUAL GEMSprite* getSprite(byte spriteId);
+    GEM_VIRTUAL void drawSprite(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem = nullptr, bool withInsetOffset = true);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
-    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
-    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL byte getMenuItemInsetOffset();
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = false);
+    GEM_VIRTUAL byte calculateSpriteOverlap(byte spriteId);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer();
     GEM_VIRTUAL void drawScrollbar();

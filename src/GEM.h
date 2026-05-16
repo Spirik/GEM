@@ -40,6 +40,7 @@
 #ifdef GEM_ENABLE_GLCD_VERSION
 
 #include <AltSerialGraphicLCD.h>
+#include "GEMSprite.h"
 #include "GEMAppearance.h"
 #include "GEMContext.h"
 #include "GEMPage.h"
@@ -84,8 +85,10 @@ class GEM {
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
+      @param 'sprites_' (optional) - pointer to an array of custom sprites (i.e. icons), see sprites/sprites-glcd-default.h for more info
+      default nullptr (default set of sprites used when set to nullptr)
     */
-    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM(GLCD& glcd_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86, void* sprites_ = nullptr);
     /*
       @param 'glcd_' - reference to the instance of the GLCD class created with AltSerialGraphicLCD library
       @param 'appearance_' - object of type GEMAppearance
@@ -99,7 +102,7 @@ class GEM {
 
     /* INIT OPERATIONS */
 
-    GEM& setSplash(const uint8_t *sprite);                  // Set custom sprite displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
+    GEM& setSplash(const uint8_t *image);                   // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM::init().
                                                             // The following is the format of the sprite as described in AltSerialGraphicLCD library documentation.
                                                             // The sprite commences with two bytes which are the width and height of the image in pixels.
                                                             // The pixel data is organised as rows of 8 vertical pixels per byte where the least significant bit (LSB)
@@ -108,6 +111,7 @@ class GEM {
                                                             // by the next row of 8 vertical pixels and so on.
                                                             // Where the image height is not an exact multiple of 8 bits then any unused bits are typically set to zero
                                                             // (although this does not matter).
+    GEM& setSplash(GEMSprite splash);                       // Set custom splash wrapped in GEMSprite struct
     GEM& setSplashDelay(uint16_t value);                    // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM::init().
     GEM& hideVersion(bool flag = true);                     // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM::init().
     GEM& invertKeysDuringEdit(bool invert = true);          // Turn inverted order of characters during edit mode on or off
@@ -126,6 +130,8 @@ class GEM {
     GEM_VIRTUAL GEM& drawMenu();                            // Draw menu on screen, with menu page set earlier in GEM::setMenuPageCurrent()
     GEM& setDrawMenuCallback(void (*drawMenuCallback_)());  // Set callback that will be called at the end of GEM::drawMenu()
     GEM& removeDrawMenuCallback();                          // Remove callback that was called at the end of GEM::drawMenu()
+    GEM& setDrawSpriteCallback(bool (*drawSpriteCallback_)(uint8_t x, uint8_t y, byte spriteId, uint8_t mode, GEMItem* menuItem));  // Set callback that will be called at the start of GEM::drawSprite()
+    GEM& removeDrawSpriteCallback();                        // Remove callback that was called at the start of GEM::drawSprite()
 
     /* VALUE EDIT */
 
@@ -140,13 +146,14 @@ class GEM {
     GLCD& _glcd;
     GEMAppearance* _appearanceCurrent = nullptr;
     GEMAppearance _appearance;
+    GEM_VIRTUAL void uploadSprites();
     byte getMenuItemsPerScreen();
     byte getMenuItemFontSize();
     FontSize _menuItemFont[2] = {{6,8},{4,6}};
     bool _invertKeysDuringEdit = false;
     GEM_VIRTUAL byte getMenuItemTitleLength();
     GEM_VIRTUAL byte getMenuItemValueLength();
-    const uint8_t *_splash;
+    GEMSprite _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
 
@@ -154,14 +161,17 @@ class GEM {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
+    bool (*drawSpriteCallback)(uint8_t x, uint8_t y, byte spriteId, uint8_t mode, GEMItem* menuItem) = nullptr;
     GEM_VIRTUAL void drawTitleBar();
-    GEM_VIRTUAL void drawSprite(uint8_t x, uint8_t y, uint8_t spriteId, uint8_t mode);
+    GEM_VIRTUAL GEMSprite* getSprite(byte spriteId);
+    GEM_VIRTUAL void drawSprite(uint8_t x, uint8_t y, byte spriteId, uint8_t mode, GEMItem* menuItem = nullptr, bool withInsetOffset = true);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
-    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
-    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
+    GEM_VIRTUAL byte getMenuItemInsetOffset();
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = false);
+    GEM_VIRTUAL byte calculateSpriteOverlap(byte spriteId);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer();
     GEM_VIRTUAL void drawScrollbar();

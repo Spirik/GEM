@@ -37,6 +37,8 @@
 
 #ifdef GEM_ENABLE_U8G2_VERSION
 
+#include "sprites/sprites-u8g2-default.h"
+
 // AVR-based Arduinos have suppoort for dtostrf, some others may require manual inclusion (e.g. SAMD),
 // see https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
 #if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_NRF52840))
@@ -84,59 +86,7 @@ static const unsigned char logo_bits [] U8X8_PROGMEM = {
 
 const GEMSprite logo = {logo_width, logo_height, logo_bits};
 
-// Sprites of the UI elements used to draw menu
-
-#define sprite_height  8
-
-#define arrowRight_width  6
-#define arrowRight_height 8
-static const unsigned char arrowRight_bits [] U8X8_PROGMEM = {
-   0xc0,0xc4,0xcc,0xdc,0xcc,0xc4,0xc0,0xc0
-};
-
-#define arrowLeft_width  6
-#define arrowLeft_height 8
-static const unsigned char arrowLeft_bits [] U8X8_PROGMEM = {
-   0xc0,0xc4,0xc6,0xc7,0xc6,0xc4,0xc0,0xc0
-};
-
-#define arrowBtn_width  6
-#define arrowBtn_height 8
-static const unsigned char arrowBtn_bits [] U8X8_PROGMEM = {
-  0xc0,0xc3,0xc5,0xc9,0xc5,0xc3,0xc0,0xc0
-};
-
-#define checkboxUnchecked_width  7
-#define checkboxUnchecked_height 8
-static const unsigned char checkboxUnchecked_bits [] U8X8_PROGMEM = {
-   0x80,0xbf,0xa1,0xa1,0xa1,0xa1,0xbf,0x80
-};
-
-#define checkboxChecked_width  7
-#define checkboxChecked_height 8
-static const unsigned char checkboxChecked_bits [] U8X8_PROGMEM = {
-   0xc0,0xaf,0xb1,0xab,0xa5,0xa1,0xbf,0x80
-};
-
-#define selectArrows_width  6
-#define selectArrows_height 8
-static const unsigned char selectArrows_bits [] U8X8_PROGMEM = {
-   0xc0,0xc4,0xce,0xc0,0xce,0xc4,0xc0,0xc0
-};
-
-const GEMSprite arrowRight = {arrowRight_width, arrowRight_height, arrowRight_bits};
-
-const GEMSprite arrowLeft = {arrowLeft_width, arrowLeft_height, arrowLeft_bits};
-
-const GEMSprite arrowBtn = {arrowBtn_width, arrowBtn_height, arrowBtn_bits};
-
-const GEMSprite checkboxUnchecked = {checkboxUnchecked_width, checkboxUnchecked_height, checkboxUnchecked_bits};
-
-const GEMSprite checkboxChecked = {checkboxChecked_width, checkboxChecked_height, checkboxChecked_bits};
-
-const GEMSprite selectArrows = {selectArrows_width, selectArrows_height, selectArrows_bits};
-
-GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_)
+GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_, byte menuItemHeight_, byte menuPageScreenTopOffset_, byte menuValuesLeftOffset_, void* sprites_)
   : _u8g2(u8g2_)
 {
   _appearance.menuPointerType = menuPointerType_;
@@ -144,6 +94,7 @@ GEM_u8g2::GEM_u8g2(U8G2& u8g2_, byte menuPointerType_, byte menuItemsPerScreen_,
   _appearance.menuItemHeight = menuItemHeight_;
   _appearance.menuPageScreenTopOffset = menuPageScreenTopOffset_;
   _appearance.menuValuesLeftOffset = menuValuesLeftOffset_;
+  _appearance.sprites = sprites_;
   _appearanceCurrent = &_appearance;
   _splash = logo;
   clearContext();
@@ -197,6 +148,11 @@ byte GEM_u8g2::getMenuItemValueLength() {
 
 GEM_u8g2& GEM_u8g2::setSplash(byte width, byte height, const unsigned char *image) {
   _splash = {width, height, image};
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::setSplash(GEMSprite splash) {
+  _splash = splash;
   return *this;
 }
 
@@ -368,8 +324,40 @@ void GEM_u8g2::drawTitleBar() {
  _u8g2.setFont(getMenuItemFontSize() ? _fontFamilies.small : _fontFamilies.big);
 }
 
-void GEM_u8g2::drawSprite(u8g2_uint_t x, u8g2_uint_t y, const GEMSprite sprite) {
-  _u8g2.drawXBMP(x, y, sprite.width, sprite.height, sprite.image);
+GEMSprite* GEM_u8g2::getSprite(byte spriteId) {
+  GEMSprite* sprite = nullptr;
+  byte len = sizeof(spritesDefault_u8g2)/sizeof(spritesDefault_u8g2[0]);
+  if (spriteId < len) {
+    void* pSprites = getCurrentAppearance()->sprites == nullptr ? spritesDefault_u8g2 : getCurrentAppearance()->sprites;
+    GEMSprite* (*pSpritesCast)[len] = static_cast<GEMSprite* (*)[len]>(pSprites);
+    sprite = (*pSpritesCast)[spriteId];
+  }
+  return sprite;
+}
+
+void GEM_u8g2::drawSprite(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem, bool withInsetOffset) {
+  bool drawDefaultSprite = true;
+  if (drawSpriteCallback != nullptr) {
+    drawDefaultSprite = drawSpriteCallback(x, y, spriteId, menuItem);
+  }
+  if (drawDefaultSprite) {
+    GEMSprite* sprite = getSprite(spriteId);
+    if (sprite != nullptr) {
+      byte menuItemFontSize = getMenuItemFontSize();
+      int offset = withInsetOffset ? 1 + (_menuItemFont[menuItemFontSize].height - sprite->height) / 2 : 0; // With additional offset for centered vertical alignment with text
+      _u8g2.drawXBMP(x, y + offset, sprite->width, sprite->height, sprite->image);
+    }
+  }
+}
+
+GEM_u8g2& GEM_u8g2::setDrawSpriteCallback(bool (*drawSpriteCallback_)(u8g2_uint_t x, u8g2_uint_t y, byte spriteId, GEMItem* menuItem)) {
+  drawSpriteCallback = drawSpriteCallback_;
+  return *this;
+}
+
+GEM_u8g2& GEM_u8g2::removeDrawSpriteCallback() {
+  drawSpriteCallback = nullptr;
+  return *this;
 }
 
 void GEM_u8g2::printMenuItemString(const char* str, byte num, byte startPos) {
@@ -418,14 +406,18 @@ void GEM_u8g2::printMenuItemFull(const char* str, int offset) {
   printMenuItemString(str, getMenuItemTitleLength() + getMenuItemValueLength() + offset);
 }
 
-byte GEM_u8g2::getMenuItemInsetOffset(bool forSprite) {
+byte GEM_u8g2::getMenuItemInsetOffset() {
   byte menuItemFontSize = getMenuItemFontSize();
-  byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height) / 2;
-  return menuItemInsetOffset + (forSprite ? (_menuItemFont[menuItemFontSize].height - sprite_height) / 2 : -1); // With additional offset for sprites and text for better visual alignment
+  byte menuItemInsetOffset = (getCurrentAppearance()->menuItemHeight - _menuItemFont[menuItemFontSize].height) / 2 - 1;
+  return menuItemInsetOffset;
 }
 
-byte GEM_u8g2::getCurrentItemTopOffset(bool withInsetOffset, bool forSprite) {
-  return (_menuPageCurrent->currentItemNum % getMenuItemsPerScreen()) * getCurrentAppearance()->menuItemHeight + getCurrentAppearance()->menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset(forSprite) : 0);
+byte GEM_u8g2::getCurrentItemTopOffset(bool withInsetOffset) {
+  return (_menuPageCurrent->currentItemNum % getMenuItemsPerScreen()) * getCurrentAppearance()->menuItemHeight + getCurrentAppearance()->menuPageScreenTopOffset + (withInsetOffset ? getMenuItemInsetOffset() : 0);
+}
+
+byte GEM_u8g2::calculateSpriteOverlap(byte spriteId) {
+  return ((getSprite(spriteId)->width - 1) / _menuItemFont[getMenuItemFontSize()].width);
 }
 
 void GEM_u8g2::printMenuItems() {
@@ -436,8 +428,8 @@ void GEM_u8g2::printMenuItems() {
   byte i = 0;
   char valueStringTmp[GEM_STR_LEN];
   while (menuItemTmp != nullptr && i < menuItemsPerScreen) {
-    byte yText = y + getMenuItemInsetOffset();
-    byte yDraw = y + getMenuItemInsetOffset(true);
+    byte yDraw = y + getMenuItemInsetOffset();
+    byte yText = yDraw;
     switch (menuItemTmp->type) {
       case GEM_ITEM_VAL:
         {
@@ -480,21 +472,21 @@ void GEM_u8g2::printMenuItems() {
               break;
             case GEM_VAL_BOOL:
               if (*(bool*)menuItemTmp->linkedVariable) {
-                drawSprite(menuValuesLeftOffset, yDraw, checkboxChecked);
+                drawSprite(menuValuesLeftOffset, yDraw, GEM_ICON_CHECKBOX_CHECKED, menuItemTmp);
               } else {
-                drawSprite(menuValuesLeftOffset, yDraw, checkboxUnchecked);
+                drawSprite(menuValuesLeftOffset, yDraw, GEM_ICON_CHECKBOX_UNCHECKED, menuItemTmp);
               }
               break;
             case GEM_VAL_SELECT:
               {
                 GEMSelect* select = menuItemTmp->select;
                 if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-                  printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum));
-                  drawSprite(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows);
+                  printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum), -1 * calculateSpriteOverlap(GEM_ICON_SELECT_ARROWS));
+                  drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SELECT_ARROWS)->width - 1, yDraw, GEM_ICON_SELECT_ARROWS, menuItemTmp);
                   drawEditValueCursor();
                 } else {
-                  printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable));
-                  drawSprite(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows);
+                  printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable), -1 * calculateSpriteOverlap(GEM_ICON_SELECT_ARROWS));
+                  drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SELECT_ARROWS)->width - 1, yDraw, GEM_ICON_SELECT_ARROWS, menuItemTmp);
                 }
               }
               break;
@@ -520,8 +512,8 @@ void GEM_u8g2::printMenuItems() {
                       break;
                     #endif
                   }
-                  printMenuItemValue(valueStringTmp);
-                  drawSprite(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows);
+                  printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SPINNER_ARROWS)->width - 1, yDraw, GEM_ICON_SPINNER_ARROWS, menuItemTmp);
                   drawEditValueCursor();
                 } else {
                   switch (spinner->getType()) {
@@ -540,8 +532,8 @@ void GEM_u8g2::printMenuItems() {
                       break;
                     #endif
                   }
-                  printMenuItemValue(valueStringTmp);
-                  drawSprite(_u8g2.getDisplayWidth() - 7, yDraw, selectArrows);
+                  printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SPINNER_ARROWS)->width - 1, yDraw, GEM_ICON_SPINNER_ARROWS, menuItemTmp);
                 }
               }
               break;
@@ -574,25 +566,25 @@ void GEM_u8g2::printMenuItems() {
       case GEM_ITEM_LINK:
         _u8g2.setCursor(5, yText);
         if (menuItemTmp->readonly) {
-          printMenuItemFull(menuItemTmp->title, -1);
+          printMenuItemFull(menuItemTmp->title, -1 * calculateSpriteOverlap(GEM_ICON_ARROW_RIGHT) - 1);
           _u8g2.print("^");
         } else {
-          printMenuItemFull(menuItemTmp->title);
+          printMenuItemFull(menuItemTmp->title, -1 * calculateSpriteOverlap(GEM_ICON_ARROW_RIGHT));
         }
-        drawSprite(_u8g2.getDisplayWidth() - 8, yDraw, arrowRight);
+        drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_ARROW_RIGHT)->width - 2, yDraw, GEM_ICON_ARROW_RIGHT, menuItemTmp);
         break;
       case GEM_ITEM_BACK:
-        drawSprite(5, yDraw, arrowLeft);
+        drawSprite(5, yDraw, GEM_ICON_ARROW_LEFT, menuItemTmp);
         break;
       case GEM_ITEM_BUTTON:
-        _u8g2.setCursor(11, yText);
+        _u8g2.setCursor(5 + getSprite(GEM_ICON_ARROW_BTN)->width, yText);
         if (menuItemTmp->readonly) {
-          printMenuItemFull(menuItemTmp->title, -1);
+          printMenuItemFull(menuItemTmp->title, -1 * calculateSpriteOverlap(GEM_ICON_ARROW_BTN) - 1);
           _u8g2.print("^");
         } else {
-          printMenuItemFull(menuItemTmp->title);
+          printMenuItemFull(menuItemTmp->title, -1 * calculateSpriteOverlap(GEM_ICON_ARROW_BTN));
         }
-        drawSprite(5, yDraw, arrowBtn);
+        drawSprite(5, yDraw, GEM_ICON_ARROW_BTN, menuItemTmp);
         break;
       case GEM_ITEM_LABEL:
         _u8g2.setCursor(5, yText);
@@ -609,7 +601,7 @@ void GEM_u8g2::printMenuItems() {
 void GEM_u8g2::drawMenuPointer() {
   if (_menuPageCurrent->itemsCount > 0) {
     GEMItem* menuItemTmp = _menuPageCurrent->getCurrentMenuItem();
-    int pointerPosition = getCurrentItemTopOffset(false);
+    int pointerPosition = getCurrentItemTopOffset();
     byte menuItemHeight = getCurrentAppearance()->menuItemHeight;
     if (getCurrentAppearance()->menuPointerType == GEM_POINTER_DASH) {
       if (menuItemTmp->readonly || menuItemTmp->type == GEM_ITEM_LABEL) {
@@ -810,7 +802,7 @@ void GEM_u8g2::prevEditValueCursorPosition() {
 }
 
 void GEM_u8g2::drawEditValueCursor() {
-  int pointerPosition = getCurrentItemTopOffset(false);
+  int pointerPosition = getCurrentItemTopOffset();
   byte menuItemFontSize = getMenuItemFontSize();
   byte cursorLeftOffset = getCurrentAppearance()->menuValuesLeftOffset + _editValueCursorPosition * _menuItemFont[menuItemFontSize].width;
   _u8g2.setDrawColor(2);

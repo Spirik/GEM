@@ -214,12 +214,12 @@ GEMItem menuItemLinkManage("Manage", menuPageManage); // Create menu item linked
 GEMItem menuItemLinkSettings("Settings", menuPageSettings); // Create menu item linked to Settings menu page
 
 // Create GEMAppearance objects
-GEMAppearance appearanceGeneral = { /* menuPointerType= */ menuPointer, /* menuItemsPerScreen= */ GEM_ITEMS_COUNT_AUTO, /* menuItemHeight= */ 10, /* menuPageScreenTopOffset= */ 10, /* menuValuesLeftOffset= */ 86};
-GEMAppearance appearanceList = appearanceGeneral;
-GEMAppearance appearanceAdd = appearanceGeneral;
+GEMAppearance appearanceGeneral;
+GEMAppearance appearanceList;
+GEMAppearance appearanceAdd;
 
 // Create menu object of class GEM. Supply its constructor with reference to glcd object we created earlier
-GEM menu(glcd, appearanceGeneral);
+GEM menu(glcd);
 
 void setup() {
   // Pin modes
@@ -261,12 +261,24 @@ void setup() {
 }
 
 void setupMenu() {
+  // Populate GEMAppearance object with general values (that will be used for every menu page if not overridden)
+  appearanceGeneral.menuPointerType = menuPointer;
+  appearanceGeneral.menuItemsPerScreen = GEM_ITEMS_COUNT_AUTO;
+  appearanceGeneral.menuItemHeight = 10;
+  appearanceGeneral.menuPageScreenTopOffset = 10;
+  appearanceGeneral.menuValuesLeftOffset = 86;
+
+  // Set appearanceGeneral as a general appearance of the menu
+  menu.setAppearance(appearanceGeneral);
+
   // Add menu items to menu page
   menuPageMain
     .addMenuItem(menuItemLinkList)
     .addMenuItem(menuItemLinkManage)
     .addMenuItem(menuItemLinkSettings);
 
+  // Customize appearance of List menu page
+  appearanceList = appearanceGeneral;
   appearanceList.menuValuesLeftOffset = 118;
 
   // Add menu items to List menu page
@@ -277,6 +289,8 @@ void setupMenu() {
   // Turn on adjusted order of ASCII characters when editing title
   menuItemTitle.setAdjustedASCIIOrder();
   
+  // Customize appearance of Add menu page
+  appearanceAdd = appearanceGeneral;
   appearanceAdd.menuValuesLeftOffset = 46;
   
   // Add menu items to Add menu page

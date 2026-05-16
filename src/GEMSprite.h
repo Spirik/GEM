@@ -1,5 +1,5 @@
 /*
-  GEMAppearance - struct for storing visual settings of GEM library.
+  GEMSprite - struct for storing a single sprite.
 
   GEM (a.k.a. Good Enough Menu) - Arduino library for creation of graphic multi-level menu with
   editable menu items, such as variables (supports int, byte, float, double, bool, char[17] data types)
@@ -34,20 +34,18 @@
   along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HEADER_GEMAPPEARANCE
-#define HEADER_GEMAPPEARANCE
+#ifndef HEADER_GEMSPRITE
+#define HEADER_GEMSPRITE
 
-// Declaration of GEMAppearance type
-struct GEMAppearance {
-  byte menuPointerType;
-  byte menuItemsPerScreen;
-  byte menuItemHeight;
-  byte menuPageScreenTopOffset;
-  byte menuValuesLeftOffset;
-  void* sprites = nullptr;
-  // Note that some boards (notably AVR and SAMD based) may not support in-class member initialization
-  // alongside brace-enclosed initizilzer list due to lack of the full C++ Standard Library (STL),
-  // so explicit initalization of sprites member is recommended when creating instance of GEMAppearance object
+// Declaration of GEMSprite type
+struct GEMSprite {
+  byte width;             // Width of the image
+  byte height;            // Height of the image
+  const uint8_t *image;   // Pointer to the image (format of data is determined by graphics library used to draw menu:
+                          // bitmap for AltSerialGraphicLCD and Adafruit GFX libraries; XBM for U8g2 library;
+                          // refer to corresponding documentation for details)
 };
+
+#define Splash GEMSprite
   
 #endif

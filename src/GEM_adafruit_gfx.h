@@ -42,6 +42,7 @@
 #include <Adafruit_GFX.h>
 #include "fonts/TomThumbMono.h"
 #include "fonts/Fixed6x12.h"
+#include "GEMSprite.h"
 #include "GEMAppearance.h"
 #include "GEMContext.h"
 #include "GEMPage.h"
@@ -63,15 +64,6 @@
 #define GEM_KEY_LEFT 4    // Left key is pressed (navigate through the Back button to the previous menu page, select previous digit/char of editable variable)
 #define GEM_KEY_CANCEL 5  // Cancel key is pressed (navigate to the previous (parent) menu page, exit edit mode without saving the variable, exit context loop if allowed within context's settings)
 #define GEM_KEY_OK 6      // Ok/Apply key is pressed (toggle bool menu item, enter edit mode of the associated non-bool variable, exit edit mode with saving the variable, execute code associated with button)
-
-// Declaration of GEMSprite type
-struct GEMSprite {
-  byte width;             // Width of the image
-  byte height;            // Height of the image
-  const uint8_t *image;   // Pointer to bitmap image
-};
-
-#define Splash GEMSprite
 
 // Declaration of FontSizeAGFX type
 struct FontSizeAGFX {
@@ -106,8 +98,10 @@ class GEM_adafruit_gfx {
       default 10 (suitable for 128x64 screen with other variables at their default values)
       @param 'menuValuesLeftOffset_' (optional) - offset from the left of the screen to the value of the associated with menu item variable (effectively the space left for the title of the menu item to be printed on screen)
       default 86 (suitable for 128x64 screen with other variables at their default values)
+      @param 'sprites_' (optional) - pointer to an array of custom sprites (i.e. icons), see sprites/sprites-adafruit-gfx-default.h for more info
+      default nullptr (default set of sprites used when set to nullptr)
     */
-    GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86);
+    GEM_adafruit_gfx(Adafruit_GFX& agfx_, byte menuPointerType_ = GEM_POINTER_ROW, byte menuItemsPerScreen_ = 5, byte menuItemHeight_ = 10, byte menuPageScreenTopOffset_ = 10, byte menuValuesLeftOffset_ = 86, void* sprites_ = nullptr);
     /*
       @param 'agfx_' - reference to an object created with Adafruit GFX library and used for communication with display
       @param 'appearance_' - object of type GEMAppearance
@@ -124,6 +118,7 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& setSplash(byte width, byte height, const uint8_t *image); // Set custom bitmap image displayed as the splash screen when GEM is being initialized. Should be called before GEM_adafruit_gfx::init().
                                                                                 // The following is the format of the bitmap as described in Adafruit GFX library documentation.
                                                                                 // A contiguous block of bits, where each '1' bit sets the corresponding pixel to 'color,' while each '0' bit is skipped.
+    GEM_adafruit_gfx& setSplash(GEMSprite splash);                              // Set custom splash wrapped in GEMSprite struct
     GEM_adafruit_gfx& setSplashDelay(uint16_t value);                   // Set splash screen delay. Default value 1000ms, max value 65535ms. Setting to 0 will disable splash screen. Should be called before GEM_adafruit_gfx::init().
     GEM_adafruit_gfx& hideVersion(bool flag = true);                    // Turn printing of the current GEM library version on splash screen off or back on. Should be called before GEM_adafruit_gfx::init().
     GEM_adafruit_gfx& setTextSize(uint8_t size);                        // Set text 'magnification' size (as per Adafruit GFX docs); sprites will be scaled maximum up to two times regardless of the supplied value (default is 1)
@@ -133,8 +128,8 @@ class GEM_adafruit_gfx {
     GEM_adafruit_gfx& setForegroundColor(uint16_t color);               // Set foreground color of the menu (default is 0xFF)
     GEM_adafruit_gfx& setBackgroundColor(uint16_t color);               // Set background color of the menu (default is 0x00)
     GEM_adafruit_gfx& invertKeysDuringEdit(bool invert = true);         // Turn inverted order of characters during edit mode on or off
-    GEM_VIRTUAL GEM_adafruit_gfx& init();                               // Init the menu (load necessary sprites into RAM of the SparkFun Graphic LCD Serial Backpack, display GEM splash screen, etc.)
-    GEM_VIRTUAL GEM_adafruit_gfx& reInit();                             // Reinitialize the menu (apply GEM specific settings to AltSerialGraphicLCD library)
+    GEM_VIRTUAL GEM_adafruit_gfx& init();                               // Init the menu (set necessary settings, display GEM splash screen, etc.)
+    GEM_VIRTUAL GEM_adafruit_gfx& reInit();                             // Reinitialize the menu (reapply GEM specific settings)
     GEM_adafruit_gfx& setMenuPageCurrent(GEMPage& menuPageCurrent);     // Set supplied menu page as current
     GEMPage* getCurrentMenuPage();                                      // Get pointer to current menu page
 
@@ -148,6 +143,8 @@ class GEM_adafruit_gfx {
     GEM_VIRTUAL GEM_adafruit_gfx& drawMenu();                           // Draw menu on screen, with menu page set earlier in GEM_adafruit_gfx::setMenuPageCurrent()
     GEM_adafruit_gfx& setDrawMenuCallback(void (*drawMenuCallback_)()); // Set callback that will be called at the end of GEM_adafruit_gfx::drawMenu()
     GEM_adafruit_gfx& removeDrawMenuCallback();                         // Remove callback that was called at the end of GEM_adafruit_gfx::drawMenu()
+    GEM_adafruit_gfx& setDrawSpriteCallback(bool (*drawSpriteCallback_)(int16_t x, int16_t y, byte spriteId, uint16_t color, GEMItem* menuItem));  // Set callback that will be called at the start of GEM_adafruit_gfx::drawSprite()
+    GEM_adafruit_gfx& removeDrawSpriteCallback();                       // Remove callback that was called at the start of GEM_adafruit_gfx::drawSprite()
 
     /* VALUE EDIT */
 
@@ -181,15 +178,17 @@ class GEM_adafruit_gfx {
 
     GEMPage* _menuPageCurrent = nullptr;
     void (*drawMenuCallback)() = nullptr;
+    bool (*drawSpriteCallback)(int16_t x, int16_t y, byte spriteId, uint16_t color, GEMItem* menuItem) = nullptr;
     GEM_VIRTUAL void drawTitleBar();
-    GEM_VIRTUAL void drawSprite(int16_t x, int16_t y, const GEMSprite sprite[], uint16_t color);
+    GEM_VIRTUAL GEMSprite* getSprite(byte spriteId);
+    GEM_VIRTUAL void drawSprite(int16_t x, int16_t y, byte spriteId, uint16_t color, GEMItem* menuItem = nullptr, bool withInsetOffset = true);
     GEM_VIRTUAL void printMenuItemString(const char* str, byte num, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemTitle(const char* str, int offset = 0);
     GEM_VIRTUAL void printMenuItemValue(const char* str, int offset = 0, byte startPos = 0);
     GEM_VIRTUAL void printMenuItemFull(const char* str, int offset = 0);
-    GEM_VIRTUAL byte getMenuItemInsetOffset(bool forSprite = false);
-    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = true, bool forSprite = false);
-    GEM_VIRTUAL byte calculateSpriteOverlap(const GEMSprite sprite[]);
+    GEM_VIRTUAL byte getMenuItemInsetOffset();
+    GEM_VIRTUAL byte getCurrentItemTopOffset(bool withInsetOffset = false);
+    GEM_VIRTUAL byte calculateSpriteOverlap(byte spriteId);
     GEM_VIRTUAL void printMenuItem(GEMItem* menuItemTmp, byte yText, byte yDraw, uint16_t color);
     GEM_VIRTUAL void printMenuItems();
     GEM_VIRTUAL void drawMenuPointer(bool clear = false);
