@@ -38,33 +38,37 @@
 #include "GEMSpinner.h"
 #include "constants.h"
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_, GEMSpinnerValueStringCallback valueStringCallback_)
   : _boundaries{ { .boundariesByte = { .step = boundaries_.step, .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_BYTE)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , _valueStringCallback(valueStringCallback_)
 { }
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_, GEMSpinnerValueStringCallback valueStringCallback_)
   : _boundaries{ { .boundariesInt = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_INTEGER)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , _valueStringCallback(valueStringCallback_)
 { }
 
 #ifdef GEM_SUPPORT_FLOAT_EDIT
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_, GEMSpinnerValueStringCallback valueStringCallback_)
   : _boundaries{ { .boundariesFloat = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_FLOAT)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , _valueStringCallback(valueStringCallback_)
 { }
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_, GEMSpinnerValueStringCallback valueStringCallback_)
   : _boundaries{ { .boundariesDouble = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_DOUBLE)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , _valueStringCallback(valueStringCallback_)
 { }
 #endif
 
@@ -195,4 +199,61 @@ void GEMSpinner::setValue(void* variable, int index, void* referenceVariable) {
       break;
     #endif
   }
+}
+
+
+byte GEMSpinner::produceStringForValue(char* stringBuffer, byte stringBufferLength, const GEMSpinnerValue& value, int valuePrecision) const
+{
+  if (_valueStringCallback != nullptr)
+  {
+    const char* const string = _valueStringCallback(value, _type, valuePrecision);
+    if (string != nullptr)
+    {
+      const size_t stringLength = MIN(strlen(string), (size_t)stringBufferLength - 1);
+      memcpy(stringBuffer, string, stringLength);
+      if (stringLength == stringBufferLength - 1)
+      {
+        stringBuffer[stringLength - 1] = '~'; // our "ellipsis"
+      }
+      stringBuffer[stringLength] = '\0';
+      return (byte)stringLength;
+    }
+  }
+
+  switch (_type)
+  {
+    case GEM_VAL_BYTE:
+      itoa(value.valByte, stringBuffer, 10);
+      break;
+    case GEM_VAL_INTEGER:
+      itoa(value.valInt, stringBuffer, 10);
+      break;
+    #ifdef GEM_SUPPORT_FLOAT_EDIT
+    case GEM_VAL_FLOAT:
+      dtostrf(value.valFloat, valuePrecision + 1, valuePrecision, stringBuffer);
+      break;
+    case GEM_VAL_DOUBLE:
+      dtostrf(value.valDouble, valuePrecision + 1, valuePrecision, stringBuffer);
+      break;
+    #endif
+    default:
+      *stringBuffer = '\0';
+      break;
+  }
+
+  return strlen(stringBuffer);
+}
+
+
+GEMSpinner& GEMSpinner::setValueStringCallback(GEMSpinnerValueStringCallback callback)
+{
+  _valueStringCallback = callback;
+  return *this;
+}
+
+
+GEMSpinner& GEMSpinner::removeValueStringCallback()
+{
+  _valueStringCallback = nullptr;
+  return *this;
 }

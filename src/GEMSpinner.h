@@ -94,6 +94,8 @@ struct GEMSpinnerValue {
   };
 };
 
+typedef const char* const (*GEMSpinnerValueStringCallback)(GEMSpinnerValue /* value */, byte /* value type */, int /* value precision */);
+
 // Declaration of GEMSpinner class
 class GEMSpinner {
   friend class GEM;
@@ -105,21 +107,25 @@ class GEMSpinner {
       @param 'loop_' (optional) - whether iteration over options should be looped
       values GEM_LOOP (alias for true)
     */
-    GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_ = false);
-    GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_ = false);
+    GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_ = false, GEMSpinnerValueStringCallback valueStringCallback_ = nullptr);
+    GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_ = false, GEMSpinnerValueStringCallback valueStringCallback_ = nullptr);
     #ifdef GEM_SUPPORT_FLOAT_EDIT
-    GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_ = false);
-    GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_ = false);
+    GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_ = false, GEMSpinnerValueStringCallback valueStringCallback_ = nullptr);
+    GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_ = false, GEMSpinnerValueStringCallback valueStringCallback_ = nullptr);
     #endif
     GEMSpinner& setLoop(bool mode = true);  // Explicitly set or unset loop mode
     bool getLoop();                         // Get current value of loop mode
     GEM_VIRTUAL GEMSpinnerValue getOptionNameByIndex(void* variable, int index);  // Get option by its index
+    GEM_VIRTUAL byte produceStringForValue(char* stringBuffer, byte stringBufferLength, const GEMSpinnerValue& value, int valuePrecision) const;
+    GEM_VIRTUAL GEMSpinner& setValueStringCallback(GEMSpinnerValueStringCallback callback);
+    GEM_VIRTUAL GEMSpinner& removeValueStringCallback();
   protected:
     GEMSpinnerBoundaries _boundaries;
     byte _type;
     int _length;
     bool _loop = false;
     byte getType();
+    GEMSpinnerValueStringCallback _valueStringCallback;
     int getLength();
     GEM_VIRTUAL int getSelectedOptionNum(void* variable);
     GEM_VIRTUAL void setValue(void* variable, int index, void* referenceVariable = nullptr);  // Assign value of the selected option to supplied variable, optionally setting reference variable for counting options

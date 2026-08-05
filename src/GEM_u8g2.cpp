@@ -496,42 +496,12 @@ void GEM_u8g2::printMenuItems() {
                 GEMSpinner* spinner = menuItemTmp->spinner;
                 if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
                   GEMSpinnerValue valueTmp = spinner->getOptionNameByIndex(menuItemTmp->linkedVariable, _valueSelectNum);
-                  switch (spinner->getType()) {
-                    case GEM_VAL_BYTE:
-                      itoa(valueTmp.valByte, valueStringTmp, 10);
-                      break;
-                    case GEM_VAL_INTEGER:
-                      itoa(valueTmp.valInt, valueStringTmp, 10);
-                      break;
-                    #ifdef GEM_SUPPORT_FLOAT_EDIT
-                    case GEM_VAL_FLOAT:
-                      dtostrf(valueTmp.valFloat, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    case GEM_VAL_DOUBLE:
-                      dtostrf(valueTmp.valDouble, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    #endif
-                  }
+                  spinner->produceStringForValue(valueStringTmp, sizeof(valueStringTmp), valueTmp, menuItemTmp->precision);
                   printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
                   drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SPINNER_ARROWS)->width - 1, yDraw, GEM_ICON_SPINNER_ARROWS, menuItemTmp);
                   drawEditValueCursor();
                 } else {
-                  switch (spinner->getType()) {
-                    case GEM_VAL_BYTE:
-                      itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-                      break;
-                    case GEM_VAL_INTEGER:
-                      itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-                      break;
-                    #ifdef GEM_SUPPORT_FLOAT_EDIT
-                    case GEM_VAL_FLOAT:
-                      dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    case GEM_VAL_DOUBLE:
-                      dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    #endif
-                  }
+                  spinner->produceStringForValue(valueStringTmp, sizeof(valueStringTmp), *static_cast<const GEMSpinnerValue*>(menuItemTmp->linkedVariable), menuItemTmp->precision);
                   printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
                   drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SPINNER_ARROWS)->width - 1, yDraw, GEM_ICON_SPINNER_ARROWS, menuItemTmp);
                 }
