@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -39,6 +39,9 @@
 
 #include "config.h"
 #include "constants.h"
+
+// Forward declaration of necessary classes
+class GEMItem;
 
 // Declaration of SelectOptionInt type
 struct SelectOptionInt {
@@ -81,25 +84,30 @@ class GEMSelect {
       @param 'options_' - array of the available options
       @param 'loop_' (optional) - whether iteration over options should be looped
       values GEM_LOOP (alias for true)
+      @param 'produceOptionNameByIndexCallback_' (optional) - pointer to callback function executed before option name is printed on the screen, allows to override option name being printed
     */
-    GEMSelect(byte length_, SelectOptionInt* options_, bool loop_ = false);
-    GEMSelect(byte length_, SelectOptionByte* options_, bool loop_ = false);
-    GEMSelect(byte length_, SelectOptionChar* options_, bool loop_ = false);
-    GEMSelect(byte length_, SelectOptionFloat* options_, bool loop_ = false);
-    GEMSelect(byte length_, SelectOptionDouble* options_, bool loop_ = false);
-    GEMSelect& setLoop(bool mode = true);  // Explicitly set or unset loop mode
-    bool getLoop();                        // Get current value of loop mode
+    GEMSelect(byte length_, SelectOptionInt* options_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*) = nullptr);
+    GEMSelect(byte length_, SelectOptionByte* options_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*) = nullptr);
+    GEMSelect(byte length_, SelectOptionChar* options_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*) = nullptr);
+    GEMSelect(byte length_, SelectOptionFloat* options_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*) = nullptr);
+    GEMSelect(byte length_, SelectOptionDouble* options_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*) = nullptr);
+    GEMSelect& setLoop(bool mode = true); // Explicitly set or unset loop mode
+    bool getLoop();                       // Get current value of loop mode
+    byte getType();                       // Get type of variable this select is suitable for
+    byte getLength();                     // Get total number of available options (options array length)
+    void* getOptions();                   // Get pointer to options array
+    GEM_VIRTUAL const char* getOptionNameByIndex(int index);  // Get option name by its index
+    GEMSelect& setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSelect* pSelect, int index, GEMItem* menuItem)); // Set callback that will be called before option name is printed on the screen
+    GEMSelect& removeProduceOptionNameByIndexCallback();      // Remove callback that was called before option name is printed on the screen
   protected:
     byte _type;
     byte _length;
     void* _options;
     bool _loop = false;
-    byte getType();
-    byte getLength();
     GEM_VIRTUAL int getSelectedOptionNum(void* variable);
     GEM_VIRTUAL const char* getSelectedOptionName(void* variable);
-    GEM_VIRTUAL const char* getOptionNameByIndex(int index);
-    GEM_VIRTUAL void setValue(void* variable, int index);  // Assign value of the selected option to supplied variable
+    GEM_VIRTUAL void setValue(void* variable, int index);     // Assign value of the selected option to supplied variable
+    const char* (*produceOptionNameByIndexCallback)(GEMSelect* pSelect, int index, GEMItem* menuItem) = nullptr;
 };
   
 #endif
