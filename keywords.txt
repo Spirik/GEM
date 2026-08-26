@@ -99,6 +99,9 @@ getLoop	KEYWORD2
 getType	KEYWORD2
 getLength	KEYWORD2
 getOptions	KEYWORD2
+setOptions	KEYWORD2
+getSelectedOptionNum	KEYWORD2
+getSelectedOptionName	KEYWORD2
 getOptionNameByIndex	KEYWORD2
 optionNameToCharBuffer	KEYWORD2
 

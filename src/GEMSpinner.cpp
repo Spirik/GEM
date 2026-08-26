@@ -89,16 +89,6 @@ int GEMSpinner::getLength() {
   return _length;
 }
 
-GEMSpinner& GEMSpinner::setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSpinner* pSpinner, int index, GEMItem* menuItem)) {
-  produceOptionNameByIndexCallback = produceOptionNameByIndexCallback_;
-  return *this;
-}
-
-GEMSpinner& GEMSpinner::removeProduceOptionNameByIndexCallback() {
-  produceOptionNameByIndexCallback = nullptr;
-  return *this;
-}
-
 int GEMSpinner::getSelectedOptionNum(void* variable) {
   int num = -1;
   switch (_type) {
@@ -228,4 +218,14 @@ void GEMSpinner::setValue(void* variable, int index, void* referenceVariable) {
       break;
     #endif
   }
+}
+
+GEMSpinner& GEMSpinner::setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSpinner* pSpinner, int index, GEMItem* menuItem)) {
+  produceOptionNameByIndexCallback = produceOptionNameByIndexCallback_;
+  return *this;
+}
+
+GEMSpinner& GEMSpinner::removeProduceOptionNameByIndexCallback() {
+  produceOptionNameByIndexCallback = nullptr;
+  return *this;
 }

@@ -99,14 +99,8 @@ void* GEMSelect::getOptions() {
   return _options;
 }
 
-GEMSelect& GEMSelect::setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSelect* pSelect, int index, GEMItem* menuItem)) {
-  produceOptionNameByIndexCallback = produceOptionNameByIndexCallback_;
-  return *this;
-}
-
-GEMSelect& GEMSelect::removeProduceOptionNameByIndexCallback() {
-  produceOptionNameByIndexCallback = nullptr;
-  return *this;
+GEMSelect& GEMSelect::setOptions(void* options_) {
+  _options = options_;
 }
 
 int GEMSelect::getSelectedOptionNum(void* variable) {
@@ -200,4 +194,14 @@ void GEMSelect::setValue(void* variable, int index) {
         break;
     }
   }
+}
+
+GEMSelect& GEMSelect::setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSelect* pSelect, int index, GEMItem* menuItem)) {
+  produceOptionNameByIndexCallback = produceOptionNameByIndexCallback_;
+  return *this;
+}
+
+GEMSelect& GEMSelect::removeProduceOptionNameByIndexCallback() {
+  produceOptionNameByIndexCallback = nullptr;
+  return *this;
 }

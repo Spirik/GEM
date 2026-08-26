@@ -119,6 +119,7 @@ class GEMSpinner {
     bool getLoop();                         // Get current value of loop mode
     byte getType();                         // Get type of variable this spinner is suitable for
     int getLength();                        // Get total number of available options
+    GEM_VIRTUAL int getSelectedOptionNum(void* variable); // Get selected option index for supplied variable (make sure that variable value is compatible w/ range of a spinner)
     GEM_VIRTUAL GEMSpinnerValue getOptionNameByIndex(void* variable, int index);  // Get option by its index
     GEM_VIRTUAL void optionNameToCharBuffer(GEMSpinnerValue& value, char* stringBuffer, int valuePrecision);  // Copy option name to provided char buffer
     GEMSpinner& setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSpinner* pSpinner, int index, GEMItem* menuItem)); // Set callback that will be called before option name is printed on the screen
@@ -128,7 +129,6 @@ class GEMSpinner {
     byte _type;
     int _length;
     bool _loop = false;
-    GEM_VIRTUAL int getSelectedOptionNum(void* variable);
     GEM_VIRTUAL void setValue(void* variable, int index, void* referenceVariable = nullptr);  // Assign value of the selected option to supplied variable, optionally setting reference variable for counting options
     const char* (*produceOptionNameByIndexCallback)(GEMSpinner* pSpinner, int index, GEMItem* menuItem) = nullptr;
 };
