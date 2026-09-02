@@ -97,8 +97,8 @@ class GEMSelect {
     byte getLength();                     // Get total number of available options (options array length)
     void* getOptions();                   // Get pointer to options array
     GEMSelect& setOptions(void* options_);// Set options array
-    GEM_VIRTUAL int getSelectedOptionNum(void* variable);           // Get selected option index for supplied variable (make sure that variable value is compatible w/ number of available options)
-    GEM_VIRTUAL const char* getSelectedOptionName(void* variable);  // Get selected option name for supplied variable (make sure that variable value is compatible w/ number of available options)
+    GEM_VIRTUAL int getSelectedOptionNum(void* variable);           // Get selected option index for supplied variable (make sure that variable value is compatible with available options)
+    GEM_VIRTUAL const char* getSelectedOptionName(void* variable);  // Get selected option name for supplied variable (make sure that variable value is compatible with available options)
     GEM_VIRTUAL const char* getOptionNameByIndex(int index);  // Get option name by its index
     GEMSelect& setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSelect* pSelect, int index, GEMItem* menuItem)); // Set callback that will be called before option name is printed on the screen
     GEMSelect& removeProduceOptionNameByIndexCallback();      // Remove callback that was called before option name is printed on the screen

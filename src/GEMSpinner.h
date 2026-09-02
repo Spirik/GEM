@@ -119,9 +119,9 @@ class GEMSpinner {
     bool getLoop();                         // Get current value of loop mode
     byte getType();                         // Get type of variable this spinner is suitable for
     int getLength();                        // Get total number of available options
-    GEM_VIRTUAL int getSelectedOptionNum(void* variable); // Get selected option index for supplied variable (make sure that variable value is compatible w/ range of a spinner)
+    GEM_VIRTUAL int getSelectedOptionNum(void* variable); // Get selected option index for supplied variable (make sure that variable value is compatible with range of a spinner)
     GEM_VIRTUAL GEMSpinnerValue getOptionNameByIndex(void* variable, int index);  // Get option by its index
-    GEM_VIRTUAL void optionNameToCharBuffer(GEMSpinnerValue& value, char* stringBuffer, int valuePrecision);  // Copy option name to provided char buffer
+    GEM_VIRTUAL void optionNameToCharBuffer(GEMSpinnerValue& value, char* stringBuffer, int valuePrecision = GEM_FLOAT_PREC);  // Copy option name to provided char buffer
     GEMSpinner& setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSpinner* pSpinner, int index, GEMItem* menuItem)); // Set callback that will be called before option name is printed on the screen
     GEMSpinner& removeProduceOptionNameByIndexCallback(); // Remove callback that was called before option name is printed on the screen
   protected:
