@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -38,39 +38,44 @@
 #include "GEMSelect.h"
 #include "constants.h"
 
-GEMSelect::GEMSelect(byte length_, SelectOptionInt* options_, bool loop_)
+GEMSelect::GEMSelect(byte length_, SelectOptionInt* options_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*))
   : _type(GEM_VAL_INTEGER)
   , _length(length_)
   , _options(options_)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
-GEMSelect::GEMSelect(byte length_, SelectOptionByte* options_, bool loop_)
+GEMSelect::GEMSelect(byte length_, SelectOptionByte* options_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*))
   : _type(GEM_VAL_BYTE)
   , _length(length_)
   , _options(options_)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
-GEMSelect::GEMSelect(byte length_, SelectOptionChar* options_, bool loop_)
+GEMSelect::GEMSelect(byte length_, SelectOptionChar* options_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*))
   : _type(GEM_VAL_CHAR)
   , _length(length_)
   , _options(options_)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
-GEMSelect::GEMSelect(byte length_, SelectOptionFloat* options_, bool loop_)
+GEMSelect::GEMSelect(byte length_, SelectOptionFloat* options_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*))
   : _type(GEM_VAL_FLOAT)
   , _length(length_)
   , _options(options_)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
-GEMSelect::GEMSelect(byte length_, SelectOptionDouble* options_, bool loop_)
+GEMSelect::GEMSelect(byte length_, SelectOptionDouble* options_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSelect*, int, GEMItem*))
   : _type(GEM_VAL_DOUBLE)
   , _length(length_)
   , _options(options_)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
 GEMSelect& GEMSelect::setLoop(bool mode) {
@@ -88,6 +93,14 @@ byte GEMSelect::getType() {
 
 byte GEMSelect::getLength() {
   return _length;
+}
+
+void* GEMSelect::getOptions() {
+  return _options;
+}
+
+GEMSelect& GEMSelect::setOptions(void* options_) {
+  _options = options_;
 }
 
 int GEMSelect::getSelectedOptionNum(void* variable) {
@@ -181,4 +194,14 @@ void GEMSelect::setValue(void* variable, int index) {
         break;
     }
   }
+}
+
+GEMSelect& GEMSelect::setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSelect* pSelect, int index, GEMItem* menuItem)) {
+  produceOptionNameByIndexCallback = produceOptionNameByIndexCallback_;
+  return *this;
+}
+
+GEMSelect& GEMSelect::removeProduceOptionNameByIndexCallback() {
+  produceOptionNameByIndexCallback = nullptr;
+  return *this;
 }

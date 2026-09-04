@@ -1066,6 +1066,16 @@ For more details on customization see corresponding section of the [wiki](https:
   
   Alias for the default small font version used to print titles of menu pages (and menu items when big font won't fit). Submitted as a default value to `GEM_adafruit_gfx::setFontSmall()` method.
 
+* **GEM_FLOAT_PREC**  
+  *Type*: macro `#define GEM_FLOAT_PREC 6`  
+  *Value*: `6`  
+  Alias for default precision of the `float` variables (the number of digits after the decimal sign as required internally by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) during conversion to `char*` string).
+
+* **GEM_DOUBLE_PREC**  
+  *Type*: macro `#define GEM_DOUBLE_PREC 6`  
+  *Value*: `6`  
+  Alias for default precision of the `double` variables (the number of digits after the decimal sign as required internally by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) during conversion to `char*` string).
+
 * **GEM_FONT_SMALL_CYR**  `GEM_u8g2 version only`  
   *Type*: macro `#define GEM_FONT_SMALL_CYR u8g2_font_4x6_t_cyrillic`  
   *Value*: `u8g2_font_4x6_t_cyrillic`  
@@ -1186,6 +1196,14 @@ For more details on customization see corresponding section of the [wiki](https:
 * *GEMAppearance** **getCurrentAppearance()**  
   *Returns*: `GEMAppearance*`  
   Get appearance (as a pointer to [`GEMAppearance`](#gemappearance) object) applied to current menu page (or general if menu page has none of its own).
+
+* *byte* **getMenuItemTitleLength()**  
+  *Returns*: `byte`  
+  Get length available for menu item title to fit on screen without cropping.
+
+* *byte* **getMenuItemValueLength()**  
+  *Returns*: `byte`  
+  Get length available for menu item value to fit on screen without cropping.
 
 * *GEM&* **setSplash(** _const uint8_t PROGMEM_ *sprite **)**  `AltSerialGraphicLCD version`  
   *Accepts*: `_const uint8_t PROGMEM_ *`  
@@ -1865,7 +1883,7 @@ GEMItem menuItemButton(title, buttonAction[, callbackVal[, readonly]]);
 List of values available for option select. Supplied to `GEMItem` constructor. Object of class `GEMSelect` defines as follows:
 
 ```cpp
-GEMSelect mySelect(length, optionsArray[, loop]);
+GEMSelect mySelect(length, optionsArray[, loop[, produceOptionNameByIndexCallback]]);
 ```
 
 * **length**  
@@ -1881,6 +1899,11 @@ GEMSelect mySelect(length, optionsArray[, loop]);
   *Values*: `GEM_LOOP` (alias for `true`), `false`  
   *Default*: `false`  
   Sets loop mode for select which defines whether iteration over options should be looped.
+
+* **produceOptionNameByIndexCallback** [*optional*]  
+  *Type*: `pointer to function`  
+  *Default*: `nullptr`  
+  Pointer to callback function that will be called before option name is printed on the screen. See description of `setProduceOptionNameByIndexCallback()` method below for details.
 
 Example of use:
 
@@ -1910,6 +1933,50 @@ GEMSelect mySelect(3, (SelectOptionInt[]){{"Opt 1", 10}, {"Opt 2", -12}, {"Opt 3
 * *bool* **getLoop()**  
   *Returns*: `bool`  
   Get loop state of the select: `true` when looping is enabled, `false` otherwise.
+
+* *byte* **getType()**  
+  *Returns*: `byte` (*Values*: `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_CHAR`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`)  
+  Get type of variable this select is suitable for.
+
+* *byte* **getLength()**  
+  *Returns*: `byte`  
+  Get total number of available options (options array length).
+
+* *void** **getOptions()**  
+  *Returns*: `void*`  
+  Get pointer to an array of the available options. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar` depending on the kind of data options are selected from. See the following section for definition of these custom types.
+
+* *GEMSelect&* **setOptions(** _void*_ options **)**  
+  *Accepts*: `void*` (pointer to array of type either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar`)  
+  *Returns*: `GEMSelect&`  
+  Explicitly set array of the available options. Overrides optons array set in constructor. Type of the array is either `SelectOptionInt`, or `SelectOptionByte`, or `SelectOptionFloat`, or `SelectOptionDouble`, or `SelectOptionChar` depending on the kind of data options are selected from. See the following section for definition of these custom types.
+
+* *int* **getSelectedOptionNum(** _void*_ variable **)**  
+  *Accepts*: `void*`  
+  *Returns*: `int`  
+  Get selected option index for supplied variable (make sure that variable value is compatible with the available options).
+
+* *const char** **getSelectedOptionName(** _void*_ variable **)**  
+  *Accepts*: `void*`  
+  *Returns*: `const char*`  
+  Get selected option name for supplied variable (make sure that variable value is compatible with available options).
+
+* *const char** **getOptionNameByIndex(** _int_ index **)**  
+  *Accepts*: `int`  
+  *Returns*: `const char*`  
+  Get option name by its index.
+
+* *GEMSelect&* **setProduceOptionNameByIndexCallback(** _const char*_ (\*produceOptionNameByIndexCallback)(_GEMSelect*_ pSelect, _int_ index, _GEMItem*_ menuItem) **)**  
+  *Accepts*: `pointer to function`  
+  *Returns*: `GEMSelect&`  
+  Specify callback function that will be called before option name is printed on the screen. Potentially can be used to override option name being printed (by returning new option name as `char*` string from a callback), e.g. to form it dynamically based on index of an option. If `void` is returned from the callback function, default option name is printed. Callback function should expect the following arguments to be passed to it when it is executed:  
+    * `pSelect` - pointer to `GEMselect` object this callback is attached to;  
+    * `index` - index of an option that is about to be printed on screen;  
+    * `menuItem` - pointer to corresponding `GEMItem` object.
+
+* *GEMSelect&* **removeProduceOptionNameByIndexCallback()**  
+ *Returns*: `GEMSelect&`  
+  Disable callback that was called before option name is printed on the screen.
 
 
 ----------
@@ -2006,7 +2073,7 @@ Spinner is similar to option select, but instead of specifying available options
 `GEMSpinner` represents range of values available for incremental spinner. Supplied to `GEMItem` constructor. Object of class `GEMSpinner` defines as follows:
 
 ```cpp
-GEMSpinner mySpinner(boundaries[, loop]);
+GEMSpinner mySpinner(boundaries[, loop[, produceOptionNameByIndexCallback]]);
 ```
 
 * **boundaries**  
@@ -2018,6 +2085,11 @@ GEMSpinner mySpinner(boundaries[, loop]);
   *Values*: `GEM_LOOP` (alias for `true`), `false`  
   *Default*: `false`  
   Sets loop mode for spinner which defines whether iteration over options should be looped.
+
+* **produceOptionNameByIndexCallback** [*optional*]  
+  *Type*: `pointer to function`  
+  *Default*: `nullptr`  
+  Pointer to callback function that will be called before option name (spinner option value) is printed on the screen. See description of `setProduceOptionNameByIndexCallback()` method below for details.
 
 Example of use:
 
@@ -2065,10 +2137,40 @@ build_flags =
   *Returns*: `bool`  
   Get loop state of the spinner: `true` when looping is enabled, `false` otherwise.
 
+* *byte* **getType()**  
+  *Returns*: `byte` (*Values*: `GEM_VAL_INTEGER`, `GEM_VAL_BYTE`, `GEM_VAL_FLOAT`, `GEM_VAL_DOUBLE`)  
+  Get type of variable this spinner is suitable for.
+
+* *int* **getLength()**  
+  *Returns*: `int`  
+  Get total number of available options.
+
+* *int* **getSelectedOptionNum(** _void*_ variable **)**  
+  *Accepts*: `void*`  
+  *Returns*: `int`  
+  Get selected option index for supplied variable (make sure that variable value is compatible with range of a spinner). If value is not suitable for this spinner (either not within range or can't be reached with boundaries and step of this spinner), `-1` is returned.
+
 * *GEMSpinnerValue* **getOptionNameByIndex(** _void*_ variable, _int_ index **)**  
   *Accepts*: `void*`, `int`  
   *Returns*: `GEMSpinnerValue`  
   Get option by supplying pointer to a variable and its **index**. Returned value is of type [`GEMSpinnerValue`](#gemspinnervalue).
+
+* *void* **optionNameToCharBuffer(** _GEMSpinnerValue&_ value, _char*_ stringBuffer[, _int_ valuePrecision = GEM_FLOAT_PREC]  **)**  
+  *Accepts*: `GEMSpinnerValue&`, `char*`, `int`  
+  Copy option name (derived from supplied `value` object of type [`GEMSpinnerValue`](#gemspinnervalue)) to provided buffer `stringBuffer` of type `char*` with optional precision (the number of digits after the decimal sign as required by [`dtostrf()`](http://www.nongnu.org/avr-libc/user-manual/group__avr__stdlib.html#ga060c998e77fb5fc0d3168b3ce8771d42) to convert `float` and `double` variables to `char*` string) `valuePrecision` specified as an `int` number. Default value of `valuePrecision` is set to `GEM_FLOAT_PREC` (i.e. `6`).
+
+* *GEMSpinner&* **setProduceOptionNameByIndexCallback(** _const char*_ (\*produceOptionNameByIndexCallback)(_GEMSpinner*_ pSpinner, _int_ index, _GEMItem*_ menuItem) **)**  
+  *Accepts*: `pointer to function`  
+  *Returns*: `GEMSpinner&`  
+  Specify callback function that will be called before option name (spinner option value) is printed on the screen. Potentially can be used to override option name being printed (by returning new option name as `char*` string from a callback), e.g. to form it dynamically based on index of an option. If `void` is returned from the callback function, default option name (spinner option value) is printed. Callback function should expect the following arguments to be passed to it when it is executed:  
+    * `pSpinner` - pointer to `GEMSpinner` object this callback is attached to;  
+    * `index` - index of an option that is about to be printed on screen;  
+    * `menuItem` - pointer to corresponding `GEMItem` object.
+
+* *GEMSpinner&* **removeProduceOptionNameByIndexCallback()**  
+ *Returns*: `GEMSpinner&`  
+  Disable callback that was called before option name is printed on the screen.
+
 
 ----------
 

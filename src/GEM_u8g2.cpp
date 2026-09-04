@@ -480,12 +480,25 @@ void GEM_u8g2::printMenuItems() {
             case GEM_VAL_SELECT:
               {
                 GEMSelect* select = menuItemTmp->select;
+                const char* valueLabel = nullptr;
                 if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-                  printMenuItemValue(select->getOptionNameByIndex(_valueSelectNum), -1 * calculateSpriteOverlap(GEM_ICON_SELECT_ARROWS));
+                  if (select->produceOptionNameByIndexCallback != nullptr) {
+                    valueLabel = select->produceOptionNameByIndexCallback(select, _valueSelectNum, menuItemTmp);
+                  }
+                  if (valueLabel == nullptr) {
+                    valueLabel = select->getOptionNameByIndex(_valueSelectNum);
+                  }
+                  printMenuItemValue(valueLabel, -1 * calculateSpriteOverlap(GEM_ICON_SELECT_ARROWS));
                   drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SELECT_ARROWS)->width - 1, yDraw, GEM_ICON_SELECT_ARROWS, menuItemTmp);
                   drawEditValueCursor();
                 } else {
-                  printMenuItemValue(select->getSelectedOptionName(menuItemTmp->linkedVariable), -1 * calculateSpriteOverlap(GEM_ICON_SELECT_ARROWS));
+                  if (select->produceOptionNameByIndexCallback != nullptr) {
+                    valueLabel = select->produceOptionNameByIndexCallback(select, select->getSelectedOptionNum(menuItemTmp->linkedVariable), menuItemTmp);
+                  }
+                  if (valueLabel == nullptr) {
+                    valueLabel = select->getSelectedOptionName(menuItemTmp->linkedVariable);
+                  }
+                  printMenuItemValue(valueLabel, -1 * calculateSpriteOverlap(GEM_ICON_SELECT_ARROWS));
                   drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SELECT_ARROWS)->width - 1, yDraw, GEM_ICON_SELECT_ARROWS, menuItemTmp);
                 }
               }
@@ -494,45 +507,30 @@ void GEM_u8g2::printMenuItems() {
             case GEM_VAL_SPINNER:
               {
                 GEMSpinner* spinner = menuItemTmp->spinner;
+                const char* valueLabel = nullptr;
                 if (_editValueMode && menuItemTmp == _menuPageCurrent->getCurrentMenuItem()) {
-                  GEMSpinnerValue valueTmp = spinner->getOptionNameByIndex(menuItemTmp->linkedVariable, _valueSelectNum);
-                  switch (spinner->getType()) {
-                    case GEM_VAL_BYTE:
-                      itoa(valueTmp.valByte, valueStringTmp, 10);
-                      break;
-                    case GEM_VAL_INTEGER:
-                      itoa(valueTmp.valInt, valueStringTmp, 10);
-                      break;
-                    #ifdef GEM_SUPPORT_FLOAT_EDIT
-                    case GEM_VAL_FLOAT:
-                      dtostrf(valueTmp.valFloat, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    case GEM_VAL_DOUBLE:
-                      dtostrf(valueTmp.valDouble, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    #endif
+                  if (spinner->produceOptionNameByIndexCallback != nullptr) {
+                    valueLabel = spinner->produceOptionNameByIndexCallback(spinner, _valueSelectNum, menuItemTmp);
                   }
-                  printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  if (valueLabel == nullptr) {
+                    GEMSpinnerValue valueTmp = spinner->getOptionNameByIndex(menuItemTmp->linkedVariable, _valueSelectNum);
+                    spinner->optionNameToCharBuffer(valueTmp, valueStringTmp, menuItemTmp->precision);
+                    printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  } else {
+                    printMenuItemValue(valueLabel, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  }
                   drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SPINNER_ARROWS)->width - 1, yDraw, GEM_ICON_SPINNER_ARROWS, menuItemTmp);
                   drawEditValueCursor();
                 } else {
-                  switch (spinner->getType()) {
-                    case GEM_VAL_BYTE:
-                      itoa(*(byte*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-                      break;
-                    case GEM_VAL_INTEGER:
-                      itoa(*(int*)menuItemTmp->linkedVariable, valueStringTmp, 10);
-                      break;
-                    #ifdef GEM_SUPPORT_FLOAT_EDIT
-                    case GEM_VAL_FLOAT:
-                      dtostrf(*(float*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    case GEM_VAL_DOUBLE:
-                      dtostrf(*(double*)menuItemTmp->linkedVariable, menuItemTmp->precision + 1, menuItemTmp->precision, valueStringTmp);
-                      break;
-                    #endif
+                  if (spinner->produceOptionNameByIndexCallback != nullptr) {
+                    valueLabel = spinner->produceOptionNameByIndexCallback(spinner, spinner->getSelectedOptionNum(menuItemTmp->linkedVariable), menuItemTmp);
                   }
-                  printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  if (valueLabel == nullptr) {
+                    spinner->optionNameToCharBuffer(*static_cast<GEMSpinnerValue*>(menuItemTmp->linkedVariable), valueStringTmp, menuItemTmp->precision);
+                    printMenuItemValue(valueStringTmp, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  } else {
+                    printMenuItemValue(valueLabel, -1 * calculateSpriteOverlap(GEM_ICON_SPINNER_ARROWS));
+                  }
                   drawSprite(_u8g2.getDisplayWidth() - getSprite(GEM_ICON_SPINNER_ARROWS)->width - 1, yDraw, GEM_ICON_SPINNER_ARROWS, menuItemTmp);
                 }
               }

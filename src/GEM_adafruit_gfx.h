@@ -112,6 +112,8 @@ class GEM_adafruit_gfx {
 
     GEM_adafruit_gfx& setAppearance(GEMAppearance appearance);          // Set appearance of the menu (can be overridden in GEMPage on per page basis)
     GEMAppearance* getCurrentAppearance();                              // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
+    GEM_VIRTUAL byte getMenuItemTitleLength();                          // Get length available for menu item title to fit on screen
+    GEM_VIRTUAL byte getMenuItemValueLength();                          // Get length available for menu item value to fit on screen
 
     /* INIT OPERATIONS */
 
@@ -166,8 +168,6 @@ class GEM_adafruit_gfx {
     byte _textSize = 1;
     byte _spriteSize = 1;
     bool _invertKeysDuringEdit = false;
-    GEM_VIRTUAL byte getMenuItemTitleLength();
-    GEM_VIRTUAL byte getMenuItemValueLength();
     GEMSprite _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;

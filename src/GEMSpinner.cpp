@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -38,33 +38,37 @@
 #include "GEMSpinner.h"
 #include "constants.h"
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*))
   : _boundaries{ { .boundariesByte = { .step = boundaries_.step, .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_BYTE)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*))
   : _boundaries{ { .boundariesInt = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_INTEGER)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
 #ifdef GEM_SUPPORT_FLOAT_EDIT
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*))
   : _boundaries{ { .boundariesFloat = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_FLOAT)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 
-GEMSpinner::GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_)
+GEMSpinner::GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*))
   : _boundaries{ { .boundariesDouble = { .step = abs(boundaries_.step), .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_DOUBLE)
   , _length(abs((boundaries_.max - boundaries_.min) / boundaries_.step) + 1)
   , _loop(loop_)
+  , produceOptionNameByIndexCallback(produceOptionNameByIndexCallback_)
 { }
 #endif
 
@@ -176,6 +180,25 @@ GEMSpinnerValue GEMSpinner::getOptionNameByIndex(void* variable, int index) {
   return value;
 }
 
+void GEMSpinner::optionNameToCharBuffer(GEMSpinnerValue& value, char* stringBuffer, int valuePrecision) {
+  switch (_type) {
+    case GEM_VAL_BYTE:
+      itoa(value.valByte, stringBuffer, 10);
+      break;
+    case GEM_VAL_INTEGER:
+      itoa(value.valInt, stringBuffer, 10);
+      break;
+    #ifdef GEM_SUPPORT_FLOAT_EDIT
+    case GEM_VAL_FLOAT:
+      dtostrf(value.valFloat, valuePrecision + 1, valuePrecision, stringBuffer);
+      break;
+    case GEM_VAL_DOUBLE:
+      dtostrf(value.valDouble, valuePrecision + 1, valuePrecision, stringBuffer);
+      break;
+    #endif
+  }
+}
+
 void GEMSpinner::setValue(void* variable, int index, void* referenceVariable) {
   void* reference = referenceVariable == nullptr ? variable : referenceVariable;
   GEMSpinnerValue value = getOptionNameByIndex(reference, index);
@@ -195,4 +218,14 @@ void GEMSpinner::setValue(void* variable, int index, void* referenceVariable) {
       break;
     #endif
   }
+}
+
+GEMSpinner& GEMSpinner::setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSpinner* pSpinner, int index, GEMItem* menuItem)) {
+  produceOptionNameByIndexCallback = produceOptionNameByIndexCallback_;
+  return *this;
+}
+
+GEMSpinner& GEMSpinner::removeProduceOptionNameByIndexCallback() {
+  produceOptionNameByIndexCallback = nullptr;
+  return *this;
 }

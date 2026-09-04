@@ -40,6 +40,8 @@ GEMSpinnerValue	KEYWORD1
 
 setAppearance	KEYWORD2
 getCurrentAppearance	KEYWORD2
+getMenuItemTitleLength	KEYWORD2
+getMenuItemValueLength	KEYWORD2
 setSplash	KEYWORD2
 setSplashDelay	KEYWORD2
 hideVersion	KEYWORD2
@@ -94,7 +96,14 @@ setCurrentMenuItemIndex	KEYWORD2
 getItemsCount	KEYWORD2
 setLoop	KEYWORD2
 getLoop	KEYWORD2
+getType	KEYWORD2
+getLength	KEYWORD2
+getOptions	KEYWORD2
+setOptions	KEYWORD2
+getSelectedOptionNum	KEYWORD2
+getSelectedOptionName	KEYWORD2
 getOptionNameByIndex	KEYWORD2
+optionNameToCharBuffer	KEYWORD2
 
 ####################################################
 # Constants (LITERAL1)

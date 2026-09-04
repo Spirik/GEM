@@ -16,7 +16,7 @@
   For documentation visit:
   https://github.com/Spirik/GEM
 
-  Copyright (c) 2018-2025 Alexander 'Spirik' Spiridonov
+  Copyright (c) 2018-2026 Alexander 'Spirik' Spiridonov
 
   This file is part of GEM library.
 
@@ -39,6 +39,9 @@
 
 #include "config.h"
 #include "constants.h"
+
+// Forward declaration of necessary classes
+class GEMItem;
 
 // Declaration of GEMSpinnerBoundariesByte type
 struct GEMSpinnerBoundariesByte {
@@ -104,25 +107,30 @@ class GEMSpinner {
       @param 'boundaries_' - boundaries of the spinner of corresponding type
       @param 'loop_' (optional) - whether iteration over options should be looped
       values GEM_LOOP (alias for true)
+      @param 'produceOptionNameByIndexCallback_' (optional) - pointer to callback function executed before option name is printed on the screen, allows to override option name being printed
     */
-    GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_ = false);
-    GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_ = false);
+    GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*) = nullptr);
+    GEMSpinner(GEMSpinnerBoundariesInt boundaries_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*) = nullptr);
     #ifdef GEM_SUPPORT_FLOAT_EDIT
-    GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_ = false);
-    GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_ = false);
+    GEMSpinner(GEMSpinnerBoundariesFloat boundaries_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*) = nullptr);
+    GEMSpinner(GEMSpinnerBoundariesDouble boundaries_, bool loop_ = false, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*) = nullptr);
     #endif
     GEMSpinner& setLoop(bool mode = true);  // Explicitly set or unset loop mode
     bool getLoop();                         // Get current value of loop mode
+    byte getType();                         // Get type of variable this spinner is suitable for
+    int getLength();                        // Get total number of available options
+    GEM_VIRTUAL int getSelectedOptionNum(void* variable); // Get selected option index for supplied variable (make sure that variable value is compatible with range of a spinner)
     GEM_VIRTUAL GEMSpinnerValue getOptionNameByIndex(void* variable, int index);  // Get option by its index
+    GEM_VIRTUAL void optionNameToCharBuffer(GEMSpinnerValue& value, char* stringBuffer, int valuePrecision = GEM_FLOAT_PREC);  // Copy option name to provided char buffer
+    GEMSpinner& setProduceOptionNameByIndexCallback(const char* (*produceOptionNameByIndexCallback_)(GEMSpinner* pSpinner, int index, GEMItem* menuItem)); // Set callback that will be called before option name is printed on the screen
+    GEMSpinner& removeProduceOptionNameByIndexCallback(); // Remove callback that was called before option name is printed on the screen
   protected:
     GEMSpinnerBoundaries _boundaries;
     byte _type;
     int _length;
     bool _loop = false;
-    byte getType();
-    int getLength();
-    GEM_VIRTUAL int getSelectedOptionNum(void* variable);
     GEM_VIRTUAL void setValue(void* variable, int index, void* referenceVariable = nullptr);  // Assign value of the selected option to supplied variable, optionally setting reference variable for counting options
+    const char* (*produceOptionNameByIndexCallback)(GEMSpinner* pSpinner, int index, GEMItem* menuItem) = nullptr;
 };
   
 #endif

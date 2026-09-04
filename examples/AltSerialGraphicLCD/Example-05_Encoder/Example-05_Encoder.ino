@@ -145,85 +145,93 @@ void setupMenu() {
   menu.setMenuPageCurrent(menuPageMain);
 }
 
+byte detectEncoder() {
+  byte btn = GEM_KEY_NONE;
+
+  chanB = digitalRead(channelB); // Reading Channel B signal beforehand to account for possible delays due to polling nature of KeyDetector algorithm
+  // Detect key press using KeyDetector library
+  // and pass pressed button to menu
+  myKeyDetector.detect();
+
+  switch (myKeyDetector.trigger) {
+    case KEY_A:
+      // Signal from Channel A of encoder was detected
+      if (chanB == LOW) {
+        // If channel B is low then the knob was rotated CCW
+        if (myKeyDetector.current == KEY_C) {
+          // If push-button was pressed at that time, then treat this action as GEM_KEY_LEFT,...
+          Serial.println("Rotation CCW with button pressed");
+          btn = GEM_KEY_LEFT;
+          // Button was in a pressed state during rotation of the knob, acting as a modifier to rotation action
+          secondaryPressed = true;
+        } else {
+          // ...or GEM_KEY_UP otherwise
+          Serial.println("Rotation CCW");
+          btn = GEM_KEY_UP;
+        }
+      } else {
+        // If channel B is high then the knob was rotated CW
+        if (myKeyDetector.current == KEY_C) {
+          // If push-button was pressed at that time, then treat this action as GEM_KEY_RIGHT,...
+          Serial.println("Rotation CW with button pressed");
+          btn = GEM_KEY_RIGHT;
+          // Button was in a pressed state during rotation of the knob, acting as a modifier to rotation action
+          secondaryPressed = true;
+        } else {
+          // ...or GEM_KEY_DOWN otherwise
+          Serial.println("Rotation CW");
+          btn = GEM_KEY_DOWN;
+        }
+      }
+      break;
+    case KEY_C:
+      // Button was pressed
+      Serial.println("Button pressed");
+      // Save current time as a time of the key press event
+      keyPressTime = now;
+      break;
+  }
+  switch (myKeyDetector.triggerRelease) {
+    case KEY_C:
+      // Button was released
+      Serial.println("Button released");
+      if (!secondaryPressed) {
+        // If button was not used as a modifier to rotation action...
+        if (now <= keyPressTime + keyPressDelay) {
+          // ...and if not enough time passed since keyPressTime,
+          // treat key that was pressed as Ok button
+          btn = GEM_KEY_OK;
+        }
+      }
+      secondaryPressed = false;
+      cancelPressed = false;
+      break;
+  }
+  // After keyPressDelay passed since keyPressTime
+  if (now > keyPressTime + keyPressDelay) {
+    switch (myKeyDetector.current) {
+      case KEY_C:
+        if (!secondaryPressed && !cancelPressed) {
+          // If button was not used as a modifier to rotation action, and Cancel action was not triggered yet
+          Serial.println("Button remained pressed");
+          // Treat key that was pressed as Cancel button
+          btn = GEM_KEY_CANCEL;
+          cancelPressed = true;
+        }
+        break;
+    }
+  }
+  return btn;
+}
+
 void loop() {
   // Get current time to use later on
   now = millis();
 
   // If menu is ready to accept button press...
   if (menu.readyForKey()) {
-    chanB = digitalRead(channelB); // Reading Channel B signal beforehand to account for possible delays due to polling nature of KeyDetector algorithm
-    // ...detect key press using KeyDetector library
-    // and pass pressed button to menu
-    myKeyDetector.detect();
-  
-    switch (myKeyDetector.trigger) {
-      case KEY_A:
-        // Signal from Channel A of encoder was detected
-        if (chanB == LOW) {
-          // If channel B is low then the knob was rotated CCW
-          if (myKeyDetector.current == KEY_C) {
-            // If push-button was pressed at that time, then treat this action as GEM_KEY_LEFT,...
-            Serial.println("Rotation CCW with button pressed");
-            menu.registerKeyPress(GEM_KEY_LEFT);
-            // Button was in a pressed state during rotation of the knob, acting as a modifier to rotation action
-            secondaryPressed = true;
-          } else {
-            // ...or GEM_KEY_UP otherwise
-            Serial.println("Rotation CCW");
-            menu.registerKeyPress(GEM_KEY_UP);
-          }
-        } else {
-          // If channel B is high then the knob was rotated CW
-          if (myKeyDetector.current == KEY_C) {
-            // If push-button was pressed at that time, then treat this action as GEM_KEY_RIGHT,...
-            Serial.println("Rotation CW with button pressed");
-            menu.registerKeyPress(GEM_KEY_RIGHT);
-            // Button was in a pressed state during rotation of the knob, acting as a modifier to rotation action
-            secondaryPressed = true;
-          } else {
-            // ...or GEM_KEY_DOWN otherwise
-            Serial.println("Rotation CW");
-            menu.registerKeyPress(GEM_KEY_DOWN);
-          }
-        }
-        break;
-      case KEY_C:
-        // Button was pressed
-        Serial.println("Button pressed");
-        // Save current time as a time of the key press event
-        keyPressTime = now;
-        break;
-    }
-    switch (myKeyDetector.triggerRelease) {
-      case KEY_C:
-        // Button was released
-        Serial.println("Button released");
-        if (!secondaryPressed) {
-          // If button was not used as a modifier to rotation action...
-          if (now <= keyPressTime + keyPressDelay) {
-            // ...and if not enough time passed since keyPressTime,
-            // treat key that was pressed as Ok button
-            menu.registerKeyPress(GEM_KEY_OK);
-          }
-        }
-        secondaryPressed = false;
-        cancelPressed = false;
-        break;
-    }
-    // After keyPressDelay passed since keyPressTime
-    if (now > keyPressTime + keyPressDelay) {
-      switch (myKeyDetector.current) {
-        case KEY_C:
-          if (!secondaryPressed && !cancelPressed) {
-            // If button was not used as a modifier to rotation action, and Cancel action was not triggered yet
-            Serial.println("Button remained pressed");
-            // Treat key that was pressed as Cancel button
-            menu.registerKeyPress(GEM_KEY_CANCEL);
-            cancelPressed = true;
-          }
-          break;
-      }
-    }
+    byte key = detectEncoder();
+    menu.registerKeyPress(key);
   }
 }
 

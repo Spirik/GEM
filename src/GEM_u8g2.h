@@ -111,6 +111,8 @@ class GEM_u8g2 {
 
     GEM_u8g2& setAppearance(GEMAppearance appearance);          // Set appearance of the menu (can be overridden in GEMPage on per page basis)
     GEMAppearance* getCurrentAppearance();                      // Get appearance (as a pointer to GEMAppearance) applied to current menu page (or general if menu page has none of its own)
+    GEM_VIRTUAL byte getMenuItemTitleLength();                  // Get length available for menu item title to fit on screen
+    GEM_VIRTUAL byte getMenuItemValueLength();                  // Get length available for menu item value to fit on screen
     
     /* INIT OPERATIONS */
 
@@ -162,8 +164,6 @@ class GEM_u8g2 {
     FontFamiliesU8g2 _fontFamilies = {GEM_FONT_BIG, GEM_FONT_SMALL};
     bool _UTF8Enabled = false;
     bool _invertKeysDuringEdit = false;
-    GEM_VIRTUAL byte getMenuItemTitleLength();
-    GEM_VIRTUAL byte getMenuItemValueLength();
     GEMSprite _splash;
     uint16_t _splashDelay = 1000;
     bool _enableVersion = true;
