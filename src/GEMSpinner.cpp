@@ -38,6 +38,12 @@
 #include "GEMSpinner.h"
 #include "constants.h"
 
+// AVR-based Arduinos have support for dtostrf, some others may require manual inclusion (e.g. SAMD),
+// see https://web.archive.org/web/20210124003259/https://github.com/plotly/arduino-api/issues/38#issuecomment-108987647
+#if defined(GEM_SUPPORT_FLOAT_EDIT) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_NRF52840))
+#include <avr/dtostrf.h>
+#endif
+
 GEMSpinner::GEMSpinner(GEMSpinnerBoundariesByte boundaries_, bool loop_, const char* (*produceOptionNameByIndexCallback_)(GEMSpinner*, int, GEMItem*))
   : _boundaries{ { .boundariesByte = { .step = boundaries_.step, .min = boundaries_.min < boundaries_.max ? boundaries_.min : boundaries_.max, .max = boundaries_.max > boundaries_.min ? boundaries_.max : boundaries_.min } } }
   , _type(GEM_VAL_BYTE)
