@@ -101,6 +101,7 @@ void* GEMSelect::getOptions() {
 
 GEMSelect& GEMSelect::setOptions(void* options_) {
   _options = options_;
+  return *this;
 }
 
 int GEMSelect::getSelectedOptionNum(void* variable) {
